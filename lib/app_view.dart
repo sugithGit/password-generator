@@ -7,8 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:toastification/toastification.dart';
 
 import 'core/const/constants.dart';
+import 'features/generate_password/presentation/page/password_generate_page.dart';
 import 'features/onboarding/presentation/loading_page.dart';
-import 'features/onboarding/presentation/splash_page.dart';
 import 'firebase_options.dart';
 
 class MyApp extends StatelessWidget {
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
                   bodyMedium: TextStyle(color: Colors.white),
                 ),
               ),
-              home: const SplashPage(),
+              home: const PasswordGeneratePage(),
             );
           }
           return MaterialApp(
