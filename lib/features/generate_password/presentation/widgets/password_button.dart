@@ -6,7 +6,6 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../core/const/constants.dart';
 import '../bloc/password_generate_bloc.dart';
-import 'app_snack_bar.dart';
 
 class PasswordButton extends StatelessWidget {
   const PasswordButton({super.key});
@@ -35,7 +34,7 @@ class PasswordButton extends StatelessWidget {
         //     borderColor = Colors.transparent;
         //   }),
         // );
-        AppSnackBar.call(context);
+        // AppSnackBar.call(context);
         context.read<PasswordGenratorBloc>().add(
               SavePasswordEvent(
                 password: password,

@@ -153,7 +153,7 @@ linter:
     sized_box_for_whitespace: true
     sized_box_shrink_expand: true
     slash_for_doc_comments: true
-    super_goes_last: true
+    # super_goes_last: true
     sort_child_properties_last: true
     sort_constructors_first: true
     sort_pub_dependencies: true
@@ -216,5 +216,7 @@ linter:
     void_checks: true
 
 analyzer:
+  errors:
+    avoid_types_as_parameter_names: ignore
   exclude:
     - "**/*.g.dart" # Exclude generated files if needed

@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/const/constants.dart';
 import '../bloc/password_generate_bloc.dart';
-import 'app_snack_bar.dart';
 import 'info_text.dart';
 
 class CopyResultContainer extends StatefulWidget {
@@ -34,7 +33,7 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
           borderColor = Colors.transparent;
         }),
       );
-      AppSnackBar.call(context);
+      // AppSnackBar.call(context);
       context.read<PasswordGenratorBloc>().add(
             SavePasswordEvent(
               password: password,
