@@ -8,7 +8,6 @@ import 'package:toastification/toastification.dart';
 
 import 'core/const/constants.dart';
 import 'features/generate_password/presentation/page/password_generate_page.dart';
-import 'features/onboarding/presentation/loading_page.dart';
 import 'firebase_options.dart';
 
 class MyApp extends StatelessWidget {
@@ -28,27 +27,18 @@ class MyApp extends StatelessWidget {
               log('Error: ${snapshot.error}');
             }
           }
-          if (snapshot.connectionState == ConnectionState.done) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Password Generator',
-              theme: ThemeData(
-                scaffoldBackgroundColor: scaffoldColor,
-                primaryColor: scaffoldColor,
-                fontFamily: GoogleFonts.poppins().fontFamily,
-                textTheme: const TextTheme(
-                  bodyMedium: TextStyle(color: Colors.white),
-                ),
-              ),
-              home: const PasswordGeneratePage(),
-            );
-          }
           return MaterialApp(
             debugShowCheckedModeBanner: false,
+            title: 'Password Generator',
             theme: ThemeData(
-              scaffoldBackgroundColor: Colors.black,
+              scaffoldBackgroundColor: scaffoldColor,
+              primaryColor: scaffoldColor,
+              fontFamily: GoogleFonts.poppins().fontFamily,
+              textTheme: const TextTheme(
+                bodyMedium: TextStyle(color: Colors.white),
+              ),
             ),
-            home: const LoadingPage(),
+            home: const PasswordGeneratePage(),
           );
         },
       ),
