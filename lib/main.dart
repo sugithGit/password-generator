@@ -13,5 +13,5 @@ void main() async {
   Hive
     ..init(appDocumentDir.path)
     ..registerAdapters();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
