@@ -17,8 +17,15 @@ import '../widgets/password_button.dart';
 import '../widgets/password_length.dart';
 import '../widgets/password_settingfield.dart';
 
+import '../../../../core/services/encryption_service.dart';
+
 class PasswordGeneratePage extends StatelessWidget {
-  const PasswordGeneratePage({super.key});
+  const PasswordGeneratePage({
+    required this.encryptionService,
+    super.key,
+  });
+
+  final EncryptionService encryptionService;
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +43,15 @@ class PasswordGeneratePage extends StatelessWidget {
           savePasswordUseCase: SavePasswordUseCase(passwordRepo),
         );
       },
-      child: const _PassWordGeneratePage(),
+      child: _PassWordGeneratePage(encryptionService: encryptionService),
     );
   }
 }
 
 class _PassWordGeneratePage extends StatelessWidget {
-  const _PassWordGeneratePage();
+  const _PassWordGeneratePage({required this.encryptionService});
+
+  final EncryptionService encryptionService;
 
   @override
   Widget build(BuildContext context) {
@@ -53,20 +62,20 @@ class _PassWordGeneratePage extends StatelessWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 700),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    if (kIsWeb) AppLogo(),
-                    HistoryButton(),
-                    PasswordLength(),
-                    SizedBox(height: 10),
-                    PassWordSettingField(),
-                    SizedBox(height: 20),
-                    GetDivider(),
-                    SizedBox(height: 20),
-                    PasswordButton(),
+                    if (kIsWeb) const AppLogo(),
+                    HistoryButton(encryptionService: encryptionService),
+                    const PasswordLength(),
+                    const SizedBox(height: 10),
+                    const PassWordSettingField(),
+                    const SizedBox(height: 20),
+                    const GetDivider(),
+                    const SizedBox(height: 20),
+                    const PasswordButton(),
                   ],
                 ),
               ),

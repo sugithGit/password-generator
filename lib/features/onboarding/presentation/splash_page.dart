@@ -2,11 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../../core/services/encryption_service.dart';
 import '../../generate_password/presentation/page/password_generate_page.dart';
 import '../../generate_password/presentation/widgets/header.dart';
 
 class SplashPage extends StatefulWidget {
-  const SplashPage({super.key});
+  const SplashPage({required this.encryptionService, super.key});
+
+  final EncryptionService encryptionService;
 
   @override
   State<SplashPage> createState() => _SplashPageState();
@@ -24,11 +27,11 @@ class _SplashPageState extends State<SplashPage> {
       if (mounted) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute<dynamic>(
-            builder: (_) => const PasswordGeneratePage(),
+            builder: (_) => PasswordGeneratePage(
+              encryptionService: widget.encryptionService,
+            ),
           ),
-          //
-          // ignore: always_specify_types
-          (Route route) => false,
+          (Route<dynamic> route) => false,
         );
       }
     });

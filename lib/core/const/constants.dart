@@ -19,3 +19,25 @@ const Color kScaffoldBackgroundColor = Color(0xFFF3FBFA);
 const double kDiameter = 300;
 const double kMinDegree = 9;
 const double kMaxDegree = 20;
+
+// ─── Vault / Password Manager Colors ──────────────────────────────
+const Color vaultAccent = Color(0xFF6C63FF);
+const Color vaultAccentLight = Color(0xFF8B83FF);
+const Color vaultCardBg = Color(0xFF1A1A2E);
+const Color vaultCardBorder = Color(0xFF2A2A4A);
+const Color vaultSurface = Color(0xFF16213E);
+const Color vaultSearchBg = Color(0xFF1A1A2E);
+const Color vaultGradientStart = Color(0xFF6C63FF);
+const Color vaultGradientEnd = Color(0xFFE91E63);
+const Color vaultSuccess = Color(0xFF00E676);
+const Color vaultWarning = Color(0xFFFFAB40);
+const Color vaultDanger = Color(0xFFFF5252);
+
+// Category colors
+const Color categorySocial = Color(0xFF2196F3);
+const Color categoryEmail = Color(0xFFFF5722);
+const Color categoryBanking = Color(0xFF4CAF50);
+const Color categoryShopping = Color(0xFFFF9800);
+const Color categoryWork = Color(0xFF9C27B0);
+const Color categoryOther = Color(0xFF607D8B);
+

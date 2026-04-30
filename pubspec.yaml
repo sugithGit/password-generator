@@ -11,11 +11,14 @@ environment:
 dependencies:
   animate_do: ^5.1.0
   awesome_extensions: ^2.1.0
+  cloud_firestore: ^5.6.7
   equatable: ^2.0.8
-  firebase_core: ^4.7.0
+  firebase_auth: ^5.5.1
+  firebase_core: ^3.15.2
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_hooks: ^0.21.3+1
   flutter_iconly: ^1.0.2
   flutter_svg: ^2.2.4
   google_fonts: ^8.1.0
@@ -24,9 +27,13 @@ dependencies:
   hive_ce_generator: ^1.11.1
   iconsax_flutter: ^1.0.1
   intl: ^0.20.2
+  local_auth: ^2.3.0
   path_provider: ^2.1.5
   sleek_circular_slider: ^2.1.0
+  sodium: ^4.0.2
+  sodium_libs: ^4.0.0
   toastification: ^3.2.0
+  uuid: ^4.5.1
 
 dev_dependencies:
   build_runner: ^2.15.0
