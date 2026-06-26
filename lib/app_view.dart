@@ -38,8 +38,8 @@ class MyApp extends StatelessWidget {
             }
           }
           return BlocProvider<AuthBloc>(
-            create: (_) => AuthBloc(authService: AuthService())
-              ..add(AuthCheckRequested()),
+            create: (_) =>
+                AuthBloc(authService: AuthService())..add(AuthCheckRequested()),
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Password Manager',

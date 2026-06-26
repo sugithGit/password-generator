@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "shadcn-ui-flutter": {
+      "source": "nank1ro/flutter-shadcn-ui",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn-ui-flutter/SKILL.md",
+      "computedHash": "7663f2fb51d11cde73a5f03253c0578db305c80ee7c33a6c03923491eba8980b"
+    }
+  }
+}
