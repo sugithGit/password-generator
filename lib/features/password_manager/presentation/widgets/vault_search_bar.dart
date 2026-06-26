@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/const/constants.dart';
-
 class VaultSearchBar extends StatelessWidget {
   const VaultSearchBar({
     required this.controller,
@@ -14,34 +12,35 @@ class VaultSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: vaultSearchBg,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: vaultCardBorder.withAlpha(60),
+          color: theme.dividerColor.withAlpha(100),
         ),
       ),
       child: TextField(
         controller: controller,
         onChanged: onChanged,
-        style: const TextStyle(color: Colors.white, fontSize: 15),
+        style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
         decoration: InputDecoration(
           hintText: 'Search passwords...',
           hintStyle: TextStyle(
-            color: Colors.white.withAlpha(60),
+            color: theme.colorScheme.onSurfaceVariant.withAlpha(150),
             fontSize: 15,
           ),
           prefixIcon: Icon(
             Icons.search_rounded,
-            color: Colors.white.withAlpha(80),
+            color: theme.colorScheme.onSurfaceVariant,
             size: 22,
           ),
           suffixIcon: controller.text.isNotEmpty
               ? IconButton(
                   icon: Icon(
                     Icons.close_rounded,
-                    color: Colors.white.withAlpha(80),
+                    color: theme.colorScheme.onSurfaceVariant,
                     size: 20,
                   ),
                   onPressed: () {
@@ -51,6 +50,9 @@ class VaultSearchBar extends StatelessWidget {
                 )
               : null,
           border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          filled: false,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 14,

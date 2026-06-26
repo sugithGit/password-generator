@@ -1,8 +1,6 @@
-import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/const/constants.dart';
 import '../bloc/password_generate_bloc.dart';
 import 'coustom_check_box.dart';
 
@@ -11,12 +9,13 @@ class PassWordSettingField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       children: <Widget>[
         Text(
           'PASSWORD SETTINGS',
-          style: context.bodyLarge?.copyWith(
-            color: shade,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant.withAlpha(150),
             fontWeight: FontWeight.w800,
           ),
         ),

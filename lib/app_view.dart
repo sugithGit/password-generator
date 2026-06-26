@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toastification/toastification.dart';
 
-import 'core/const/constants.dart';
+import 'core/theme/shadcn_theme.dart';
 import 'core/services/auth_service.dart';
 import 'core/services/encryption_service.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
@@ -43,15 +43,9 @@ class MyApp extends StatelessWidget {
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Password Manager',
-              theme: ThemeData.dark().copyWith(
-                scaffoldBackgroundColor: scaffoldColor,
-                textTheme: TextTheme(
-                  bodyMedium: TextStyle(
-                    color: Colors.white,
-                    fontFamily: GoogleFonts.monaSans().fontFamily,
-                  ),
-                ),
-              ),
+              theme: ShadcnTheme.lightTheme,
+              darkTheme: ShadcnTheme.darkTheme,
+              themeMode: ThemeMode.system,
               home: PasswordGeneratePage(
                 encryptionService: encryptionService,
               ),

@@ -63,7 +63,6 @@ class _LoginPageState extends State<LoginPage>
         }
       },
       child: Scaffold(
-        backgroundColor: scaffoldColor,
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -100,6 +99,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget _buildHeader() {
+    final theme = Theme.of(context);
     return Column(
       children: <Widget>[
         // Animated shield/lock icon
@@ -108,14 +108,14 @@ class _LoginPageState extends State<LoginPage>
           height: 80,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: <Color>[vaultGradientStart, vaultGradientEnd],
+            gradient: LinearGradient(
+              colors: <Color>[theme.colorScheme.primary, theme.colorScheme.secondary],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                color: vaultAccent.withAlpha(60),
+                color: theme.colorScheme.primary.withAlpha(60),
                 blurRadius: 30,
                 spreadRadius: 5,
               ),
@@ -130,8 +130,7 @@ class _LoginPageState extends State<LoginPage>
         const SizedBox(height: 24),
         Text(
           _isSignUp ? 'Create Account' : 'Welcome Back',
-          style: context.headlineMedium?.copyWith(
-            color: Colors.white,
+          style: theme.textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.w800,
             letterSpacing: 0.5,
           ),
@@ -141,8 +140,8 @@ class _LoginPageState extends State<LoginPage>
           _isSignUp
               ? 'Sign up to secure your passwords'
               : 'Sign in to access your vault',
-          style: context.bodyMedium?.copyWith(
-            color: Colors.white.withAlpha(120),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
       ],
@@ -150,17 +149,18 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget _buildFormCard() {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: vaultCardBg.withAlpha(180),
+        color: theme.cardColor.withAlpha(180),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: vaultCardBorder.withAlpha(100),
+          color: theme.dividerColor.withAlpha(100),
         ),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Colors.black.withAlpha(80),
+            color: Colors.black.withAlpha(theme.brightness == Brightness.dark ? 80 : 10),
             blurRadius: 40,
             offset: const Offset(0, 10),
           ),
@@ -199,7 +199,7 @@ class _LoginPageState extends State<LoginPage>
                   _obscurePassword
                       ? Icons.visibility_off_outlined
                       : Icons.visibility_outlined,
-                  color: Colors.white.withAlpha(100),
+                  color: theme.colorScheme.onSurfaceVariant,
                   size: 20,
                 ),
                 onPressed: () {
@@ -223,55 +223,22 @@ class _LoginPageState extends State<LoginPage>
             BlocBuilder<AuthBloc, AuthState>(
               builder: (BuildContext context, AuthState state) {
                 final bool isLoading = state is AuthLoading;
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
+                return SizedBox(
                   height: 52,
                   child: ElevatedButton(
                     onPressed: isLoading ? null : _submit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      padding: EdgeInsets.zero,
-                    ),
-                    child: Ink(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: isLoading
-                              ? <Color>[Colors.grey.shade800, Colors.grey.shade700]
-                              : const <Color>[
-                                  vaultGradientStart,
-                                  vaultGradientEnd,
-                                ],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: isLoading
-                            ? const SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2.5,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : Text(
-                                _isSignUp ? 'SIGN UP' : 'SIGN IN',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 15,
-                                  letterSpacing: 1.5,
-                                ),
-                              ),
-                      ),
-                    ),
+                    child: isLoading
+                        ? SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: theme.colorScheme.onPrimary,
+                            ),
+                          )
+                        : Text(
+                            _isSignUp ? 'SIGN UP' : 'SIGN IN',
+                          ),
                   ),
                 );
               },
@@ -291,49 +258,23 @@ class _LoginPageState extends State<LoginPage>
     Widget? suffixIcon,
     String? Function(String?)? validator,
   }) {
+    final theme = Theme.of(context);
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
       validator: validator,
-      style: const TextStyle(color: Colors.white, fontSize: 15),
+      style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(
-          color: Colors.white.withAlpha(100),
-          fontSize: 14,
-        ),
-        prefixIcon: Icon(icon, color: vaultAccent, size: 20),
+        prefixIcon: Icon(icon, color: theme.colorScheme.primary, size: 20),
         suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: Colors.white.withAlpha(8),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: vaultCardBorder.withAlpha(80)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: vaultCardBorder.withAlpha(80)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: vaultAccent, width: 1.5),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: vaultDanger),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: vaultDanger, width: 1.5),
-        ),
       ),
     );
   }
 
   Widget _buildToggle() {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -342,7 +283,7 @@ class _LoginPageState extends State<LoginPage>
               ? 'Already have an account?'
               : "Don't have an account?",
           style: TextStyle(
-            color: Colors.white.withAlpha(120),
+            color: theme.colorScheme.onSurfaceVariant,
             fontSize: 14,
           ),
         ),
@@ -354,11 +295,6 @@ class _LoginPageState extends State<LoginPage>
           },
           child: Text(
             _isSignUp ? 'Sign In' : 'Sign Up',
-            style: const TextStyle(
-              color: vaultAccent,
-              fontWeight: FontWeight.w700,
-              fontSize: 14,
-            ),
           ),
         ),
       ],

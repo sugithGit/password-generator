@@ -1,9 +1,7 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/const/constants.dart';
 import '../../domain/entities/vault_entry.dart';
 import '../bloc/vault_bloc.dart';
 import '../widgets/category_chip.dart';
@@ -43,7 +41,6 @@ class _VaultPageState extends State<VaultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: scaffoldColor,
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -115,10 +112,11 @@ class _VaultPageState extends State<VaultPage> {
             Expanded(
               child: BlocBuilder<VaultBloc, VaultState>(
                 builder: (BuildContext context, VaultState state) {
+                  final theme = Theme.of(context);
                   if (state is VaultLoading) {
-                    return const Center(
+                    return Center(
                       child: CircularProgressIndicator(
-                        color: vaultAccent,
+                        color: theme.colorScheme.primary,
                         strokeWidth: 2.5,
                       ),
                     );
@@ -158,7 +156,7 @@ class _VaultPageState extends State<VaultPage> {
                     return Center(
                       child: Text(
                         state.message,
-                        style: const TextStyle(color: vaultDanger),
+                        style: TextStyle(color: theme.colorScheme.error),
                       ),
                     );
                   }
@@ -173,34 +171,21 @@ class _VaultPageState extends State<VaultPage> {
       floatingActionButton: FadeInUp(
         duration: const Duration(milliseconds: 600),
         delay: const Duration(milliseconds: 300),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: <Color>[vaultGradientStart, vaultGradientEnd],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(18),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: vaultAccent.withAlpha(60),
-                blurRadius: 20,
-                offset: const Offset(0, 6),
-              ),
-            ],
+        child: FloatingActionButton(
+          onPressed: () => _navigateToAddEntry(),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-          child: FloatingActionButton(
-            onPressed: () => _navigateToAddEntry(),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            child: const Icon(Icons.add_rounded, size: 28),
-          ),
+          child: const Icon(Icons.add_rounded, size: 28),
         ),
       ),
     );
   }
 
   Widget _buildHeader(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: Row(
@@ -214,15 +199,15 @@ class _VaultPageState extends State<VaultPage> {
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: vaultCardBg,
+                color: theme.cardColor,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: vaultCardBorder.withAlpha(60),
+                  color: theme.dividerColor,
                 ),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back_ios_new_rounded,
-                color: Colors.white,
+                color: theme.colorScheme.onSurface,
                 size: 18,
               ),
             ),
@@ -234,8 +219,7 @@ class _VaultPageState extends State<VaultPage> {
             children: <Widget>[
               Text(
                 'Password Vault',
-                style: context.titleLarge?.copyWith(
-                  color: Colors.white,
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -246,10 +230,7 @@ class _VaultPageState extends State<VaultPage> {
                       state is VaultLoaded ? state.entries.length : 0;
                   return Text(
                     '$count passwords stored',
-                    style: TextStyle(
-                      color: Colors.white.withAlpha(80),
-                      fontSize: 13,
-                    ),
+                    style: theme.textTheme.bodySmall,
                   );
                 },
               ),
@@ -262,19 +243,20 @@ class _VaultPageState extends State<VaultPage> {
             height: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(
-                colors: <Color>[vaultGradientStart, vaultGradientEnd],
+              color: theme.colorScheme.primary.withAlpha(20),
+              border: Border.all(
+                color: theme.colorScheme.primary.withAlpha(60),
               ),
               boxShadow: <BoxShadow>[
                 BoxShadow(
-                  color: vaultAccent.withAlpha(40),
+                  color: theme.colorScheme.primary.withAlpha(20),
                   blurRadius: 12,
                 ),
               ],
             ),
-            child: const Icon(
+            child: Icon(
               Icons.shield_rounded,
-              color: Colors.white,
+              color: theme.colorScheme.primary,
               size: 20,
             ),
           ),

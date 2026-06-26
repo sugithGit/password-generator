@@ -44,6 +44,7 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<PasswordGenratorBloc, PasswordGenratorState>(
       builder: (BuildContext context, PasswordGenratorState state) {
         return Column(
@@ -61,7 +62,10 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
                   const EdgeInsets.symmetric(horizontal: defaultPadding + 2),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(defaultPadding),
-                color: trackBg,
+                color: theme.cardColor,
+                border: Border.all(
+                  color: theme.dividerColor.withAlpha(50),
+                ),
               ),
               child: Stack(
                 children: <Widget>[
@@ -69,11 +73,14 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
                     minLines: 1,
                     controller: state.passwordController,
                     readOnly: true,
-                    style: const TextStyle(color: primaryColor, fontSize: 15),
-                    decoration: const InputDecoration(
+                    style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
+                    decoration: InputDecoration(
                       hintText: 'Password will appear here...',
-                      hintStyle: TextStyle(color: secondaryColor, fontSize: 15),
+                      hintStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant.withAlpha(150), fontSize: 15),
                       border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      filled: false,
                     ),
                     onTap: () => _onTap(state.passwordController.text),
                   ),
@@ -83,9 +90,9 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
                     bottom: 0,
                     child: GestureDetector(
                       onTap: () => _onTap(state.passwordController.text),
-                      child: const Icon(
+                      child: Icon(
                         Icons.copy,
-                        color: secondaryColor,
+                        color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/entities/password.dart';
-import '../../domain/entities/password_settings.dart';
-import '../../domain/use_cases/delete_password_use_case.dart';
-import '../../domain/use_cases/get_password_history_use_case.dart';
-import '../../domain/use_cases/pasword_use_case.dart';
-import '../../domain/use_cases/save_password_use_case.dart';
+import '../../../../service/generate_password/domain/entities/password.dart';
+import '../../../../service/generate_password/domain/entities/password_settings.dart';
+import '../../../../service/generate_password/domain/use_cases/delete_password_use_case.dart';
+import '../../../../service/generate_password/domain/use_cases/get_password_history_use_case.dart';
+import '../../../../service/generate_password/domain/use_cases/pasword_use_case.dart';
+import '../../../../service/generate_password/domain/use_cases/save_password_use_case.dart';
 
 part 'password_generate_event.dart';
 part 'password_generate_state.dart';

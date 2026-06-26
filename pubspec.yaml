@@ -10,7 +10,6 @@ environment:
 
 dependencies:
   animate_do: ^5.1.0
-  auris: ^0.2.0
   awesome_extensions: ^2.1.0
   cloud_firestore: ^5.6.7
   equatable: ^2.0.8
@@ -30,7 +29,6 @@ dependencies:
   intl: ^0.20.2
   local_auth: ^2.3.0
   path_provider: ^2.1.5
-  shadcn_ui: ^0.55.0
   sleek_circular_slider: ^2.1.0
   sodium: ^4.0.2
   sodium_libs: ^4.0.0

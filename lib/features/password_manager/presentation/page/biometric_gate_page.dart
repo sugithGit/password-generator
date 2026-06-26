@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sodium/sodium.dart';
 
-import '../../../../core/const/constants.dart';
 import '../../../../core/services/biometric_service.dart';
 import '../../../../core/services/encryption_service.dart';
 import '../../data/remote/vault_remote_datasource.dart';
@@ -120,8 +119,8 @@ class _BiometricGatePageState extends State<BiometricGatePage>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: scaffoldColor,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -145,29 +144,14 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                       height: 120,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: _authFailed
-                              ? <Color>[
-                                  vaultDanger.withAlpha(40),
-                                  vaultDanger.withAlpha(20),
-                                ]
-                              : <Color>[
-                                  vaultAccent.withAlpha(30),
-                                  vaultGradientEnd.withAlpha(20),
-                                ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+                        color: (_authFailed ? theme.colorScheme.error : theme.colorScheme.primary).withAlpha(20),
                         border: Border.all(
-                          color: _authFailed
-                              ? vaultDanger.withAlpha(60)
-                              : vaultAccent.withAlpha(50),
+                          color: (_authFailed ? theme.colorScheme.error : theme.colorScheme.primary).withAlpha(60),
                           width: 2,
                         ),
                         boxShadow: <BoxShadow>[
                           BoxShadow(
-                            color: (_authFailed ? vaultDanger : vaultAccent)
-                                .withAlpha(30),
+                            color: (_authFailed ? theme.colorScheme.error : theme.colorScheme.primary).withAlpha(30),
                             blurRadius: 30,
                             spreadRadius: 5,
                           ),
@@ -178,9 +162,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                             ? Icons.lock_outline_rounded
                             : Icons.fingerprint_rounded,
                         size: 52,
-                        color: _authFailed
-                            ? vaultDanger
-                            : vaultAccent.withAlpha(200),
+                        color: _authFailed ? theme.colorScheme.error : theme.colorScheme.primary,
                       ),
                     ),
                   ),
@@ -194,9 +176,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                     _authFailed
                         ? 'Authentication Failed'
                         : 'Verify Your Identity',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
+                    style: theme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -212,7 +192,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                         : 'Use biometrics or device PIN to\naccess your Password Vault',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.white.withAlpha(100),
+                      color: theme.colorScheme.onSurfaceVariant,
                       fontSize: 15,
                       height: 1.5,
                     ),
@@ -222,11 +202,11 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                 // Loading or retry
                 if (_isAuthenticating)
                   FadeIn(
-                    child: const SizedBox(
+                    child: SizedBox(
                       width: 36,
                       height: 36,
                       child: CircularProgressIndicator(
-                        color: vaultAccent,
+                        color: theme.colorScheme.primary,
                         strokeWidth: 2.5,
                       ),
                     ),
@@ -236,50 +216,18 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                     duration: const Duration(milliseconds: 400),
                     child: Column(
                       children: <Widget>[
-                        GestureDetector(
-                          onTap: _authenticate,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 32,
-                              vertical: 14,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: <Color>[
-                                  vaultGradientStart,
-                                  vaultGradientEnd,
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                  color: vaultAccent.withAlpha(40),
-                                  blurRadius: 16,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: const Text(
-                              'TRY AGAIN',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 15,
-                                letterSpacing: 1.5,
-                              ),
-                            ),
+                        SizedBox(
+                          height: 52,
+                          width: 180,
+                          child: ElevatedButton(
+                            onPressed: _authenticate,
+                            child: const Text('TRY AGAIN'),
                           ),
                         ),
                         const SizedBox(height: 16),
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: Text(
-                            'Go Back',
-                            style: TextStyle(
-                              color: Colors.white.withAlpha(100),
-                              fontSize: 14,
-                            ),
-                          ),
+                          child: const Text('Go Back'),
                         ),
                       ],
                     ),

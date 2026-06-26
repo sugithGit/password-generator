@@ -16,6 +16,7 @@ class CustomCheckBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(
         defaultPadding / 4,
@@ -33,12 +34,10 @@ class CustomCheckBox extends StatelessWidget {
             vertical: defaultPadding,
           ),
           decoration: BoxDecoration(
-            color: cardColor2,
+            color: theme.cardColor,
             border: Border.all(
               color: value
-                  ? primaryColor.withValues(
-                      alpha: 0.5,
-                    )
+                  ? theme.colorScheme.primary.withAlpha(128)
                   : Colors.transparent,
             ),
             borderRadius: BorderRadius.circular(defaultPadding),
@@ -46,8 +45,8 @@ class CustomCheckBox extends StatelessWidget {
           child: Center(
             child: Text(
               label,
-              style: const TextStyle(
-                color: Color.fromARGB(255, 251, 251, 251),
+              style: TextStyle(
+                color: theme.colorScheme.onSurface,
                 fontWeight: FontWeight.w500,
               ),
               maxLines: 1,

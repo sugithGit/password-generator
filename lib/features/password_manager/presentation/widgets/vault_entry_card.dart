@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/const/constants.dart';
-import '../../../../core/services/encryption_service.dart';
 import '../../domain/entities/vault_entry.dart';
 
 class VaultEntryCard extends StatefulWidget {
@@ -81,6 +80,7 @@ class _VaultEntryCardState extends State<VaultEntryCard>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final Color categoryColor = _getCategoryColor();
     return AnimatedBuilder(
       animation: _scaleAnimation,
@@ -99,14 +99,14 @@ class _VaultEntryCardState extends State<VaultEntryCard>
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: vaultCardBg,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: vaultCardBorder.withAlpha(60),
+              color: theme.dividerColor.withAlpha(100),
             ),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                color: Colors.black.withAlpha(40),
+                color: Colors.black.withAlpha(theme.brightness == Brightness.dark ? 40 : 10),
                 blurRadius: 16,
                 offset: const Offset(0, 4),
               ),
@@ -139,8 +139,8 @@ class _VaultEntryCardState extends State<VaultEntryCard>
                   children: <Widget>[
                     Text(
                       widget.entry.title,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurface,
                         fontWeight: FontWeight.w600,
                         fontSize: 15,
                       ),
@@ -151,7 +151,7 @@ class _VaultEntryCardState extends State<VaultEntryCard>
                     Text(
                       widget.entry.username,
                       style: TextStyle(
-                        color: Colors.white.withAlpha(120),
+                        color: theme.colorScheme.onSurfaceVariant,
                         fontSize: 13,
                       ),
                       maxLines: 1,
@@ -165,13 +165,13 @@ class _VaultEntryCardState extends State<VaultEntryCard>
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withAlpha(8),
+                          color: theme.colorScheme.onSurface.withAlpha(10),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           widget.entry.encryptedPassword,
                           style: TextStyle(
-                            color: vaultSuccess.withAlpha(200),
+                            color: theme.colorScheme.primary,
                             fontSize: 13,
                             fontFamily: 'monospace',
                             letterSpacing: 1,
@@ -207,7 +207,7 @@ class _VaultEntryCardState extends State<VaultEntryCard>
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: const Text('Password copied!'),
-                          backgroundColor: vaultAccent,
+                          backgroundColor: theme.colorScheme.primary,
                           behavior: SnackBarBehavior.floating,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -238,6 +238,7 @@ class _ActionIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
       customBorder: RoundedRectangleBorder(
@@ -247,7 +248,7 @@ class _ActionIcon extends StatelessWidget {
         padding: const EdgeInsets.all(6),
         child: Icon(
           icon,
-          color: Colors.white.withAlpha(100),
+          color: theme.colorScheme.onSurfaceVariant,
           size: 20,
         ),
       ),

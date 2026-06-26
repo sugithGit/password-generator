@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/const/constants.dart';
 import '../../../../core/extension/date_time_extension.dart';
-import '../../domain/entities/password.dart';
+import '../../../../service/generate_password/domain/entities/password.dart';
 import '../bloc/password_generate_bloc.dart';
 
 abstract final class ShowSavedPasswords {

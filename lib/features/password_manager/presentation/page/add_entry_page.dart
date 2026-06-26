@@ -1,10 +1,8 @@
-import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/const/constants.dart';
-import '../../../../core/services/encryption_service.dart';
 import '../../domain/entities/vault_entry.dart';
 import '../bloc/vault_bloc.dart';
 
@@ -93,8 +91,8 @@ class _AddEntryPageState extends State<AddEntryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: scaffoldColor,
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -139,7 +137,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                             _obscurePassword
                                 ? Icons.visibility_off_outlined
                                 : Icons.visibility_outlined,
-                            color: Colors.white.withAlpha(100),
+                            color: theme.colorScheme.onSurfaceVariant,
                             size: 20,
                           ),
                           onPressed: () => setState(() {
@@ -172,9 +170,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                       // Category
                       Text(
                         'CATEGORY',
-                        style: TextStyle(
-                          color: Colors.white.withAlpha(80),
-                          fontSize: 12,
+                        style: theme.textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w600,
                           letterSpacing: 1.5,
                         ),
@@ -199,12 +195,12 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                 decoration: BoxDecoration(
                                   color: isSelected
                                       ? color.withAlpha(30)
-                                      : vaultCardBg,
+                                      : theme.cardColor,
                                   borderRadius: BorderRadius.circular(14),
                                   border: Border.all(
                                     color: isSelected
                                         ? color
-                                        : vaultCardBorder.withAlpha(60),
+                                        : theme.dividerColor,
                                     width: isSelected ? 1.5 : 1,
                                   ),
                                 ),
@@ -215,7 +211,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                       _getCategoryIcon(cat),
                                       color: isSelected
                                           ? color
-                                          : Colors.white.withAlpha(100),
+                                          : theme.colorScheme.onSurfaceVariant,
                                       size: 18,
                                     ),
                                     const SizedBox(width: 6),
@@ -224,7 +220,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                       style: TextStyle(
                                         color: isSelected
                                             ? color
-                                            : Colors.white.withAlpha(100),
+                                            : theme.colorScheme.onSurfaceVariant,
                                         fontWeight: isSelected
                                             ? FontWeight.w600
                                             : FontWeight.w400,
@@ -240,112 +236,81 @@ class _AddEntryPageState extends State<AddEntryPage> {
                       ),
                       const SizedBox(height: 40),
                       // Save button
-                      GestureDetector(
-                        onTap: _save,
-                        child: Container(
-                          height: 54,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: <Color>[
-                                vaultGradientStart,
-                                vaultGradientEnd,
-                              ],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                color: vaultAccent.withAlpha(50),
-                                blurRadius: 20,
-                                offset: const Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              _isEditing ? 'UPDATE PASSWORD' : 'SAVE PASSWORD',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 15,
-                                letterSpacing: 1.5,
-                              ),
-                            ),
+                      SizedBox(
+                        height: 52,
+                        child: ElevatedButton(
+                          onPressed: _save,
+                          child: Text(
+                            _isEditing ? 'UPDATE PASSWORD' : 'SAVE PASSWORD',
                           ),
                         ),
                       ),
                       if (_isEditing) ...<Widget>[
                         const SizedBox(height: 16),
                         // Delete button
-                        GestureDetector(
-                          onTap: () {
-                            HapticFeedback.heavyImpact();
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext ctx) => AlertDialog(
-                                backgroundColor: vaultCardBg,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                title: const Text(
-                                  'Delete Password',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                content: const Text(
-                                  'Are you sure you want to delete this entry?',
-                                  style: TextStyle(
-                                      color: Colors.white70),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(ctx).pop(),
-                                    child: const Text(
-                                      'Cancel',
-                                      style:
-                                          TextStyle(color: Colors.white54),
-                                    ),
+                        SizedBox(
+                          height: 52,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              HapticFeedback.heavyImpact();
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext ctx) => AlertDialog(
+                                  backgroundColor: theme.cardColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                  TextButton(
-                                    onPressed: () {
-                                      context.read<VaultBloc>().add(
-                                            DeleteEntry(
-                                              entryId:
-                                                  widget.existingEntry!.id,
-                                            ),
-                                          );
-                                      Navigator.of(ctx).pop();
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text(
-                                      'Delete',
-                                      style:
-                                          TextStyle(color: vaultDanger),
-                                    ),
+                                  title: Text(
+                                    'Delete Password',
+                                    style: TextStyle(color: theme.colorScheme.onSurface),
                                   ),
-                                ],
-                              ),
-                            );
-                          },
-                          child: Container(
-                            height: 54,
-                            decoration: BoxDecoration(
-                              color: vaultDanger.withAlpha(15),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: vaultDanger.withAlpha(60),
+                                  content: Text(
+                                    'Are you sure you want to delete this entry?',
+                                    style: TextStyle(
+                                        color: theme.colorScheme.onSurfaceVariant),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(ctx).pop(),
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        context.read<VaultBloc>().add(
+                                              DeleteEntry(
+                                                entryId:
+                                                    widget.existingEntry!.id,
+                                              ),
+                                            );
+                                        Navigator.of(ctx).pop();
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        'Delete',
+                                        style: TextStyle(color: theme.colorScheme.error),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: theme.colorScheme.error,
+                              side: BorderSide(color: theme.colorScheme.error.withAlpha(100)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Center(
-                              child: Text(
-                                'DELETE',
-                                style: TextStyle(
-                                  color: vaultDanger,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 15,
-                                  letterSpacing: 1.5,
-                                ),
+                            child: const Text(
+                              'DELETE PASSWORD',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 15,
+                                letterSpacing: 1.5,
                               ),
                             ),
                           ),
@@ -363,6 +328,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: Row(
@@ -375,15 +341,15 @@ class _AddEntryPageState extends State<AddEntryPage> {
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: vaultCardBg,
+                color: theme.cardColor,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: vaultCardBorder.withAlpha(60),
+                  color: theme.dividerColor,
                 ),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back_ios_new_rounded,
-                color: Colors.white,
+                color: theme.colorScheme.onSurface,
                 size: 18,
               ),
             ),
@@ -391,8 +357,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
           const SizedBox(width: 16),
           Text(
             _isEditing ? 'Edit Password' : 'Add Password',
-            style: context.titleLarge?.copyWith(
-              color: Colors.white,
+            style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -412,54 +377,23 @@ class _AddEntryPageState extends State<AddEntryPage> {
     int maxLines = 1,
     String? Function(String?)? validator,
   }) {
+    final theme = Theme.of(context);
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
       maxLines: maxLines,
       validator: validator,
-      style: const TextStyle(color: Colors.white, fontSize: 15),
+      style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        labelStyle: TextStyle(
-          color: Colors.white.withAlpha(100),
-          fontSize: 14,
-        ),
-        hintStyle: TextStyle(
-          color: Colors.white.withAlpha(40),
-          fontSize: 14,
-        ),
         prefixIcon: Padding(
           padding: const EdgeInsets.only(left: 12, right: 8),
-          child: Icon(icon, color: vaultAccent, size: 20),
+          child: Icon(icon, color: theme.colorScheme.primary, size: 20),
         ),
         prefixIconConstraints: const BoxConstraints(minWidth: 44),
         suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: vaultCardBg,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: vaultCardBorder.withAlpha(60)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: vaultCardBorder.withAlpha(60)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: vaultAccent, width: 1.5),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: vaultDanger),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: vaultDanger, width: 1.5),
-        ),
       ),
     );
   }

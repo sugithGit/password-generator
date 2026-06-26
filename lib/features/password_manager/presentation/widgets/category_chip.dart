@@ -15,8 +15,8 @@ class CategoryChip extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  Color _getColor() {
-    if (category == null) return vaultAccent;
+  Color _getColor(BuildContext context) {
+    if (category == null) return Theme.of(context).colorScheme.primary;
     switch (category!) {
       case VaultCategory.social:
         return categorySocial;
@@ -35,7 +35,8 @@ class CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = _getColor();
+    final theme = Theme.of(context);
+    final Color color = _getColor(context);
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -46,14 +47,14 @@ class CategoryChip extends StatelessWidget {
           color: isSelected ? color.withAlpha(40) : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? color : vaultCardBorder.withAlpha(80),
+            color: isSelected ? color : theme.dividerColor.withAlpha(80),
             width: isSelected ? 1.5 : 1,
           ),
         ),
         child: Text(
           category?.label ?? 'All',
           style: TextStyle(
-            color: isSelected ? color : Colors.white.withAlpha(120),
+            color: isSelected ? color : theme.colorScheme.onSurfaceVariant,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             fontSize: 13,
           ),

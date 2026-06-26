@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
-import '../../../../core/const/constants.dart';
 import '../bloc/password_generate_bloc.dart';
 
 class PasswordButton extends StatelessWidget {
@@ -48,13 +47,14 @@ class PasswordButton extends StatelessWidget {
         BuildContext context,
         PasswordGenratorState state,
       ) {
+        final theme = Theme.of(context);
         return Column(
           children: <Widget>[
             Text(
               'CREATE RANDOM PASSWORD',
-              style: context.bodyLarge?.copyWith(
+              style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w800,
-                color: Colors.white.withAlpha(50),
+                color: theme.colorScheme.onSurfaceVariant.withAlpha(150),
               ),
             ).paddingOnly(
               bottom: 10,
@@ -64,12 +64,12 @@ class PasswordButton extends StatelessWidget {
                   ? state.passwordController.text
                   : '________',
               maxLines: 4,
-              style: context.headlineMedium?.copyWith(
+              style: theme.textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.w900,
                 letterSpacing: 2.5,
                 color: state.passwordController.text.isNotEmpty
-                    ? Colors.white
-                    : Colors.white.withAlpha(50),
+                    ? theme.colorScheme.onSurface
+                    : theme.colorScheme.onSurface.withAlpha(50),
               ),
             ).paddingOnly(
               bottom: 30,
@@ -80,13 +80,13 @@ class PasswordButton extends StatelessWidget {
                 children: <Widget>[
                   IconButton.filled(
                     onPressed: generatePassword,
-                    icon: const SizedBox(
+                    icon: SizedBox(
                       height: 30,
                       width: 30,
-                      child: Icon(Iconsax.refresh),
+                      child: Icon(Iconsax.refresh, color: theme.colorScheme.onSecondary),
                     ),
                     style: IconButton.styleFrom(
-                      backgroundColor: cardColor2,
+                      backgroundColor: theme.colorScheme.secondary,
                     ),
                   ),
                   10.widthBox,
@@ -97,10 +97,17 @@ class PasswordButton extends StatelessWidget {
                         context,
                       );
                     },
-                    icon: const Center(child: Text('COPY'))
-                        .paddingSymmetric(vertical: 5, horizontal: 10),
+                    icon: Center(
+                      child: Text(
+                        'COPY',
+                        style: TextStyle(
+                          color: theme.colorScheme.onSecondary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ).paddingSymmetric(vertical: 5, horizontal: 10),
                     style: IconButton.styleFrom(
-                      backgroundColor: cardColor2,
+                      backgroundColor: theme.colorScheme.secondary,
                     ),
                   ),
                 ],
@@ -111,10 +118,17 @@ class PasswordButton extends StatelessWidget {
                 children: <Widget>[
                   IconButton.filled(
                     onPressed: generatePassword,
-                    icon: const Center(child: Text('GENERATE'))
-                        .paddingSymmetric(vertical: 5, horizontal: 10),
+                    icon: Center(
+                      child: Text(
+                        'GENERATE',
+                        style: TextStyle(
+                          color: theme.colorScheme.onSecondary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ).paddingSymmetric(vertical: 5, horizontal: 10),
                     style: IconButton.styleFrom(
-                      backgroundColor: cardColor2,
+                      backgroundColor: theme.colorScheme.secondary,
                     ),
                   ),
                 ],

@@ -1,4 +1,3 @@
-import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -152,8 +151,8 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: scaffoldColor,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -161,9 +160,9 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
               child: _isLoading && _masterKeyController.text.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: CircularProgressIndicator(
-                        color: vaultAccent,
+                        color: theme.colorScheme.primary,
                         strokeWidth: 2.5,
                       ),
                     )
@@ -184,6 +183,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
   }
 
   Widget _buildHeader() {
+    final theme = Theme.of(context);
     return Column(
       children: <Widget>[
         Container(
@@ -198,7 +198,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
             ),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                color: vaultAccent.withAlpha(60),
+                color: theme.colorScheme.primary.withAlpha(60),
                 blurRadius: 30,
                 spreadRadius: 5,
               ),
@@ -213,8 +213,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
         const SizedBox(height: 24),
         Text(
           _isNewUser ? 'Create Master Key' : 'Enter Master Key',
-          style: context.headlineMedium?.copyWith(
-            color: Colors.white,
+          style: theme.textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.w800,
             letterSpacing: 0.5,
           ),
@@ -228,7 +227,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
                 : 'Enter your master key to decrypt your vault.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white.withAlpha(100),
+              color: theme.colorScheme.onSurfaceVariant,
               fontSize: 14,
               height: 1.5,
             ),
@@ -239,17 +238,18 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
   }
 
   Widget _buildFormCard() {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: vaultCardBg.withAlpha(180),
+        color: theme.cardColor.withAlpha(180),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: vaultCardBorder.withAlpha(100),
+          color: theme.dividerColor.withAlpha(100),
         ),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Colors.black.withAlpha(80),
+            color: Colors.black.withAlpha(theme.brightness == Brightness.dark ? 80 : 10),
             blurRadius: 40,
             offset: const Offset(0, 10),
           ),
@@ -265,17 +265,17 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: vaultWarning.withAlpha(15),
+                  color: theme.colorScheme.error.withAlpha(15),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: vaultWarning.withAlpha(40),
+                     color: theme.colorScheme.error.withAlpha(40),
                   ),
                 ),
                 child: Row(
                   children: <Widget>[
                     Icon(
                       Icons.warning_amber_rounded,
-                      color: vaultWarning,
+                      color: theme.colorScheme.error,
                       size: 20,
                     ),
                     const SizedBox(width: 10),
@@ -283,7 +283,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
                       child: Text(
                         'Write this key down and keep it safe. It cannot be reset or recovered.',
                         style: TextStyle(
-                          color: vaultWarning.withAlpha(200),
+                          color: theme.colorScheme.error.withAlpha(200),
                           fontSize: 12,
                           height: 1.4,
                         ),
@@ -305,7 +305,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
                   _obscureMasterKey
                       ? Icons.visibility_off_outlined
                       : Icons.visibility_outlined,
-                  color: Colors.white.withAlpha(100),
+                  color: theme.colorScheme.onSurfaceVariant,
                   size: 20,
                 ),
                 onPressed: () =>
@@ -334,7 +334,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
                     _obscureConfirm
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: Colors.white.withAlpha(100),
+                    color: theme.colorScheme.onSurfaceVariant,
                     size: 20,
                   ),
                   onPressed: () =>
@@ -353,16 +353,16 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: vaultDanger.withAlpha(15),
+                  color: theme.colorScheme.error.withAlpha(15),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: vaultDanger.withAlpha(40),
+                    color: theme.colorScheme.error.withAlpha(40),
                   ),
                 ),
                 child: Text(
                   _errorMessage!,
                   style: TextStyle(
-                    color: vaultDanger.withAlpha(220),
+                    color: theme.colorScheme.error.withAlpha(220),
                     fontSize: 13,
                   ),
                   textAlign: TextAlign.center,
@@ -371,53 +371,22 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
             ],
             const SizedBox(height: 28),
             // Submit button
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
+            SizedBox(
               height: 52,
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _submit,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  padding: EdgeInsets.zero,
-                ),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: _isLoading
-                          ? <Color>[Colors.grey.shade800, Colors.grey.shade700]
-                          : const <Color>[
-                              vaultGradientStart,
-                              vaultGradientEnd,
-                            ],
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: _isLoading
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.5,
-                              color: Colors.white,
-                            ),
-                          )
-                        : Text(
-                            _isNewUser ? 'CREATE VAULT' : 'UNLOCK VAULT',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 15,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                  ),
-                ),
+                child: _isLoading
+                    ? SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          color: theme.colorScheme.onPrimary,
+                        ),
+                      )
+                    : Text(
+                        _isNewUser ? 'CREATE VAULT' : 'UNLOCK VAULT',
+                      ),
               ),
             ),
           ],
@@ -434,43 +403,16 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     Widget? suffixIcon,
     String? Function(String?)? validator,
   }) {
+    final theme = Theme.of(context);
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
       validator: validator,
-      style: const TextStyle(color: Colors.white, fontSize: 15),
+      style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(
-          color: Colors.white.withAlpha(100),
-          fontSize: 14,
-        ),
-        prefixIcon: Icon(icon, color: vaultAccent, size: 20),
+        prefixIcon: Icon(icon, color: theme.colorScheme.primary, size: 20),
         suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: Colors.white.withAlpha(8),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: vaultCardBorder.withAlpha(80)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: vaultCardBorder.withAlpha(80)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: vaultAccent, width: 1.5),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: vaultDanger),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: vaultDanger, width: 1.5),
-        ),
       ),
     );
   }
@@ -478,13 +420,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
   Widget _buildBackButton() {
     return TextButton(
       onPressed: () => Navigator.of(context).pop(),
-      child: Text(
-        'Go Back',
-        style: TextStyle(
-          color: Colors.white.withAlpha(100),
-          fontSize: 14,
-        ),
-      ),
+      child: const Text('Go Back'),
     );
   }
 }
