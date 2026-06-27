@@ -16,7 +16,9 @@ class CategoryChip extends StatelessWidget {
   final VoidCallback onTap;
 
   Color _getColor(BuildContext context) {
-    if (category == null) return Theme.of(context).colorScheme.primary;
+    if (category == null) {
+      return Theme.of(context).colorScheme.primary;
+    }
     switch (category!) {
       case VaultCategory.social:
         return categorySocial;

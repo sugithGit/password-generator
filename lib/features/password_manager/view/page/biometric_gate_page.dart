@@ -72,7 +72,9 @@ class _BiometricGatePageState extends State<BiometricGatePage>
 
     if (!isSupported) {
       // If device doesn't support biometrics, skip to master key
-      if (mounted) _navigateToMasterKey();
+      if (mounted) {
+        _navigateToMasterKey();
+      }
       return;
     }
 
@@ -103,7 +105,9 @@ class _BiometricGatePageState extends State<BiometricGatePage>
 
   void _onMasterKeyValidated(String masterKey) {
     final User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+    if (user == null) {
+      return;
+    }
 
     // Derive the encryption key from UID + master key
     final SecureKey encryptionKey = widget.encryptionRepo.deriveKey(

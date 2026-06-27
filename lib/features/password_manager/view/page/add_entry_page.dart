@@ -38,7 +38,9 @@ class _AddEntryPageState extends State<AddEntryPage> {
     );
     _websiteController = TextEditingController(text: e?.website ?? '');
     _notesController = TextEditingController(text: e?.notes ?? '');
-    if (e != null) _selectedCategory = e.category;
+    if (e != null) {
+      _selectedCategory = e.category;
+    }
   }
 
   @override

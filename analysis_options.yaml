@@ -206,7 +206,7 @@ linter:
     use_named_constants: true
     use_raw_strings: true
     use_rethrow_when_possible: true
-    use_setters_to_change_properties: true
+    use_setters_to_change_properties: false
     use_string_buffers: true
     use_string_in_part_of_directives: true
     use_super_parameters: true
@@ -220,3 +220,4 @@ analyzer:
     avoid_types_as_parameter_names: ignore
   exclude:
     - "**/*.g.dart" # Exclude generated files if needed
+    - "**/*.md"

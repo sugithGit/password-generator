@@ -55,7 +55,9 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     setState(() => _isLoading = true);
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      if (mounted) Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
       return;
     }
 
@@ -76,8 +78,10 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
   }
 
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
-    HapticFeedback.mediumImpact();
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    await HapticFeedback.mediumImpact();
 
     setState(() {
       _isLoading = true;
@@ -86,7 +90,9 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
 
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      if (mounted) Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
       return;
     }
 
@@ -137,7 +143,9 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
       );
 
       if (isValid) {
-        if (mounted) widget.onAuthenticated(masterKey);
+        if (mounted) {
+          widget.onAuthenticated(masterKey);
+        }
       } else {
         if (mounted) {
           setState(() {

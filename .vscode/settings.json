@@ -1,3 +1,12 @@
 {
-  "dart.flutterSdkPath": ".fvm/versions/3.41.9"
+  "dart.flutterSdkPath": ".fvm/versions/3.41.9",
+  "markdown.validate.enabled": false,
+  "markdown.validate.fileLinks.enabled": "ignore",
+  "markdown.validate.referenceLinks.enabled": "ignore",
+  "markdownlint.config": {
+    "default": false
+  },
+  "cSpell.ignorePaths": [
+    "**/*.md"
+  ]
 }
