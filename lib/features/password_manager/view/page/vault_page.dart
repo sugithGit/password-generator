@@ -132,9 +132,7 @@ class _VaultPageState extends State<VaultPage> {
                   );
                 }
                 if (controller.state.entries.isEmpty) {
-                  return EmptyVaultWidget(
-                    onAdd: _navigateToAddEntry,
-                  );
+                  return EmptyVaultWidget(onAdd: _navigateToAddEntry);
                 }
                 return FadeIn(
                   duration: const Duration(milliseconds: 400),
@@ -197,9 +195,7 @@ class _VaultPageState extends State<VaultPage> {
               decoration: BoxDecoration(
                 color: theme.cardColor,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: theme.dividerColor,
-                ),
+                border: Border.all(color: theme.dividerColor),
               ),
               child: Icon(
                 Icons.arrow_back_ios_new_rounded,

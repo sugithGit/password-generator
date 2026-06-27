@@ -3,7 +3,7 @@ import '../local/biometric_local.dart';
 
 class BiometricRepoImpl implements BiometricRepo {
   BiometricRepoImpl({required BiometricLocal biometricLocal})
-      : _biometricLocal = biometricLocal;
+    : _biometricLocal = biometricLocal;
 
   final BiometricLocal _biometricLocal;
 

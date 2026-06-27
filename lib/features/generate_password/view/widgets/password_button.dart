@@ -22,9 +22,7 @@ class PasswordButton extends StatelessWidget {
     void copyPassword(String password) {
       if (password.isNotEmpty) {
         HapticFeedback.mediumImpact();
-        Clipboard.setData(
-          ClipboardData(text: password),
-        );
+        Clipboard.setData(ClipboardData(text: password));
         controller.savePassword();
       }
     }
@@ -41,9 +39,7 @@ class PasswordButton extends StatelessWidget {
               fontWeight: FontWeight.w800,
               color: theme.colorScheme.onSurfaceVariant.withAlpha(150),
             ),
-          ).paddingOnly(
-            bottom: 10,
-          ),
+          ).paddingOnly(bottom: 10),
           Text(
             password.isNotEmpty ? password : '________',
             maxLines: 4,
@@ -54,9 +50,7 @@ class PasswordButton extends StatelessWidget {
                   ? theme.colorScheme.onSurface
                   : theme.colorScheme.onSurface.withAlpha(50),
             ),
-          ).paddingOnly(
-            bottom: 30,
-          ),
+          ).paddingOnly(bottom: 30),
           if (password.isNotEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

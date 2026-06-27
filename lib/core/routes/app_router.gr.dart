@@ -40,10 +40,10 @@ class AddEntryRoute extends _i9.PageRouteInfo<AddEntryRouteArgs> {
     _i11.Key? key,
     List<_i9.PageRouteInfo>? children,
   }) : super(
-          AddEntryRoute.name,
-          args: AddEntryRouteArgs(existingEntry: existingEntry, key: key),
-          initialChildren: children,
-        );
+         AddEntryRoute.name,
+         args: AddEntryRouteArgs(existingEntry: existingEntry, key: key),
+         initialChildren: children,
+       );
 
   static const String name = 'AddEntryRoute';
 
@@ -85,7 +85,7 @@ class AddEntryRouteArgs {
 /// [_i2.BiometricGatePage]
 class BiometricGateRoute extends _i9.PageRouteInfo<void> {
   const BiometricGateRoute({List<_i9.PageRouteInfo>? children})
-      : super(BiometricGateRoute.name, initialChildren: children);
+    : super(BiometricGateRoute.name, initialChildren: children);
 
   static const String name = 'BiometricGateRoute';
 
@@ -101,7 +101,7 @@ class BiometricGateRoute extends _i9.PageRouteInfo<void> {
 /// [_i3.LoadingPage]
 class LoadingRoute extends _i9.PageRouteInfo<void> {
   const LoadingRoute({List<_i9.PageRouteInfo>? children})
-      : super(LoadingRoute.name, initialChildren: children);
+    : super(LoadingRoute.name, initialChildren: children);
 
   static const String name = 'LoadingRoute';
 
@@ -117,7 +117,7 @@ class LoadingRoute extends _i9.PageRouteInfo<void> {
 /// [_i4.LoginPage]
 class LoginRoute extends _i9.PageRouteInfo<void> {
   const LoginRoute({List<_i9.PageRouteInfo>? children})
-      : super(LoginRoute.name, initialChildren: children);
+    : super(LoginRoute.name, initialChildren: children);
 
   static const String name = 'LoginRoute';
 
@@ -137,10 +137,10 @@ class MasterKeyRoute extends _i9.PageRouteInfo<MasterKeyRouteArgs> {
     _i11.Key? key,
     List<_i9.PageRouteInfo>? children,
   }) : super(
-          MasterKeyRoute.name,
-          args: MasterKeyRouteArgs(onAuthenticated: onAuthenticated, key: key),
-          initialChildren: children,
-        );
+         MasterKeyRoute.name,
+         args: MasterKeyRouteArgs(onAuthenticated: onAuthenticated, key: key),
+         initialChildren: children,
+       );
 
   static const String name = 'MasterKeyRoute';
 
@@ -183,7 +183,7 @@ class MasterKeyRouteArgs {
 /// [_i6.PasswordGeneratePage]
 class PasswordGenerateRoute extends _i9.PageRouteInfo<void> {
   const PasswordGenerateRoute({List<_i9.PageRouteInfo>? children})
-      : super(PasswordGenerateRoute.name, initialChildren: children);
+    : super(PasswordGenerateRoute.name, initialChildren: children);
 
   static const String name = 'PasswordGenerateRoute';
 
@@ -199,7 +199,7 @@ class PasswordGenerateRoute extends _i9.PageRouteInfo<void> {
 /// [_i7.SplashPage]
 class SplashRoute extends _i9.PageRouteInfo<void> {
   const SplashRoute({List<_i9.PageRouteInfo>? children})
-      : super(SplashRoute.name, initialChildren: children);
+    : super(SplashRoute.name, initialChildren: children);
 
   static const String name = 'SplashRoute';
 
@@ -219,10 +219,10 @@ class VaultRoute extends _i9.PageRouteInfo<VaultRouteArgs> {
     _i11.Key? key,
     List<_i9.PageRouteInfo>? children,
   }) : super(
-          VaultRoute.name,
-          args: VaultRouteArgs(repository: repository, key: key),
-          initialChildren: children,
-        );
+         VaultRoute.name,
+         args: VaultRouteArgs(repository: repository, key: key),
+         initialChildren: children,
+       );
 
   static const String name = 'VaultRoute';
 

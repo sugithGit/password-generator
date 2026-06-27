@@ -25,12 +25,14 @@ dependencies:
   google_fonts: ^8.1.0
   hive_ce: ^2.19.3
   hive_ce_flutter: ^2.3.4
+  hooks_rxget: ^0.0.1
   iconsax_flutter: ^1.0.1
   intl: ^0.20.2
   loading_indicator: ^3.1.1
   local_auth: ^2.3.0
   path_provider: ^2.1.5
   rxget: ^0.1.3
+  rxget_annotation: ^0.0.1
   sleek_circular_slider: ^2.1.0
   sodium: ^4.0.2
   sodium_libs: ^4.0.0
@@ -47,6 +49,7 @@ dev_dependencies:
   freezed: ^3.2.5
   hive_ce_generator: ^1.10.0
   json_serializable: ^6.11.1
+  rxget_generator: ^1.0.1
 
 flutter:
   uses-material-design: true

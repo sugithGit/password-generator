@@ -15,7 +15,7 @@ abstract final class AppColors {
   static const Color border = Color(0xFF27272A); // Zinc 800
   static const Color error = Color(0xFFEF4444); // Red 500
   static const Color onError = Colors.white;
-  static const textSecondary = Color(0xFFE3E3E3);
+  static const textSecondary = Color.fromARGB(255, 207, 207, 207);
   static const textDisabled = Color(0xFFE3E3E3);
   static const textPrimary = Color(0xFFFFFCFC);
   static const deepTeal = Color(0xFFFFFCFC);

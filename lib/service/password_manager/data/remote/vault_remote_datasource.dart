@@ -3,11 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/vault_entry_model.dart';
 
 class VaultRemoteDatasource {
-  VaultRemoteDatasource({
-    required String userId,
-    FirebaseFirestore? firestore,
-  })  : _userId = userId,
-        _firestore = firestore ?? FirebaseFirestore.instance;
+  VaultRemoteDatasource({required String userId, FirebaseFirestore? firestore})
+    : _userId = userId,
+      _firestore = firestore ?? FirebaseFirestore.instance;
 
   final String _userId;
   final FirebaseFirestore _firestore;
@@ -16,12 +14,12 @@ class VaultRemoteDatasource {
       _firestore.collection('users').doc(_userId).collection('vault');
 
   Stream<List<VaultEntryModel>> getEntries() {
-    return _collection
-        .orderBy('updatedAt', descending: true)
-        .snapshots()
-        .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
-      return snapshot.docs
-          .map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    return _collection.orderBy('updatedAt', descending: true).snapshots().map((
+      QuerySnapshot<Map<String, dynamic>> snapshot,
+    ) {
+      return snapshot.docs.map((
+        QueryDocumentSnapshot<Map<String, dynamic>> doc,
+      ) {
         return VaultEntryModel.fromMap(doc.data(), doc.id);
       }).toList();
     });

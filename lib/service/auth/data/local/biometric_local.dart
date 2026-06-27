@@ -3,7 +3,7 @@ import 'package:local_auth/local_auth.dart';
 
 class BiometricLocal {
   BiometricLocal({LocalAuthentication? localAuth})
-      : _localAuth = localAuth ?? LocalAuthentication();
+    : _localAuth = localAuth ?? LocalAuthentication();
 
   final LocalAuthentication _localAuth;
 
@@ -21,9 +21,7 @@ class BiometricLocal {
     try {
       return await _localAuth.authenticate(
         localizedReason: reason,
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-        ),
+        options: const AuthenticationOptions(stickyAuth: true),
       );
     } on FirebaseAuthException catch (_) {
       return false;

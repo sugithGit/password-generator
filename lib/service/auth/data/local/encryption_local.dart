@@ -7,10 +7,7 @@ class EncryptionLocal {
 
   final Sodium _sodium;
 
-  SecureKey deriveKey({
-    required String uid,
-    required String masterKey,
-  }) {
+  SecureKey deriveKey({required String uid, required String masterKey}) {
     final String combined = '$uid:$masterKey';
     final Uint8List seed = Uint8List.fromList(utf8.encode(combined));
 
@@ -22,10 +19,7 @@ class EncryptionLocal {
     return _sodium.secureCopy(hash);
   }
 
-  String encrypt({
-    required String plainText,
-    required SecureKey key,
-  }) {
+  String encrypt({required String plainText, required SecureKey key}) {
     final Uint8List messageBytes = Uint8List.fromList(utf8.encode(plainText));
 
     final Uint8List nonce = _sodium.randombytes.buf(
@@ -45,10 +39,7 @@ class EncryptionLocal {
     return base64Encode(combined);
   }
 
-  String decrypt({
-    required String cipherText,
-    required SecureKey key,
-  }) {
+  String decrypt({required String cipherText, required SecureKey key}) {
     final Uint8List combined = base64Decode(cipherText);
     final int nonceLength = _sodium.crypto.secretBox.nonceBytes;
 

@@ -21,38 +21,38 @@ class AppRouter extends RootStackRouter {
   AutoRoute _route(AppRouteEnum route) {
     return switch (route) {
       AppRouteEnum.splash => AutoRoute(
-          path: AppRouteEnum.splash.path,
-          page: SplashRoute.page,
-          initial: true,
-        ),
+        path: AppRouteEnum.splash.path,
+        page: SplashRoute.page,
+        initial: true,
+      ),
       AppRouteEnum.loading => AutoRoute(
-          path: AppRouteEnum.loading.path,
-          page: LoadingRoute.page,
-        ),
+        path: AppRouteEnum.loading.path,
+        page: LoadingRoute.page,
+      ),
       AppRouteEnum.login => AutoRoute(
-          path: AppRouteEnum.login.path,
-          page: LoginRoute.page,
-        ),
+        path: AppRouteEnum.login.path,
+        page: LoginRoute.page,
+      ),
       AppRouteEnum.masterKey => AutoRoute(
-          path: AppRouteEnum.masterKey.path,
-          page: MasterKeyRoute.page,
-        ),
+        path: AppRouteEnum.masterKey.path,
+        page: MasterKeyRoute.page,
+      ),
       AppRouteEnum.vault => AutoRoute(
-          path: AppRouteEnum.vault.path,
-          page: VaultRoute.page,
-        ),
+        path: AppRouteEnum.vault.path,
+        page: VaultRoute.page,
+      ),
       AppRouteEnum.biometricGate => AutoRoute(
-          path: AppRouteEnum.biometricGate.path,
-          page: BiometricGateRoute.page,
-        ),
+        path: AppRouteEnum.biometricGate.path,
+        page: BiometricGateRoute.page,
+      ),
       AppRouteEnum.addEntry => AutoRoute(
-          path: AppRouteEnum.addEntry.path,
-          page: AddEntryRoute.page,
-        ),
+        path: AppRouteEnum.addEntry.path,
+        page: AddEntryRoute.page,
+      ),
       AppRouteEnum.passwordGenerate => AutoRoute(
-          path: AppRouteEnum.passwordGenerate.path,
-          page: PasswordGenerateRoute.page,
-        ),
+        path: AppRouteEnum.passwordGenerate.path,
+        page: PasswordGenerateRoute.page,
+      ),
     };
   }
 }

@@ -1,10 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class AuthUser with EquatableMixin {
-  const AuthUser({
-    required this.uid,
-    this.email,
-  });
+  const AuthUser({required this.uid, this.email});
 
   final String uid;
   final String? email;

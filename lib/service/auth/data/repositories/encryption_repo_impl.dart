@@ -4,7 +4,7 @@ import '../local/encryption_local.dart';
 
 class EncryptionRepoImpl implements EncryptionRepo {
   EncryptionRepoImpl({required EncryptionLocal encryptionLocal})
-      : _encryptionLocal = encryptionLocal;
+    : _encryptionLocal = encryptionLocal;
 
   final EncryptionLocal _encryptionLocal;
 

@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthRemote {
   FirebaseAuthRemote({FirebaseAuth? firebaseAuth})
-      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
+    : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   final FirebaseAuth _firebaseAuth;
 

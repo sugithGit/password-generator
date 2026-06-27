@@ -151,6 +151,4 @@ class VaultController extends GetxController<_VaultState> {
 
     state._entries.assignAll(filtered);
   }
-
-  void _enableBtn() {}
 }

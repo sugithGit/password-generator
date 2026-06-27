@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxget/rxget.dart';
 
-import '../../../../core/const/constants.dart';
+import '../../../../core/widgets/app_bar/page_app_bar.dart';
 import '../../../../core/widgets/app_button/app_button.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../controller/vault_controller.dart';
+import '../widgets/add_password_category.dart';
 
 @RoutePage()
 class AddEntryPage extends StatefulWidget {
-  const AddEntryPage({this.existingEntry, super.key});
+  const AddEntryPage({this.existingEntry, this.initialCategory, super.key});
 
   final VaultEntry? existingEntry;
+  final VaultCategory? initialCategory;
 
   @override
   State<AddEntryPage> createState() => _AddEntryPageState();
@@ -100,272 +102,177 @@ class _AddEntryPageState extends State<AddEntryPage> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            _buildHeader(context),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      // Title
-                      _buildField(
-                        controller: _titleController,
-                        label: 'Title',
-                        icon: Icons.title_rounded,
-                        hint: 'e.g. Gmail, Instagram',
-                        validator: (String? v) =>
-                            v == null || v.isEmpty ? 'Title is required' : null,
-                      ),
-                      const SizedBox(height: 16),
-                      // Username/Email
-                      _buildField(
-                        controller: _usernameController,
-                        label: 'Username / Email',
-                        icon: Icons.person_outline_rounded,
-                        hint: 'e.g. john@example.com',
-                        validator: (String? v) => v == null || v.isEmpty
-                            ? 'Username is required'
-                            : null,
-                      ),
-                      const SizedBox(height: 16),
-                      // Password
-                      _buildField(
-                        controller: _passwordController,
-                        label: 'Password',
-                        icon: Icons.lock_outline_rounded,
-                        hint: 'Enter password',
-                        obscureText: _obscurePassword,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
-                            color: theme.colorScheme.onSurfaceVariant,
-                            size: 20,
-                          ),
-                          onPressed: () => setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          }),
+      appBar: PageAppBar(title: _isEditing ? 'Edit Password' : 'Add Password'),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    // Title
+                    _buildField(
+                      controller: _titleController,
+                      label: 'Title',
+                      icon: Icons.title_rounded,
+                      hint: 'e.g. Gmail, Instagram',
+                      validator: (String? v) =>
+                          v == null || v.isEmpty ? 'Title is required' : null,
+                    ),
+                    const SizedBox(height: 16),
+                    // Username/Email
+                    _buildField(
+                      controller: _usernameController,
+                      label: 'Username / Email',
+                      icon: Icons.person_outline_rounded,
+                      hint: 'e.g. john@example.com',
+                      validator: (String? v) => v == null || v.isEmpty
+                          ? 'Username is required'
+                          : null,
+                    ),
+                    const SizedBox(height: 16),
+                    // Password
+                    _buildField(
+                      controller: _passwordController,
+                      label: 'Password',
+                      icon: Icons.lock_outline_rounded,
+                      hint: 'Enter password',
+                      obscureText: _obscurePassword,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: theme.colorScheme.onSurfaceVariant,
+                          size: 20,
                         ),
-                        validator: (String? v) => v == null || v.isEmpty
-                            ? 'Password is required'
-                            : null,
+                        onPressed: () => setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        }),
                       ),
+                      validator: (String? v) => v == null || v.isEmpty
+                          ? 'Password is required'
+                          : null,
+                    ),
+                    const SizedBox(height: 16),
+                    // Website
+                    _buildField(
+                      controller: _websiteController,
+                      label: 'Website (optional)',
+                      icon: Icons.language_rounded,
+                      hint: 'e.g. https://gmail.com',
+                      keyboardType: TextInputType.url,
+                    ),
+                    const SizedBox(height: 16),
+                    // Notes
+                    _buildField(
+                      controller: _notesController,
+                      label: 'Notes (optional)',
+                      icon: Icons.notes_rounded,
+                      hint: 'Add any notes...',
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 24),
+                    // Category
+                    Text(
+                      'CATEGORY',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    const AddPasswordCategory(),
+                    const SizedBox(height: 40),
+                    // Save button
+                    AppButton(
+                      onPressed: _save,
+                      disabled: true,
+                      title: _isEditing ? 'UPDATE PASSWORD' : 'SAVE PASSWORD',
+                    ),
+                    if (_isEditing) ...<Widget>[
                       const SizedBox(height: 16),
-                      // Website
-                      _buildField(
-                        controller: _websiteController,
-                        label: 'Website (optional)',
-                        icon: Icons.language_rounded,
-                        hint: 'e.g. https://gmail.com',
-                        keyboardType: TextInputType.url,
-                      ),
-                      const SizedBox(height: 16),
-                      // Notes
-                      _buildField(
-                        controller: _notesController,
-                        label: 'Notes (optional)',
-                        icon: Icons.notes_rounded,
-                        hint: 'Add any notes...',
-                        maxLines: 3,
-                      ),
-                      const SizedBox(height: 24),
-                      // Category
-                      Text(
-                        'CATEGORY',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: VaultCategory.values.map((VaultCategory cat) {
-                          final bool isSelected = _selectedCategory == cat;
-                          final Color color = _getCategoryColor(cat);
-                          return GestureDetector(
-                            onTap: () =>
-                                setState(() => _selectedCategory = cat),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 250),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? color.withAlpha(30)
-                                    : theme.cardColor,
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: isSelected
-                                      ? color
-                                      : theme.dividerColor,
-                                  width: isSelected ? 1.5 : 1,
+                      // Delete button
+                      SizedBox(
+                        height: 52,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            HapticFeedback.heavyImpact();
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext ctx) => AlertDialog(
+                                backgroundColor: theme.cardColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Icon(
-                                    _getCategoryIcon(cat),
-                                    color: isSelected
-                                        ? color
-                                        : theme.colorScheme.onSurfaceVariant,
-                                    size: 18,
+                                title: Text(
+                                  'Delete Password',
+                                  style: TextStyle(
+                                    color: theme.colorScheme.onSurface,
                                   ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    cat.label,
-                                    style: TextStyle(
-                                      color: isSelected
-                                          ? color
-                                          : theme.colorScheme.onSurfaceVariant,
-                                      fontWeight: isSelected
-                                          ? FontWeight.w600
-                                          : FontWeight.w400,
-                                      fontSize: 13,
+                                ),
+                                content: Text(
+                                  'Are you sure you want to delete this entry?',
+                                  style: TextStyle(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => ctx.router.maybePop(),
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                        color:
+                                            theme.colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Get.find<VaultController>().deleteEntry(
+                                        widget.existingEntry!.id,
+                                      );
+                                      ctx.router.maybePop();
+                                      context.router.maybePop();
+                                    },
+                                    child: Text(
+                                      'Delete',
+                                      style: TextStyle(
+                                        color: theme.colorScheme.error,
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
+                            );
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: theme.colorScheme.error,
+                            side: BorderSide(
+                              color: theme.colorScheme.error.withAlpha(100),
                             ),
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(height: 40),
-                      // Save button
-                      AppButton(
-                        onPressed: _save,
-                        disabled: true,
-                        title: _isEditing ? 'UPDATE PASSWORD' : 'SAVE PASSWORD',
-                      ),
-                      if (_isEditing) ...<Widget>[
-                        const SizedBox(height: 16),
-                        // Delete button
-                        SizedBox(
-                          height: 52,
-                          child: OutlinedButton(
-                            onPressed: () {
-                              HapticFeedback.heavyImpact();
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext ctx) => AlertDialog(
-                                  backgroundColor: theme.cardColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  title: Text(
-                                    'Delete Password',
-                                    style: TextStyle(
-                                      color: theme.colorScheme.onSurface,
-                                    ),
-                                  ),
-                                  content: Text(
-                                    'Are you sure you want to delete this entry?',
-                                    style: TextStyle(
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () => ctx.router.maybePop(),
-                                      child: Text(
-                                        'Cancel',
-                                        style: TextStyle(
-                                          color: theme
-                                              .colorScheme
-                                              .onSurfaceVariant,
-                                        ),
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Get.find<VaultController>().deleteEntry(
-                                          widget.existingEntry!.id,
-                                        );
-                                        ctx.router.maybePop();
-                                        context.router.maybePop();
-                                      },
-                                      child: Text(
-                                        'Delete',
-                                        style: TextStyle(
-                                          color: theme.colorScheme.error,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: theme.colorScheme.error,
-                              side: BorderSide(
-                                color: theme.colorScheme.error.withAlpha(100),
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Text(
-                              'DELETE PASSWORD',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 15,
-                                letterSpacing: 1.5,
-                              ),
+                          ),
+                          child: const Text(
+                            'DELETE PASSWORD',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15,
+                              letterSpacing: 1.5,
                             ),
                           ),
                         ),
-                      ],
+                      ),
                     ],
-                  ),
+                  ],
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-      child: Row(
-        children: <Widget>[
-          InkWell(
-            onTap: () => context.router.maybePop(),
-            customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: theme.cardColor,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: theme.dividerColor),
-              ),
-              child: Icon(
-                Icons.arrow_back_ios_new_rounded,
-                color: theme.colorScheme.onSurface,
-                size: 18,
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Text(
-            _isEditing ? 'Edit Password' : 'Add Password',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w800,
             ),
           ),
         ],
@@ -403,39 +310,5 @@ class _AddEntryPageState extends State<AddEntryPage> {
         suffixIcon: suffixIcon,
       ),
     );
-  }
-
-  Color _getCategoryColor(VaultCategory cat) {
-    switch (cat) {
-      case VaultCategory.social:
-        return categorySocial;
-      case VaultCategory.email:
-        return categoryEmail;
-      case VaultCategory.banking:
-        return categoryBanking;
-      case VaultCategory.shopping:
-        return categoryShopping;
-      case VaultCategory.work:
-        return categoryWork;
-      case VaultCategory.other:
-        return categoryOther;
-    }
-  }
-
-  IconData _getCategoryIcon(VaultCategory cat) {
-    switch (cat) {
-      case VaultCategory.social:
-        return Icons.people_outline_rounded;
-      case VaultCategory.email:
-        return Icons.email_outlined;
-      case VaultCategory.banking:
-        return Icons.account_balance_outlined;
-      case VaultCategory.shopping:
-        return Icons.shopping_bag_outlined;
-      case VaultCategory.work:
-        return Icons.work_outline_rounded;
-      case VaultCategory.other:
-        return Icons.key_rounded;
-    }
   }
 }

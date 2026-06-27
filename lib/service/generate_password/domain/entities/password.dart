@@ -1,10 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class Password with EquatableMixin {
-  const Password({
-    required this.password,
-    required this.date,
-  });
+  const Password({required this.password, required this.date});
 
   final String password;
   final DateTime date;
@@ -15,8 +12,5 @@ class Password with EquatableMixin {
   }
 
   @override
-  List<Object?> get props => <Object?>[
-        password,
-        date,
-      ];
+  List<Object?> get props => <Object?>[password, date];
 }

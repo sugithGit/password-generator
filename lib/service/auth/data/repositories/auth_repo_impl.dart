@@ -7,7 +7,7 @@ import '../remote/firebase_auth_remote.dart';
 
 class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl({required FirebaseAuthRemote firebaseAuthRemote})
-      : _firebaseAuthRemote = firebaseAuthRemote;
+    : _firebaseAuthRemote = firebaseAuthRemote;
 
   final FirebaseAuthRemote _firebaseAuthRemote;
 

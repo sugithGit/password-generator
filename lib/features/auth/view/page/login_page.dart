@@ -86,9 +86,7 @@ class _LoginPageState extends State<LoginPage>
                   ),
                   const SizedBox(height: 24),
                   // ── Toggle sign in / sign up ──────────────
-                  FadeInUp(
-                    child: _buildToggle(),
-                  ),
+                  FadeInUp(child: _buildToggle()),
                 ],
               ),
             ),
@@ -214,9 +212,7 @@ class _LoginPageState extends State<LoginPage>
                               color: Theme.of(context).colorScheme.onPrimary,
                             ),
                           )
-                        : Text(
-                            _isSignUp ? 'SIGN UP' : 'SIGN IN',
-                          ),
+                        : Text(_isSignUp ? 'SIGN UP' : 'SIGN IN'),
                   ),
                 );
               }),
@@ -269,9 +265,7 @@ class _LoginPageState extends State<LoginPage>
               _isSignUp = !_isSignUp;
             });
           },
-          child: Text(
-            _isSignUp ? 'Sign In' : 'Sign Up',
-          ),
+          child: Text(_isSignUp ? 'Sign In' : 'Sign Up'),
         ),
       ],
     );

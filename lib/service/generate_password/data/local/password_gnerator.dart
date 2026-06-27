@@ -30,8 +30,9 @@ class PasswordGenerator {
     }
 
     for (int i = 0; i < passwordSettings.passwordLength; i++) {
-      final String randomChar = staticPassword[
-          (Random().nextDouble() * staticPassword.length).floor()];
+      final String randomChar =
+          staticPassword[(Random().nextDouble() * staticPassword.length)
+              .floor()];
 
       if (passwordSettings.excludeDuplicates) {
         !randomPassword.contains(randomChar) || randomChar == " "

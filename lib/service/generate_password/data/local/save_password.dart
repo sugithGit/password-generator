@@ -14,10 +14,7 @@ class PasswordHistoryLocal {
   }
 
   void savePassword({required PasswordModel password}) {
-    _box.put(
-      password.password,
-      password,
-    );
+    _box.put(password.password, password);
   }
 
   List<PasswordModel> getPasswordHistory() {

@@ -11,8 +11,9 @@ class _PasswordGeneratorState extends GetxState {
   final RxBool _isIncludeSpaces = false.obs;
   final RxList<Password> _passwordHistory = <Password>[].obs;
   final RxString _generatedPassword = ''.obs;
-  final TextEditingController passwordController =
-      TextEditingController(text: "");
+  final TextEditingController passwordController = TextEditingController(
+    text: "",
+  );
 
   int get passwordLength => _passwordLength.value;
   int get maxPasswordLength => _maxPasswordLength.value;

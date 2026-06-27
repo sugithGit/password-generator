@@ -7,9 +7,7 @@ import '../../../../core/routes/app_router.gr.dart';
 import '../../../../core/widgets/squircle.dart';
 
 class HistoryButton extends StatelessWidget {
-  const HistoryButton({
-    super.key,
-  });
+  const HistoryButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +28,7 @@ class HistoryButton extends StatelessWidget {
               color: theme.cardColor,
             ),
             padding: const EdgeInsets.all(defaultPadding),
-            child: Icon(
-              Icons.shield_rounded,
-              color: theme.colorScheme.primary,
-            ),
+            child: Icon(Icons.shield_rounded, color: theme.colorScheme.primary),
           ),
         ),
       ),

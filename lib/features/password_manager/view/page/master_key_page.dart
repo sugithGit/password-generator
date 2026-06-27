@@ -15,10 +15,7 @@ import '../../../../service/auth/domain/repositories/encryption_repo.dart';
 /// If the master key is lost, data is irrecoverable — this is by design.
 @RoutePage()
 class MasterKeyPage extends StatefulWidget {
-  const MasterKeyPage({
-    required this.onAuthenticated,
-    super.key,
-  });
+  const MasterKeyPage({required this.onAuthenticated, super.key});
 
   /// Called with the validated master key when authentication succeeds.
   final void Function(BuildContext context, String masterKey) onAuthenticated;
@@ -69,7 +66,8 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
 
     if (mounted) {
       setState(() {
-        _isNewUser = !doc.exists ||
+        _isNewUser =
+            !doc.exists ||
             doc.data() == null ||
             !doc.data()!.containsKey('verificationHash');
         _isLoading = false;
@@ -111,9 +109,9 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
           .collection('users')
           .doc(user.uid)
           .set(<String, dynamic>{
-        'verificationHash': verificationHash,
-        'createdAt': DateTime.now().toIso8601String(),
-      });
+            'verificationHash': verificationHash,
+            'createdAt': DateTime.now().toIso8601String(),
+          });
 
       if (mounted) {
         widget.onAuthenticated(context, masterKey);
@@ -271,10 +269,9 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
                         child: Text(
                           'Write this key down and keep it safe. It cannot be reset or recovered.',
                           style: TextStyle(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .error
-                                .withAlpha(200),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.error.withAlpha(200),
                             fontSize: 12,
                             height: 1.4,
                           ),
@@ -375,9 +372,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         )
-                      : Text(
-                          _isNewUser ? 'CREATE VAULT' : 'UNLOCK VAULT',
-                        ),
+                      : Text(_isNewUser ? 'CREATE VAULT' : 'UNLOCK VAULT'),
                 ),
               ),
             ],

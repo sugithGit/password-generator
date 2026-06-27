@@ -19,16 +19,10 @@ class VaultSearchBar extends StatelessWidget {
       style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
       decoration: InputDecoration(
         hintText: 'Search passwords...',
-        prefixIcon: const Icon(
-          Icons.search_rounded,
-          size: 22,
-        ),
+        prefixIcon: const Icon(Icons.search_rounded, size: 22),
         suffixIcon: controller.text.isNotEmpty
             ? IconButton(
-                icon: const Icon(
-                  Icons.close_rounded,
-                  size: 20,
-                ),
+                icon: const Icon(Icons.close_rounded, size: 20),
                 onPressed: () {
                   controller.clear();
                   onChanged('');

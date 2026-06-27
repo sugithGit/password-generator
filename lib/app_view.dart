@@ -38,8 +38,9 @@ class _MyAppState extends State<MyApp> {
       options: firebaseOptions,
     );
 
-    final EncryptionLocal encryptionLocal =
-        EncryptionLocal(sodium: sodiumInstance);
+    final EncryptionLocal encryptionLocal = EncryptionLocal(
+      sodium: sodiumInstance,
+    );
 
     final EncryptionRepo encryptionRepo = EncryptionRepoImpl(
       encryptionLocal: encryptionLocal,
@@ -58,8 +59,9 @@ class _MyAppState extends State<MyApp> {
             dependencies: <GetIn<dynamic>>[
               GetIn<AuthController>(() {
                 final FirebaseAuthRemote authRemote = FirebaseAuthRemote();
-                final AuthRepoImpl authRepo =
-                    AuthRepoImpl(firebaseAuthRemote: authRemote);
+                final AuthRepoImpl authRepo = AuthRepoImpl(
+                  firebaseAuthRemote: authRemote,
+                );
                 return AuthController(
                   getCurrentUserUseCase: GetCurrentUserUseCase(authRepo),
                   signInUseCase: SignInUseCase(authRepo),

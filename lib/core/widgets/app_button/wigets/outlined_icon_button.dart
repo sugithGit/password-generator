@@ -43,9 +43,7 @@ class OutlinedIconButton extends StatelessWidget {
         foregroundColor: Colors.black,
         backgroundColor: selected ? AppColors.deepTeal : null,
         minimumSize: const Size.fromHeight(48),
-        side: BorderSide(
-          color: selected ? AppColors.deepTeal : Colors.grey,
-        ),
+        side: BorderSide(color: selected ? AppColors.deepTeal : Colors.grey),
         shape: const Squircle().outlinedShape(),
         padding: const EdgeInsets.only(left: 16),
       ),

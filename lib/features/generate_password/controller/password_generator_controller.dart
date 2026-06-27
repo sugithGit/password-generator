@@ -135,10 +135,7 @@ class PasswordGeneratorController
   void _savePassword() {
     if (state.passwordController.text.isNotEmpty) {
       savePasswordUseCase.call(
-        Password(
-          date: DateTime.now(),
-          password: state.passwordController.text,
-        ),
+        Password(date: DateTime.now(), password: state.passwordController.text),
       );
     }
   }

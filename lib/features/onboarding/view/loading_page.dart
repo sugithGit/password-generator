@@ -4,16 +4,10 @@ import '../../generate_password/view/widgets/header.dart';
 
 @RoutePage()
 class LoadingPage extends StatelessWidget {
-  const LoadingPage({
-    super.key,
-  });
+  const LoadingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: AppLogo(),
-      ),
-    );
+    return const Scaffold(body: Center(child: AppLogo()));
   }
 }

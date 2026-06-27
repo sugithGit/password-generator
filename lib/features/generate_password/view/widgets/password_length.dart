@@ -35,8 +35,10 @@ class _SliderWidgetState extends State<_SliderWidget> {
     return Obx(() {
       final state = controller.state;
       final double maxVal = state.maxPasswordLength.toDouble();
-      final double currentVal =
-          state.passwordLength.toDouble().clamp(kMinDegree, maxVal);
+      final double currentVal = state.passwordLength.toDouble().clamp(
+        kMinDegree,
+        maxVal,
+      );
 
       // Normalize progressVal for shader
       progressVal = normalize(currentVal, kMinDegree, maxVal).toDouble();
@@ -54,10 +56,7 @@ class _SliderWidgetState extends State<_SliderWidget> {
                   return SweepGradient(
                     startAngle: degToRad(180).toDouble(),
                     endAngle: degToRad(360).toDouble(),
-                    colors: <Color>[
-                      primaryColor,
-                      Colors.grey.withAlpha(50),
-                    ],
+                    colors: <Color>[primaryColor, Colors.grey.withAlpha(50)],
                     stops: <double>[progressVal, progressVal],
                   ).createShader(rect);
                 },
@@ -69,10 +68,7 @@ class _SliderWidgetState extends State<_SliderWidget> {
               height: kDiameter - 40,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: trackBg,
-                  width: 20,
-                ),
+                border: Border.all(color: trackBg, width: 20),
               ),
               child: SleekCircularSlider(
                 min: kMinDegree,
@@ -97,8 +93,11 @@ class _SliderWidgetState extends State<_SliderWidget> {
                 ),
                 onChange: (double value) {
                   setState(() {
-                    progressVal =
-                        normalize(value, kMinDegree, maxVal).toDouble();
+                    progressVal = normalize(
+                      value,
+                      kMinDegree,
+                      maxVal,
+                    ).toDouble();
                   });
                   controller.changePasswordLength(value.toInt());
                 },
@@ -106,9 +105,7 @@ class _SliderWidgetState extends State<_SliderWidget> {
                   return Center(
                     child: Text(
                       '${value.toInt()}',
-                      style: const TextStyle(
-                        fontSize: 50,
-                      ),
+                      style: const TextStyle(fontSize: 50),
                     ),
                   );
                 },

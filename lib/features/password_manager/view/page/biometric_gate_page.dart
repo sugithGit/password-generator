@@ -38,10 +38,12 @@ class _BiometricGatePageState extends State<BiometricGatePage>
   void initState() {
     super.initState();
     _biometricRepo = BiometricRepoImpl(biometricLocal: BiometricLocal());
-    _checkBiometricsSupportUseCase =
-        CheckBiometricsSupportUseCase(_biometricRepo);
-    _authenticateBiometricsUseCase =
-        AuthenticateBiometricsUseCase(_biometricRepo);
+    _checkBiometricsSupportUseCase = CheckBiometricsSupportUseCase(
+      _biometricRepo,
+    );
+    _authenticateBiometricsUseCase = AuthenticateBiometricsUseCase(
+      _biometricRepo,
+    );
 
     _pulseController = AnimationController(
       vsync: this,
@@ -76,8 +78,9 @@ class _BiometricGatePageState extends State<BiometricGatePage>
       return;
     }
 
-    final bool success = await _authenticateBiometricsUseCase
-        .call('Authenticate to access your Password Vault');
+    final bool success = await _authenticateBiometricsUseCase.call(
+      'Authenticate to access your Password Vault',
+    );
 
     if (mounted) {
       setState(() {
@@ -92,9 +95,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
 
   void _navigateToMasterKey() {
     context.router.replace(
-      MasterKeyRoute(
-        onAuthenticated: _onMasterKeyValidated,
-      ),
+      MasterKeyRoute(onAuthenticated: _onMasterKeyValidated),
     );
   }
 
@@ -120,9 +121,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
       encryptionKey: encryptionKey,
     );
 
-    context.router.replace(
-      VaultRoute(repository: repository),
-    );
+    context.router.replace(VaultRoute(repository: repository));
   }
 
   @override
@@ -152,15 +151,17 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                       height: 120,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: (_authFailed
-                                ? theme.colorScheme.error
-                                : theme.colorScheme.primary)
-                            .withAlpha(20),
+                        color:
+                            (_authFailed
+                                    ? theme.colorScheme.error
+                                    : theme.colorScheme.primary)
+                                .withAlpha(20),
                         border: Border.all(
-                          color: (_authFailed
-                                  ? theme.colorScheme.error
-                                  : theme.colorScheme.primary)
-                              .withAlpha(40),
+                          color:
+                              (_authFailed
+                                      ? theme.colorScheme.error
+                                      : theme.colorScheme.primary)
+                                  .withAlpha(40),
                           width: 1.5,
                         ),
                       ),

@@ -4,10 +4,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import '../theme/app_colors.dart';
 
 class LoadingIcon extends StatelessWidget {
-  const LoadingIcon({
-    this.colors,
-    super.key,
-  });
+  const LoadingIcon({this.colors, super.key});
 
   final List<Color>? colors;
 

@@ -33,8 +33,9 @@ class PasswordGeneratePage extends StatelessWidget {
           );
           return PasswordGeneratorController(
             generatePasswordUseCase: GeneratePasswordUseCase(passwordRepo),
-            deletePasswordHistoryUseCase:
-                DeletePasswordHistoryUseCase(passwordRepo),
+            deletePasswordHistoryUseCase: DeletePasswordHistoryUseCase(
+              passwordRepo,
+            ),
             getPasswordHistoryUseCase: GetPasswordHistoryUseCase(passwordRepo),
             savePasswordUseCase: SavePasswordUseCase(passwordRepo),
           );

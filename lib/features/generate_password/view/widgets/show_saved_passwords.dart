@@ -9,21 +9,14 @@ import '../../../../service/generate_password/domain/entities/password.dart';
 import '../../controller/password_generator_controller.dart';
 
 abstract final class ShowSavedPasswords {
-  static void call({
-    required BuildContext context,
-  }) =>
-      _call(context);
+  static void call({required BuildContext context}) => _call(context);
 
-  static void _call(
-    BuildContext context,
-  ) {
+  static void _call(BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(16),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (BuildContext context) => const _SavedPaaswordBottomSheet(),
     );
@@ -82,9 +75,7 @@ class _Indicator extends StatelessWidget {
 }
 
 class _HistoryCard extends StatelessWidget {
-  const _HistoryCard({
-    required this.passwordHistory,
-  });
+  const _HistoryCard({required this.passwordHistory});
   final Password passwordHistory;
 
   @override
@@ -117,10 +108,7 @@ class _HistoryCard extends StatelessWidget {
             const Spacer(),
             IconButton(
               tooltip: 'Copy',
-              icon: Icon(
-                Icons.copy,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+              icon: Icon(Icons.copy, color: theme.colorScheme.onSurfaceVariant),
               onPressed: () {
                 Clipboard.setData(
                   ClipboardData(text: passwordHistory.password),
@@ -173,19 +161,19 @@ class _ClearPasswordHistory extends StatelessWidget {
       return ElevatedButton(
         onPressed: isEnabled ? controller.deletePasswordHistory : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor:
-              isEnabled ? theme.colorScheme.error : theme.colorScheme.secondary,
+          backgroundColor: isEnabled
+              ? theme.colorScheme.error
+              : theme.colorScheme.secondary,
           foregroundColor: isEnabled
               ? theme.colorScheme.onError
               : theme.colorScheme.onSurfaceVariant,
           disabledBackgroundColor: theme.colorScheme.secondary.withAlpha(100),
-          disabledForegroundColor:
-              theme.colorScheme.onSurfaceVariant.withAlpha(100),
+          disabledForegroundColor: theme.colorScheme.onSurfaceVariant.withAlpha(
+            100,
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           minimumSize: Size.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: Text(
           'Clear All',

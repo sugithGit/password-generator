@@ -19,9 +19,7 @@ class CustomCheckBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(
-        defaultPadding / 4,
-      ),
+      padding: const EdgeInsets.all(defaultPadding / 4),
       child: InkWell(
         customBorder: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
@@ -31,9 +29,7 @@ class CustomCheckBox extends StatelessWidget {
           HapticFeedback.lightImpact();
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: defaultPadding,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: defaultPadding),
           decoration: ShapeDecoration(
             color: theme.cardColor,
             shape: const Squircle(radius: 16).shape(

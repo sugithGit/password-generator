@@ -21,9 +21,7 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
   void _onTap(String password) {
     if (password.isNotEmpty) {
       HapticFeedback.mediumImpact();
-      Clipboard.setData(
-        ClipboardData(text: password),
-      );
+      Clipboard.setData(ClipboardData(text: password));
       setState(() {
         borderColor = const Color.fromRGBO(224, 224, 224, 0.293);
       });
@@ -56,8 +54,10 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
             child: TextFormField(
               controller: controller.state.passwordController,
               readOnly: true,
-              style:
-                  TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
+              style: TextStyle(
+                color: theme.colorScheme.onSurface,
+                fontSize: 15,
+              ),
               decoration: InputDecoration(
                 hintText: 'Password will appear here...',
                 suffixIcon: IconButton(
