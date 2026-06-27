@@ -7,15 +7,15 @@ import '../../../service/password_manager/domain/repositories/vault_repository.d
 
 part 'vault_state.dart';
 
-class VaultController extends GetxController<VaultState> {
-  VaultController({required this.repository}) : state = VaultState();
+class VaultController extends GetxController<_VaultState> {
+  VaultController({required this.repository}) : state = _VaultState();
 
   final VaultRepository repository;
   StreamSubscription<List<VaultEntry>>? _subscription;
   List<VaultEntry> _allEntries = <VaultEntry>[];
 
   @override
-  final VaultState state;
+  final _VaultState state;
 
   void loadVault() => _loadVault();
 

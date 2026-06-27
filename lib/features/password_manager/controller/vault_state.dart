@@ -1,6 +1,6 @@
 part of 'vault_controller.dart';
 
-class VaultState extends GetxState {
+class _VaultState extends GetxState {
   final RxBool _isLoading = false.obs;
   final RxnString _error = RxnString();
   final RxList<VaultEntry> _entries = <VaultEntry>[].obs;

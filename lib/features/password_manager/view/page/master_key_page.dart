@@ -21,7 +21,7 @@ class MasterKeyPage extends StatefulWidget {
   final EncryptionRepo encryptionRepo;
 
   /// Called with the validated master key when authentication succeeds.
-  final void Function(String masterKey) onAuthenticated;
+  final void Function(BuildContext context, String masterKey) onAuthenticated;
 
   @override
   State<MasterKeyPage> createState() => _MasterKeyPageState();
@@ -115,7 +115,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
       });
 
       if (mounted) {
-        widget.onAuthenticated(masterKey);
+        widget.onAuthenticated(context, masterKey);
       }
     } else {
       // Returning user: validate master key
@@ -144,7 +144,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
 
       if (isValid) {
         if (mounted) {
-          widget.onAuthenticated(masterKey);
+          widget.onAuthenticated(context, masterKey);
         }
       } else {
         if (mounted) {

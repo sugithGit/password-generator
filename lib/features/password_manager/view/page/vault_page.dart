@@ -216,30 +216,6 @@ class _VaultPageState extends State<VaultPage> {
               }),
             ],
           ),
-          const Spacer(),
-          // Gradient accent dot
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: theme.colorScheme.primary.withAlpha(20),
-              border: Border.all(
-                color: theme.colorScheme.primary.withAlpha(60),
-              ),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: theme.colorScheme.primary.withAlpha(20),
-                  blurRadius: 12,
-                ),
-              ],
-            ),
-            child: Icon(
-              Icons.shield_rounded,
-              color: theme.colorScheme.primary,
-              size: 20,
-            ),
-          ),
         ],
       ),
     );

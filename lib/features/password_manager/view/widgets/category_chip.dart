@@ -1,6 +1,9 @@
+import 'package:awesome_extensions/awesome_extensions_flutter.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/const/constants.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/squircle.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 
 class CategoryChip extends StatelessWidget {
@@ -45,18 +48,19 @@ class CategoryChip extends StatelessWidget {
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
+        decoration: ShapeDecoration(
           color: isSelected ? color.withAlpha(40) : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? color : theme.dividerColor.withAlpha(80),
-            width: isSelected ? 1.5 : 1,
+          shape: const Squircle().shape(
+            side: BorderSide(
+              color: isSelected ? color : theme.dividerColor.withAlpha(80),
+              width: isSelected ? 1.5 : 1,
+            ),
           ),
         ),
         child: Text(
           category?.label ?? 'All',
-          style: TextStyle(
-            color: isSelected ? color : theme.colorScheme.onSurfaceVariant,
+          style: context.titleLarge?.copyWith(
+            color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             fontSize: 13,
           ),

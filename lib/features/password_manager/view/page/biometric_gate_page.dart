@@ -103,7 +103,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
     );
   }
 
-  void _onMasterKeyValidated(String masterKey) {
+  void _onMasterKeyValidated(BuildContext context, String masterKey) {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       return;

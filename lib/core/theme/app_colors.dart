@@ -15,4 +15,6 @@ abstract final class AppColors {
   static const Color border = Color(0xFF27272A); // Zinc 800
   static const Color error = Color(0xFFEF4444); // Red 500
   static const Color onError = Colors.white;
+  static const textSecondary = Color(0xFFE3E3E3);
+  static const textPrimary = Color(0xFFFFFCFC);
 }
