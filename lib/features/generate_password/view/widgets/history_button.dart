@@ -30,7 +30,7 @@ class HistoryButton extends StatelessWidget {
           ),
           child: Container(
             decoration: ShapeDecoration(
-              shape: const Squircle(radius: 20).shape(),
+              shape: const Squircle().shape(),
               color: theme.cardColor,
             ),
             padding: const EdgeInsets.all(defaultPadding),

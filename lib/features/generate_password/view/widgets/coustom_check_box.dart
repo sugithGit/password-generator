@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/const/constants.dart';
+import '../../../../core/widgets/squircle.dart';
 
 class CustomCheckBox extends StatelessWidget {
   const CustomCheckBox({
@@ -33,12 +34,13 @@ class CustomCheckBox extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
             vertical: defaultPadding,
           ),
-          decoration: BoxDecoration(
+          decoration: ShapeDecoration(
             color: theme.cardColor,
-            border: Border.all(
-              color: value ? theme.colorScheme.primary : theme.dividerColor,
+            shape: const Squircle(radius: 16).shape(
+              side: BorderSide(
+                color: value ? theme.colorScheme.primary : theme.dividerColor,
+              ),
             ),
-            borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
             child: Text(

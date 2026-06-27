@@ -5,7 +5,7 @@ linter:
     always_declare_return_types: false
     always_put_control_body_on_new_line: true
     always_put_required_named_parameters_first: true
-    always_specify_types: true
+    always_specify_types: false
     always_use_package_imports: false
     annotate_overrides: true
     annotate_redeclares: true
