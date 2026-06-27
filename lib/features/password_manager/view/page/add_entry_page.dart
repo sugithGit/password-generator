@@ -6,8 +6,9 @@ import 'package:rxget/rxget.dart';
 import '../../../../core/widgets/app_bar/page_app_bar.dart';
 import '../../../../core/widgets/app_button/app_button.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
-import '../../controller/vault_controller.dart';
+import '../../controller/vault/vault_controller.dart';
 import '../widgets/add_password_category.dart';
+import '../widgets/custom_form_field.dart';
 
 @RoutePage()
 class AddEntryPage extends StatefulWidget {
@@ -114,7 +115,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     // Title
-                    _buildField(
+                    CustomFormField(
                       controller: _titleController,
                       label: 'Title',
                       icon: Icons.title_rounded,
@@ -124,7 +125,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                     ),
                     const SizedBox(height: 16),
                     // Username/Email
-                    _buildField(
+                    CustomFormField(
                       controller: _usernameController,
                       label: 'Username / Email',
                       icon: Icons.person_outline_rounded,
@@ -135,7 +136,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                     ),
                     const SizedBox(height: 16),
                     // Password
-                    _buildField(
+                    CustomFormField(
                       controller: _passwordController,
                       label: 'Password',
                       icon: Icons.lock_outline_rounded,
@@ -159,7 +160,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                     ),
                     const SizedBox(height: 16),
                     // Website
-                    _buildField(
+                    CustomFormField(
                       controller: _websiteController,
                       label: 'Website (optional)',
                       icon: Icons.language_rounded,
@@ -168,7 +169,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                     ),
                     const SizedBox(height: 16),
                     // Notes
-                    _buildField(
+                    CustomFormField(
                       controller: _notesController,
                       label: 'Notes (optional)',
                       icon: Icons.notes_rounded,
@@ -276,38 +277,6 @@ class _AddEntryPageState extends State<AddEntryPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    String? hint,
-    TextInputType keyboardType = TextInputType.text,
-    bool obscureText = false,
-    Widget? suffixIcon,
-    int maxLines = 1,
-    String? Function(String?)? validator,
-  }) {
-    final ThemeData theme = Theme.of(context);
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      maxLines: maxLines,
-      validator: validator,
-      style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: Padding(
-          padding: const EdgeInsets.only(left: 12, right: 8),
-          child: Icon(icon, size: 20),
-        ),
-        prefixIconConstraints: const BoxConstraints(minWidth: 44),
-        suffixIcon: suffixIcon,
       ),
     );
   }

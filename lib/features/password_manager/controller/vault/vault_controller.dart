@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:rxget/rxget.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../service/password_manager/domain/entities/vault_entry.dart';
-import '../../../service/password_manager/domain/repositories/vault_repository.dart';
+import '../../../../service/password_manager/domain/entities/vault_entry.dart';
+import '../../../../service/password_manager/domain/repositories/vault_repository.dart';
 
 part 'vault_state.dart';
 

@@ -6,7 +6,7 @@ import 'package:rxget/rxget.dart';
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../service/password_manager/data/repositories/vault_repo_impl.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
-import '../../controller/vault_controller.dart';
+import '../../controller/vault/vault_controller.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/empty_vault_widget.dart';
 import '../widgets/vault_entry_card.dart';
