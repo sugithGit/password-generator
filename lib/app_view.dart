@@ -43,9 +43,9 @@ class MyApp extends StatelessWidget {
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Password Manager',
-              theme: ShadcnTheme.lightTheme,
+              theme: ShadcnTheme.darkTheme,
               darkTheme: ShadcnTheme.darkTheme,
-              themeMode: ThemeMode.system,
+              themeMode: ThemeMode.dark,
               home: PasswordGeneratePage(
                 encryptionService: encryptionService,
               ),

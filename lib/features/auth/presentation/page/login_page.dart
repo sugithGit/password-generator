@@ -108,23 +108,16 @@ class _LoginPageState extends State<LoginPage>
           height: 80,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: LinearGradient(
-              colors: <Color>[theme.colorScheme.primary, theme.colorScheme.secondary],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+            color: theme.colorScheme.primary.withAlpha(20),
+            border: Border.all(
+              color: theme.colorScheme.primary.withAlpha(40),
+              width: 1.5,
             ),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: theme.colorScheme.primary.withAlpha(60),
-                blurRadius: 30,
-                spreadRadius: 5,
-              ),
-            ],
           ),
-          child: const Icon(
+          child: Icon(
             Icons.shield_rounded,
             size: 40,
-            color: Colors.white,
+            color: theme.colorScheme.primary,
           ),
         ),
         const SizedBox(height: 24),
@@ -153,16 +146,16 @@ class _LoginPageState extends State<LoginPage>
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: theme.cardColor.withAlpha(180),
-        borderRadius: BorderRadius.circular(24),
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: theme.dividerColor.withAlpha(100),
+          color: theme.dividerColor,
         ),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Colors.black.withAlpha(theme.brightness == Brightness.dark ? 80 : 10),
-            blurRadius: 40,
-            offset: const Offset(0, 10),
+            color: Colors.black.withAlpha(40),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -267,7 +260,7 @@ class _LoginPageState extends State<LoginPage>
       style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: theme.colorScheme.primary, size: 20),
+        prefixIcon: Icon(icon, color: theme.colorScheme.onSurfaceVariant, size: 20),
         suffixIcon: suffixIcon,
       ),
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ShadcnTheme {
-  static const Color accentColor = Color(0xFF6C63FF);
+  static const Color accentColor = Color(0xFF09090B);
 
   static ThemeData get darkTheme {
     const ColorScheme colorScheme = ColorScheme.dark(
@@ -12,8 +12,8 @@ class ShadcnTheme {
       onSurface: Color(0xFFFAFAFA),
       surfaceVariant: Color(0xFF18181B), // Used for cards/containers
       onSurfaceVariant: Color(0xFFA1A1AA), // Muted text
-      primary: accentColor,
-      onPrimary: Colors.white,
+      primary: Color(0xFFFAFAFA),
+      onPrimary: Color(0xFF09090B),
       secondary: Color(0xFF27272A),
       onSecondary: Color(0xFFFAFAFA),
       outline: Color(0xFF27272A),
@@ -32,8 +32,8 @@ class ShadcnTheme {
       onSurface: Color(0xFF09090B),
       surfaceVariant: Color(0xFFF4F4F5), // Used for cards/containers
       onSurfaceVariant: Color(0xFF71717A), // Muted text
-      primary: accentColor,
-      onPrimary: Colors.white,
+      primary: Color(0xFF09090B),
+      onPrimary: Color(0xFFFFFFFF),
       secondary: Color(0xFFE4E4E7),
       onSecondary: Color(0xFF18181B),
       outline: Color(0xFFE4E4E7),
@@ -97,23 +97,23 @@ class ShadcnTheme {
         labelStyle: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 14),
         hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withAlpha(150), fontSize: 14),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: colorScheme.outline),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: colorScheme.outline),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: colorScheme.error),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: colorScheme.error, width: 1.5),
         ),
       ),
@@ -124,7 +124,7 @@ class ShadcnTheme {
           elevation: 0,
           minimumSize: const Size.fromHeight(52),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
           ),
           textStyle: const TextStyle(
             fontWeight: FontWeight.w600,
@@ -140,6 +140,14 @@ class ShadcnTheme {
             fontWeight: FontWeight.w600,
             fontSize: 14,
           ),
+        ),
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
       checkboxTheme: CheckboxThemeData(
