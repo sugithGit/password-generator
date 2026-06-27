@@ -148,7 +148,7 @@ class _VaultPageState extends State<VaultPage> {
                           entry: entry,
                           onEdit: () => _navigateToAddEntry(entry: entry),
                           onDelete: () {
-                            controller.deleteEntry(entry.id);
+                            // controller.deleteEntry(entry.id);
                           },
                         ),
                       );

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:rxget/rxget.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../../../service/password_manager/domain/repositories/vault_repository.dart';
@@ -31,24 +30,6 @@ class VaultController extends GetxController<_VaultState> {
 
   void loadVault() => _loadVault();
 
-  Future<void> addEntry({
-    required String title,
-    required String username,
-    required String password,
-    String? website,
-    String? notes,
-    VaultCategory category = VaultCategory.other,
-  }) => _addEntry(
-    title: title,
-    username: username,
-    password: password,
-    website: website,
-    notes: notes,
-    category: category,
-  );
-
-  Future<void> updateEntry(VaultEntry entry) => _updateEntry(entry);
-  Future<void> deleteEntry(String entryId) => _deleteEntry(entryId);
   void searchEntries(String query) => _searchEntries(query);
   void filterByCategory(VaultCategory? category) => _filterByCategory(category);
 
@@ -67,54 +48,6 @@ class VaultController extends GetxController<_VaultState> {
         state._isLoading.value = false;
       },
     );
-  }
-
-  Future<void> _addEntry({
-    required String title,
-    required String username,
-    required String password,
-    required VaultCategory category,
-    String? website,
-    String? notes,
-  }) async {
-    state._error.value = null;
-    try {
-      final VaultEntry entry = VaultEntry(
-        id: const Uuid().v4(),
-        title: title,
-        username: username,
-        encryptedPassword: password,
-        website: website,
-        notes: notes,
-        category: category,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-      await repository.addEntry(entry);
-    } catch (e) {
-      state._error.value = 'Failed to add entry: $e';
-      rethrow;
-    }
-  }
-
-  Future<void> _updateEntry(VaultEntry entry) async {
-    state._error.value = null;
-    try {
-      await repository.updateEntry(entry.copyWith(updatedAt: DateTime.now()));
-    } catch (e) {
-      state._error.value = 'Failed to update entry: $e';
-      rethrow;
-    }
-  }
-
-  Future<void> _deleteEntry(String entryId) async {
-    state._error.value = null;
-    try {
-      await repository.deleteEntry(entryId);
-    } catch (e) {
-      state._error.value = 'Failed to delete entry: $e';
-      rethrow;
-    }
   }
 
   void _searchEntries(String query) {
