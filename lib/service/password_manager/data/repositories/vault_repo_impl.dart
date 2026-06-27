@@ -55,8 +55,7 @@ class VaultRepoImpl implements VaultRepository {
       title: _encryptField(entry.title),
       username: _encryptField(entry.username),
       encryptedPassword: _encryptField(entry.encryptedPassword),
-      website:
-          entry.website != null ? _encryptField(entry.website!) : null,
+      website: entry.website != null ? _encryptField(entry.website!) : null,
       notes: entry.notes != null ? _encryptField(entry.notes!) : null,
       category: entry.category.name,
       createdAt: entry.createdAt,
@@ -72,8 +71,7 @@ class VaultRepoImpl implements VaultRepository {
       title: _encryptField(entry.title),
       username: _encryptField(entry.username),
       encryptedPassword: _encryptField(entry.encryptedPassword),
-      website:
-          entry.website != null ? _encryptField(entry.website!) : null,
+      website: entry.website != null ? _encryptField(entry.website!) : null,
       notes: entry.notes != null ? _encryptField(entry.notes!) : null,
       category: entry.category.name,
       createdAt: entry.createdAt,

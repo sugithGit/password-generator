@@ -6,7 +6,10 @@ class VaultEntryModel {
     required this.title,
     required this.username,
     required this.encryptedPassword,
-    required this.category, required this.createdAt, required this.updatedAt, this.website,
+    required this.category,
+    required this.createdAt,
+    required this.updatedAt,
+    this.website,
     this.notes,
   });
 

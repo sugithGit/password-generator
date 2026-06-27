@@ -20,7 +20,8 @@ class VaultRemoteDatasource {
         .orderBy('updatedAt', descending: true)
         .snapshots()
         .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
-      return snapshot.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+      return snapshot.docs
+          .map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
         return VaultEntryModel.fromMap(doc.data(), doc.id);
       }).toList();
     });

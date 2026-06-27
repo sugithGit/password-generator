@@ -79,9 +79,12 @@ class ShadcnTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: colorScheme.surfaceContainerHighest,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        labelStyle: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 14),
-        hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withAlpha(150), fontSize: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        labelStyle:
+            TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 14),
+        hintStyle: TextStyle(
+            color: colorScheme.onSurfaceVariant.withAlpha(150), fontSize: 14),
         prefixIconColor: colorScheme.onSurfaceVariant,
         suffixIconColor: colorScheme.onSurfaceVariant,
         border: OutlineInputBorder(

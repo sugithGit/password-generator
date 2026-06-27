@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxget/rxget.dart';
 
 import '../../../service/auth/domain/entities/auth_user.dart';
 import '../../../service/auth/domain/use_cases/get_current_user_use_case.dart';
@@ -7,83 +7,83 @@ import '../../../service/auth/domain/use_cases/sign_in_use_case.dart';
 import '../../../service/auth/domain/use_cases/sign_out_use_case.dart';
 import '../../../service/auth/domain/use_cases/sign_up_use_case.dart';
 
-part 'auth_event.dart';
 part 'auth_state.dart';
 
-class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc({
+class AuthController extends GetxController<AuthState> {
+  AuthController({
     required this.getCurrentUserUseCase,
     required this.signInUseCase,
     required this.signUpUseCase,
     required this.signOutUseCase,
-  }) : super(AuthInitial()) {
-    on<AuthCheckRequested>(_onAuthCheck);
-    on<SignInRequested>(_onSignIn);
-    on<SignUpRequested>(_onSignUp);
-    on<SignOutRequested>(_onSignOut);
-  }
+  }) : state = AuthState();
 
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final SignInUseCase signInUseCase;
   final SignUpUseCase signUpUseCase;
   final SignOutUseCase signOutUseCase;
 
-  Future<void> _onAuthCheck(
-    AuthCheckRequested event,
-    Emitter<AuthState> emit,
-  ) async {
+  @override
+  final AuthState state;
+
+  void checkAuth() => _checkAuth();
+  Future<void> signIn({required String email, required String password}) => _signIn(email, password);
+  Future<void> signUp({required String email, required String password}) => _signUp(email, password);
+  Future<void> signOut() => _signOut();
+
+  void _checkAuth() {
     final AuthUser? user = getCurrentUserUseCase.call(null);
-    if (user != null) {
-      emit(Authenticated(user: user));
-    } else {
-      emit(Unauthenticated());
-    }
+    state._user.value = user;
   }
 
-  Future<void> _onSignIn(
-    SignInRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthLoading());
+  Future<void> _signIn(String email, String password) async {
+    state._isLoading.value = true;
+    state._error.value = null;
     try {
       final AuthUser user = await signInUseCase.call(
-        SignInParams(email: event.email, password: event.password),
+        SignInParams(email: email, password: password),
       );
-      emit(Authenticated(user: user));
+      state._user.value = user;
     } on FirebaseAuthException catch (e) {
-      emit(AuthError(message: _parseAuthError(e.code)));
-      emit(Unauthenticated());
+      final String parsedError = _parseAuthError(e.code);
+      state._error.value = parsedError;
+      state._user.value = null;
+      throw Exception(parsedError);
     } catch (e) {
-      emit(AuthError(message: e.toString()));
-      emit(Unauthenticated());
+      final String errorMsg = e.toString();
+      state._error.value = errorMsg;
+      state._user.value = null;
+      throw Exception(errorMsg);
+    } finally {
+      state._isLoading.value = false;
     }
   }
 
-  Future<void> _onSignUp(
-    SignUpRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthLoading());
+  Future<void> _signUp(String email, String password) async {
+    state._isLoading.value = true;
+    state._error.value = null;
     try {
       final AuthUser user = await signUpUseCase.call(
-        SignUpParams(email: event.email, password: event.password),
+        SignUpParams(email: email, password: password),
       );
-      emit(Authenticated(user: user));
+      state._user.value = user;
     } on FirebaseAuthException catch (e) {
-      emit(AuthError(message: _parseAuthError(e.code)));
-      emit(Unauthenticated());
+      final String parsedError = _parseAuthError(e.code);
+      state._error.value = parsedError;
+      state._user.value = null;
+      throw Exception(parsedError);
     } catch (e) {
-      emit(AuthError(message: e.toString()));
-      emit(Unauthenticated());
+      final String errorMsg = e.toString();
+      state._error.value = errorMsg;
+      state._user.value = null;
+      throw Exception(errorMsg);
+    } finally {
+      state._isLoading.value = false;
     }
   }
 
-  Future<void> _onSignOut(
-    SignOutRequested event,
-    Emitter<AuthState> emit,
-  ) async {
+  Future<void> _signOut() async {
     await signOutUseCase.call(null);
-    emit(Unauthenticated());
+    state._user.value = null;
   }
 
   String _parseAuthError(String code) {

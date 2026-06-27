@@ -2,23 +2,19 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxget/rxget.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 import '../../../../core/const/constants.dart';
 import '../../../../core/util/utils.dart';
-import '../../bloc/password_generate_bloc.dart';
+import '../../controller/password_generator_controller.dart';
 
 class PasswordLength extends StatelessWidget {
   const PasswordLength({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PasswordGenratorBloc, PasswordGenratorState>(
-      builder: (BuildContext context, PasswordGenratorState state) {
-        return const _SliderWidget();
-      },
-    );
+    return const _SliderWidget();
   }
 }
 
@@ -31,88 +27,95 @@ class _SliderWidget extends StatefulWidget {
 
 class _SliderWidgetState extends State<_SliderWidget> {
   double progressVal = 0;
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: kDiameter,
-      height: kDiameter,
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Transform.scale(
-            scale: 1,
-            child: ShaderMask(
-              shaderCallback: (Rect rect) {
-                return SweepGradient(
-                  startAngle: degToRad(180).toDouble(),
-                  endAngle: degToRad(360).toDouble(),
-                  colors: <Color>[
-                    primaryColor,
-                    Colors.grey.withAlpha(50),
-                  ],
-                  stops: <double>[progressVal, progressVal],
-                ).createShader(rect);
-              },
-              child: const _CustomArc(),
-            ),
-          ),
-          Container(
-            width: kDiameter - 40,
-            height: kDiameter - 40,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: trackBg,
-                width: 20,
+    final PasswordGeneratorController controller = Get.find<PasswordGeneratorController>();
+    return Obx(() {
+      final state = controller.state;
+      final double maxVal = state.maxPasswordLength.toDouble();
+      final double currentVal = state.passwordLength.toDouble().clamp(kMinDegree, maxVal);
+
+      // Normalize progressVal for shader
+      progressVal = normalize(currentVal, kMinDegree, maxVal).toDouble();
+
+      return SizedBox(
+        width: kDiameter,
+        height: kDiameter,
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Transform.scale(
+              scale: 1,
+              child: ShaderMask(
+                shaderCallback: (Rect rect) {
+                  return SweepGradient(
+                    startAngle: degToRad(180).toDouble(),
+                    endAngle: degToRad(360).toDouble(),
+                    colors: <Color>[
+                      primaryColor,
+                      Colors.grey.withAlpha(50),
+                    ],
+                    stops: <double>[progressVal, progressVal],
+                  ).createShader(rect);
+                },
+                child: const _CustomArc(),
               ),
             ),
-            child: SleekCircularSlider(
-              min: kMinDegree,
-              max: kMaxDegree,
-              initialValue: kMinDegree,
-              appearance: CircularSliderAppearance(
-                startAngle: 180,
-                angleRange: 180,
-                size: kDiameter - 30,
-                customWidths: CustomSliderWidths(
-                  trackWidth: 15,
-                  shadowWidth: 0,
-                  progressBarWidth: 01,
-                  handlerSize: 15,
-                ),
-                customColors: CustomSliderColors(
-                  hideShadow: true,
-                  progressBarColor: Colors.transparent,
-                  trackColor: const Color(0xFF20201e),
-                  dotColor: thumb,
+            Container(
+              width: kDiameter - 40,
+              height: kDiameter - 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: trackBg,
+                  width: 20,
                 ),
               ),
-              onChange: (double value) {
-                setState(() {
-                  progressVal =
-                      normalize(value, kMinDegree, kMaxDegree).toDouble();
-                });
-                context.read<PasswordGenratorBloc>().add(
-                      ChangePasswordLengthEvent(
-                        passwordLength: value.toInt(),
-                      ),
-                    );
-              },
-              innerWidget: (double value) {
-                return Center(
-                  child: Text(
-                    '${value.toInt()}',
-                    style: const TextStyle(
-                      fontSize: 50,
-                    ),
+              child: SleekCircularSlider(
+                min: kMinDegree,
+                max: maxVal,
+                initialValue: currentVal,
+                appearance: CircularSliderAppearance(
+                  startAngle: 180,
+                  angleRange: 180,
+                  size: kDiameter - 30,
+                  customWidths: CustomSliderWidths(
+                    trackWidth: 15,
+                    shadowWidth: 0,
+                    progressBarWidth: 01,
+                    handlerSize: 15,
                   ),
-                );
-              },
+                  customColors: CustomSliderColors(
+                    hideShadow: true,
+                    progressBarColor: Colors.transparent,
+                    trackColor: const Color(0xFF20201e),
+                    dotColor: thumb,
+                  ),
+                ),
+                onChange: (double value) {
+                  setState(() {
+                    progressVal =
+                        normalize(value, kMinDegree, maxVal).toDouble();
+                  });
+                  controller.changePasswordLength(value.toInt());
+                },
+                innerWidget: (double value) {
+                  return Center(
+                    child: Text(
+                      '${value.toInt()}',
+                      style: const TextStyle(
+                        fontSize: 50,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }
 

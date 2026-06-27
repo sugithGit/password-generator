@@ -14,13 +14,17 @@ class AuthRepoImpl implements AuthRepo {
   @override
   AuthUser? get currentUser {
     final User? user = _firebaseAuthRemote.currentUser;
-    return user == null ? null : AuthUserModel.fromFirebaseUser(user).toAuthUser();
+    return user == null
+        ? null
+        : AuthUserModel.fromFirebaseUser(user).toAuthUser();
   }
 
   @override
   Stream<AuthUser?> get authStateChanges {
     return _firebaseAuthRemote.authStateChanges.map(
-      (User? user) => user == null ? null : AuthUserModel.fromFirebaseUser(user).toAuthUser(),
+      (User? user) => user == null
+          ? null
+          : AuthUserModel.fromFirebaseUser(user).toAuthUser(),
     );
   }
 

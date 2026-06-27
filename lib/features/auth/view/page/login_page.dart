@@ -1,9 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxget/rxget.dart';
 import 'package:toastification/toastification.dart';
 
-import '../../bloc/auth_bloc.dart';
+import '../../controller/auth_controller.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -27,66 +27,62 @@ class _LoginPageState extends State<LoginPage>
     super.dispose();
   }
 
-  void _submit() {
+  void _submit() async {
     if (!_formKey.currentState!.validate()) return;
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
 
-    if (_isSignUp) {
-      context.read<AuthBloc>().add(
-            SignUpRequested(email: email, password: password),
-          );
-    } else {
-      context.read<AuthBloc>().add(
-            SignInRequested(email: email, password: password),
-          );
+    final AuthController controller = Get.find<AuthController>();
+    try {
+      if (_isSignUp) {
+        await controller.signUp(email: email, password: password);
+      } else {
+        await controller.signIn(email: email, password: password);
+      }
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        toastification.show(
+          context: context,
+          title: Text(controller.state.error ?? e.toString().replaceAll('Exception: ', '')),
+          type: ToastificationType.error,
+          autoCloseDuration: const Duration(seconds: 3),
+          style: ToastificationStyle.flatColored,
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (BuildContext context, AuthState state) {
-        if (state is AuthError) {
-          toastification.show(
-            context: context,
-            title: Text(state.message),
-            type: ToastificationType.error,
-            autoCloseDuration: const Duration(seconds: 3),
-            style: ToastificationStyle.flatColored,
-          );
-        }
-        if (state is Authenticated) {
-          Navigator.of(context).pop();
-        }
-      },
-      child: Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: Column(
-                  children: <Widget>[
-                    // ── Header ─────────────────────────────────
-                    FadeInDown(
-                      duration: const Duration(milliseconds: 600),
-                      child: _buildHeader(),
-                    ),
-                    const SizedBox(height: 40),
-                    // ── Glassmorphism card ─────────────────────
-                    FadeInUp(
-                      duration: const Duration(milliseconds: 700),
-                      child: _buildFormCard(),
-                    ),
-                    const SizedBox(height: 24),
-                    // ── Toggle sign in / sign up ──────────────
-                    FadeInUp(
-                      child: _buildToggle(),
-                    ),
-                  ],
-                ),
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: Column(
+                children: <Widget>[
+                  // ── Header ─────────────────────────────────
+                  FadeInDown(
+                    duration: const Duration(milliseconds: 600),
+                    child: _buildHeader(),
+                  ),
+                  const SizedBox(height: 40),
+                  // ── Glassmorphism card ─────────────────────
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 700),
+                    child: _buildFormCard(),
+                  ),
+                  const SizedBox(height: 24),
+                  // ── Toggle sign in / sign up ──────────────
+                  FadeInUp(
+                    child: _buildToggle(),
+                  ),
+                ],
               ),
             ),
           ),
@@ -195,29 +191,28 @@ class _LoginPageState extends State<LoginPage>
               ),
               const SizedBox(height: 28),
               // Submit button
-              BlocBuilder<AuthBloc, AuthState>(
-                builder: (BuildContext context, AuthState state) {
-                  final bool isLoading = state is AuthLoading;
-                  return SizedBox(
-                    height: 52,
-                    child: ElevatedButton(
-                      onPressed: isLoading ? null : _submit,
-                      child: isLoading
-                          ? SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              ),
-                            )
-                          : Text(
-                              _isSignUp ? 'SIGN UP' : 'SIGN IN',
+              Obx(() {
+                final AuthController controller = Get.find<AuthController>();
+                final bool isLoading = controller.state.isLoading;
+                return SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : _submit,
+                    child: isLoading
+                        ? SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: Theme.of(context).colorScheme.onPrimary,
                             ),
-                    ),
-                  );
-                },
-              ),
+                          )
+                        : Text(
+                            _isSignUp ? 'SIGN UP' : 'SIGN IN',
+                          ),
+                  ),
+                );
+              }),
             ],
           ),
         ),

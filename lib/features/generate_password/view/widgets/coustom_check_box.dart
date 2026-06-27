@@ -36,9 +36,7 @@ class CustomCheckBox extends StatelessWidget {
           decoration: BoxDecoration(
             color: theme.cardColor,
             border: Border.all(
-              color: value
-                  ? theme.colorScheme.primary
-                  : theme.dividerColor,
+              color: value ? theme.colorScheme.primary : theme.dividerColor,
             ),
             borderRadius: BorderRadius.circular(8),
           ),

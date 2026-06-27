@@ -1,23 +1,21 @@
 import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxget/rxget.dart';
 
 import '../../../../core/const/constants.dart';
 import '../../../../core/extension/date_time_extension.dart';
 import '../../../../service/generate_password/domain/entities/password.dart';
-import '../../bloc/password_generate_bloc.dart';
+import '../../controller/password_generator_controller.dart';
 
 abstract final class ShowSavedPasswords {
   static void call({
     required BuildContext context,
-    required PasswordGenratorBloc bloc,
   }) =>
-      _call(context, bloc);
+      _call(context);
 
   static void _call(
     BuildContext context,
-    PasswordGenratorBloc bloc,
   ) {
     showModalBottomSheet(
       context: context,
@@ -27,41 +25,36 @@ abstract final class ShowSavedPasswords {
           top: Radius.circular(16),
         ),
       ),
-      builder: (BuildContext context) => _SavedPaaswordBottomSheet(bloc),
+      builder: (BuildContext context) => const _SavedPaaswordBottomSheet(),
     );
   }
 }
 
 class _SavedPaaswordBottomSheet extends StatelessWidget {
-  const _SavedPaaswordBottomSheet(this.bloc);
-  final PasswordGenratorBloc bloc;
+  const _SavedPaaswordBottomSheet();
 
   @override
   Widget build(BuildContext context) {
+    final PasswordGeneratorController controller = Get.find<PasswordGeneratorController>();
     return Container(
       padding: const EdgeInsets.all(defaultPadding),
       child: Column(
         children: <Widget>[
           const _Indicator(),
-          _Header(bloc),
+          const _Header(),
           const SizedBox(height: defaultPadding),
           Expanded(
-            child: BlocBuilder<PasswordGenratorBloc, PasswordGenratorState>(
-              bloc: bloc,
-              builder: (
-                BuildContext context,
-                PasswordGenratorState state,
-              ) {
-                return ListView.builder(
-                  itemCount: state.passwordHistory.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _HistoryCard(
-                      passwordHistory: state.passwordHistory[index],
-                    );
-                  },
-                );
-              },
-            ),
+            child: Obx(() {
+              final state = controller.state;
+              return ListView.builder(
+                itemCount: state.passwordHistory.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return _HistoryCard(
+                    passwordHistory: state.passwordHistory[index],
+                  );
+                },
+              );
+            }),
           ),
         ],
       ),
@@ -141,8 +134,7 @@ class _HistoryCard extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header(this.bloc);
-  final PasswordGenratorBloc bloc;
+  const _Header();
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +151,7 @@ class _Header extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          _ClearPasswordHistory(bloc),
+          const _ClearPasswordHistory(),
         ],
       ),
     );
@@ -167,46 +159,44 @@ class _Header extends StatelessWidget {
 }
 
 class _ClearPasswordHistory extends StatelessWidget {
-  const _ClearPasswordHistory(this.bloc);
-  final PasswordGenratorBloc bloc;
+  const _ClearPasswordHistory();
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return BlocBuilder<PasswordGenratorBloc, PasswordGenratorState>(
-      bloc: bloc,
-      builder: (BuildContext context, PasswordGenratorState state) {
-        final bool isEnabled = state.passwordHistory.isNotEmpty;
-        return ElevatedButton(
-          onPressed:
-              isEnabled ? () => bloc.add(DeletePasswordHistoryEvent()) : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: isEnabled
-                ? theme.colorScheme.error
-                : theme.colorScheme.secondary,
-            foregroundColor: isEnabled
+    final PasswordGeneratorController controller = Get.find<PasswordGeneratorController>();
+    return Obx(() {
+      final state = controller.state;
+      final bool isEnabled = state.passwordHistory.isNotEmpty;
+      return ElevatedButton(
+        onPressed:
+            isEnabled ? controller.deletePasswordHistory : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isEnabled
+              ? theme.colorScheme.error
+              : theme.colorScheme.secondary,
+          foregroundColor: isEnabled
+              ? theme.colorScheme.onError
+              : theme.colorScheme.onSurfaceVariant,
+          disabledBackgroundColor: theme.colorScheme.secondary.withAlpha(100),
+          disabledForegroundColor:
+              theme.colorScheme.onSurfaceVariant.withAlpha(100),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          minimumSize: Size.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: Text(
+          'Clear All',
+          style: context.bodySmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: isEnabled
                 ? theme.colorScheme.onError
-                : theme.colorScheme.onSurfaceVariant,
-            disabledBackgroundColor: theme.colorScheme.secondary.withAlpha(100),
-            disabledForegroundColor:
-                theme.colorScheme.onSurfaceVariant.withAlpha(100),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            minimumSize: Size.zero,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+                : theme.colorScheme.onSurfaceVariant.withAlpha(100),
           ),
-          child: Text(
-            'Clear All',
-            style: context.bodySmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: isEnabled
-                  ? theme.colorScheme.onError
-                  : theme.colorScheme.onSurfaceVariant.withAlpha(100),
-            ),
-          ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 }

@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxget/rxget.dart';
 
 import '../../../../core/const/constants.dart';
-import '../../bloc/password_generate_bloc.dart';
+import '../../controller/password_generator_controller.dart';
 import 'info_text.dart';
 
 class CopyResultContainer extends StatefulWidget {
@@ -34,46 +34,41 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
         }),
       );
       // AppSnackBar.call(context);
-      context.read<PasswordGenratorBloc>().add(
-            SavePasswordEvent(
-              password: password,
-            ),
-          );
+      Get.find<PasswordGeneratorController>().savePassword();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return BlocBuilder<PasswordGenratorBloc, PasswordGenratorState>(
-      builder: (BuildContext context, PasswordGenratorState state) {
-        return Column(
-          children: <Widget>[
-            InfoText(
-              text: "Tap to Copy Password",
-              show: state.passwordController.text.isNotEmpty,
-            ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: TextFormField(
-                controller: state.passwordController,
-                readOnly: true,
-                style:
-                    TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
-                decoration: InputDecoration(
-                  hintText: 'Password will appear here...',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.copy_rounded, size: 20),
-                    onPressed: () => _onTap(state.passwordController.text),
-                  ),
+    final PasswordGeneratorController controller = Get.find<PasswordGeneratorController>();
+    return Obx(() {
+      return Column(
+        children: <Widget>[
+          InfoText(
+            text: "Tap to Copy Password",
+            show: controller.state.passwordController.text.isNotEmpty,
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+            child: TextFormField(
+              controller: controller.state.passwordController,
+              readOnly: true,
+              style:
+                  TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
+              decoration: InputDecoration(
+                hintText: 'Password will appear here...',
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.copy_rounded, size: 20),
+                  onPressed: () => _onTap(controller.state.passwordController.text),
                 ),
-                onTap: () => _onTap(state.passwordController.text),
               ),
+              onTap: () => _onTap(controller.state.passwordController.text),
             ),
-          ],
-        );
-      },
-    );
+          ),
+        ],
+      );
+    });
   }
 }

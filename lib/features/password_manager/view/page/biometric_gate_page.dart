@@ -1,7 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxget/rxget.dart';
 import 'package:sodium/sodium.dart';
 
 import '../../../../service/auth/data/local/biometric_local.dart';
@@ -12,7 +12,7 @@ import '../../../../service/auth/domain/use_cases/authenticate_biometrics_use_ca
 import '../../../../service/auth/domain/use_cases/check_biometrics_support_use_case.dart';
 import '../../../../service/password_manager/data/remote/vault_remote_datasource.dart';
 import '../../../../service/password_manager/data/repositories/vault_repo_impl.dart';
-import '../../bloc/vault_bloc.dart';
+import '../../controller/vault_controller.dart';
 import 'master_key_page.dart';
 import 'vault_page.dart';
 
@@ -40,8 +40,10 @@ class _BiometricGatePageState extends State<BiometricGatePage>
   void initState() {
     super.initState();
     _biometricRepo = BiometricRepoImpl(biometricLocal: BiometricLocal());
-    _checkBiometricsSupportUseCase = CheckBiometricsSupportUseCase(_biometricRepo);
-    _authenticateBiometricsUseCase = AuthenticateBiometricsUseCase(_biometricRepo);
+    _checkBiometricsSupportUseCase =
+        CheckBiometricsSupportUseCase(_biometricRepo);
+    _authenticateBiometricsUseCase =
+        AuthenticateBiometricsUseCase(_biometricRepo);
 
     _pulseController = AnimationController(
       vsync: this,
@@ -74,7 +76,8 @@ class _BiometricGatePageState extends State<BiometricGatePage>
       return;
     }
 
-    final bool success = await _authenticateBiometricsUseCase.call('Authenticate to access your Password Vault');
+    final bool success = await _authenticateBiometricsUseCase
+        .call('Authenticate to access your Password Vault');
 
     if (mounted) {
       setState(() {
@@ -119,9 +122,11 @@ class _BiometricGatePageState extends State<BiometricGatePage>
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
-        builder: (_) => BlocProvider<VaultBloc>(
-          create: (_) =>
-              VaultBloc(repository: repository)..add(const LoadVault()),
+        builder: (_) => GetInWidget(
+          dependencies: <GetIn<dynamic>>[
+            GetIn<VaultController>(() =>
+                VaultController(repository: repository)..loadVault()),
+          ],
           child: const VaultPage(),
         ),
       ),

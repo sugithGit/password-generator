@@ -3,11 +3,11 @@ import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxget/rxget.dart';
 import 'package:toastification/toastification.dart';
 
 import 'core/theme/shadcn_theme.dart';
-import 'features/auth/bloc/auth_bloc.dart';
+import 'features/auth/controller/auth_controller.dart';
 import 'features/generate_password/view/page/password_generate_page.dart';
 import 'firebase_options.dart';
 import 'main.dart';
@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
       options: firebaseOptions,
     );
 
-    final EncryptionLocal encryptionLocal = EncryptionLocal(sodium: sodiumInstance);
+    final EncryptionLocal encryptionLocal =
+        EncryptionLocal(sodium: sodiumInstance);
     final EncryptionRepo encryptionRepo = EncryptionRepoImpl(
       encryptionLocal: encryptionLocal,
     );
@@ -45,17 +46,20 @@ class MyApp extends StatelessWidget {
               log('Error: ${snapshot.error}');
             }
           }
-          return BlocProvider<AuthBloc>(
-            create: (_) {
-              final FirebaseAuthRemote authRemote = FirebaseAuthRemote();
-              final AuthRepoImpl authRepo = AuthRepoImpl(firebaseAuthRemote: authRemote);
-              return AuthBloc(
-                getCurrentUserUseCase: GetCurrentUserUseCase(authRepo),
-                signInUseCase: SignInUseCase(authRepo),
-                signUpUseCase: SignUpUseCase(authRepo),
-                signOutUseCase: SignOutUseCase(authRepo),
-              )..add(AuthCheckRequested());
-            },
+          return GetInWidget(
+            dependencies: <GetIn<dynamic>>[
+              GetIn<AuthController>(() {
+                final FirebaseAuthRemote authRemote = FirebaseAuthRemote();
+                final AuthRepoImpl authRepo =
+                    AuthRepoImpl(firebaseAuthRemote: authRemote);
+                return AuthController(
+                  getCurrentUserUseCase: GetCurrentUserUseCase(authRepo),
+                  signInUseCase: SignInUseCase(authRepo),
+                  signUpUseCase: SignUpUseCase(authRepo),
+                  signOutUseCase: SignOutUseCase(authRepo),
+                )..checkAuth();
+              }),
+            ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Password Manager',

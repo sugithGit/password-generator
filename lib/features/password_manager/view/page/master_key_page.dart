@@ -113,17 +113,18 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
       }
     } else {
       // Returning user: validate master key
-      final DocumentSnapshot<Map<String, dynamic>> doc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
+      final DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
 
       final String? storedHash = doc.data()?['verificationHash'] as String?;
 
       if (storedHash == null) {
         setState(() {
-          _errorMessage = 'Verification data not found. Please contact support.';
+          _errorMessage =
+              'Verification data not found. Please contact support.';
           _isLoading = false;
         });
         return;
@@ -246,7 +247,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
                     color: Theme.of(context).colorScheme.error.withAlpha(15),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                       color: Theme.of(context).colorScheme.error.withAlpha(40),
+                      color: Theme.of(context).colorScheme.error.withAlpha(40),
                     ),
                   ),
                   child: Row(
@@ -261,7 +262,10 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
                         child: Text(
                           'Write this key down and keep it safe. It cannot be reset or recovered.',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.error.withAlpha(200),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .error
+                                .withAlpha(200),
                             fontSize: 12,
                             height: 1.4,
                           ),
@@ -312,21 +316,21 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
                       _obscureConfirm
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    size: 20,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      size: 20,
+                    ),
+                    onPressed: () =>
+                        setState(() => _obscureConfirm = !_obscureConfirm),
                   ),
-                  onPressed: () =>
-                      setState(() => _obscureConfirm = !_obscureConfirm),
+                  validator: (String? value) {
+                    if (value != _masterKeyController.text) {
+                      return 'Master keys do not match';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (String? value) {
-                  if (value != _masterKeyController.text) {
-                    return 'Master keys do not match';
-                  }
-                  return null;
-                },
-              ),
-            ],
-            if (_errorMessage != null) ...<Widget>[
+              ],
+              if (_errorMessage != null) ...<Widget>[
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.all(10),

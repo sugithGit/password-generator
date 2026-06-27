@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxget/rxget.dart';
 
 import '../../../../service/auth/domain/repositories/encryption_repo.dart';
 import '../../../../service/generate_password/data/local/password_gnerator.dart';
@@ -10,7 +10,7 @@ import '../../../../service/generate_password/domain/use_cases/delete_password_u
 import '../../../../service/generate_password/domain/use_cases/get_password_history_use_case.dart';
 import '../../../../service/generate_password/domain/use_cases/pasword_use_case.dart';
 import '../../../../service/generate_password/domain/use_cases/save_password_use_case.dart';
-import '../../bloc/password_generate_bloc.dart';
+import '../../controller/password_generator_controller.dart';
 import '../widgets/get_divider.dart';
 import '../widgets/header.dart';
 import '../widgets/history_button.dart';
@@ -28,20 +28,22 @@ class PasswordGeneratePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PasswordGenratorBloc>(
-      create: (BuildContext context) {
-        final PasswordRepoImpl passwordRepo = PasswordRepoImpl(
-          passwordGenerator: PasswordGenerator(),
-          passwordHistoryLocal: PasswordHistoryLocal(),
-        );
-        return PasswordGenratorBloc(
-          generatePasswordUseCase: GeneratePasswordUseCase(passwordRepo),
-          deletePasswordHistoryUseCase:
-              DeletePasswordHistoryUseCase(passwordRepo),
-          getPasswordHistoryUseCase: GetPasswordHistoryUseCase(passwordRepo),
-          savePasswordUseCase: SavePasswordUseCase(passwordRepo),
-        );
-      },
+    return GetInWidget(
+      dependencies: <GetIn<dynamic>>[
+        GetIn<PasswordGeneratorController>(() {
+          final PasswordRepoImpl passwordRepo = PasswordRepoImpl(
+            passwordGenerator: PasswordGenerator(),
+            passwordHistoryLocal: PasswordHistoryLocal(),
+          );
+          return PasswordGeneratorController(
+            generatePasswordUseCase: GeneratePasswordUseCase(passwordRepo),
+            deletePasswordHistoryUseCase:
+                DeletePasswordHistoryUseCase(passwordRepo),
+            getPasswordHistoryUseCase: GetPasswordHistoryUseCase(passwordRepo),
+            savePasswordUseCase: SavePasswordUseCase(passwordRepo),
+          );
+        }),
+      ],
       child: _PassWordGeneratePage(encryptionRepo: encryptionRepo),
     );
   }

@@ -1,9 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxget/rxget.dart';
 
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
-import '../../bloc/vault_bloc.dart';
+import '../../controller/vault_controller.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/empty_vault_widget.dart';
 import '../widgets/vault_entry_card.dart';
@@ -30,16 +30,14 @@ class _VaultPageState extends State<VaultPage> {
   void _navigateToAddEntry({VaultEntry? entry}) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => BlocProvider<VaultBloc>.value(
-          value: context.read<VaultBloc>(),
-          child: AddEntryPage(existingEntry: entry),
-        ),
+        builder: (_) => AddEntryPage(existingEntry: entry),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final VaultController controller = Get.find<VaultController>();
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -59,7 +57,7 @@ class _VaultPageState extends State<VaultPage> {
                 child: VaultSearchBar(
                   controller: _searchController,
                   onChanged: (String query) {
-                    context.read<VaultBloc>().add(SearchEntries(query: query));
+                    controller.searchEntries(query);
                   },
                 ),
               ),
@@ -80,7 +78,7 @@ class _VaultPageState extends State<VaultPage> {
                       isSelected: _selectedCategory == null,
                       onTap: () {
                         setState(() => _selectedCategory = null);
-                        context.read<VaultBloc>().add(const FilterByCategory());
+                        controller.filterByCategory(null);
                       },
                     ),
                     const SizedBox(width: 8),
@@ -92,9 +90,7 @@ class _VaultPageState extends State<VaultPage> {
                           isSelected: _selectedCategory == cat,
                           onTap: () {
                             setState(() => _selectedCategory = cat);
-                            context.read<VaultBloc>().add(
-                                  FilterByCategory(category: cat),
-                                );
+                            controller.filterByCategory(cat);
                           },
                         ),
                       ),
@@ -106,58 +102,51 @@ class _VaultPageState extends State<VaultPage> {
             const SizedBox(height: 16),
             // ── Vault List ──────────────────────────────────
             Expanded(
-              child: BlocBuilder<VaultBloc, VaultState>(
-                builder: (BuildContext context, VaultState state) {
-                  final ThemeData theme = Theme.of(context);
-                  if (state is VaultLoading) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: theme.colorScheme.primary,
-                        strokeWidth: 2.5,
-                      ),
-                    );
-                  }
-                  if (state is VaultLoaded) {
-                    if (state.entries.isEmpty) {
-                      return EmptyVaultWidget(
-                        onAdd: _navigateToAddEntry,
+              child: Obx(() {
+                final ThemeData theme = Theme.of(context);
+                if (controller.state.isLoading) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: theme.colorScheme.primary,
+                      strokeWidth: 2.5,
+                    ),
+                  );
+                }
+                if (controller.state.error != null) {
+                  return Center(
+                    child: Text(
+                      controller.state.error!,
+                      style: TextStyle(color: theme.colorScheme.error),
+                    ),
+                  );
+                }
+                if (controller.state.entries.isEmpty) {
+                  return EmptyVaultWidget(
+                    onAdd: _navigateToAddEntry,
+                  );
+                }
+                return FadeIn(
+                  duration: const Duration(milliseconds: 400),
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    itemCount: controller.state.entries.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final VaultEntry entry = controller.state.entries[index];
+                      return FadeInUp(
+                        duration: const Duration(milliseconds: 400),
+                        delay: Duration(milliseconds: index * 60),
+                        child: VaultEntryCard(
+                          entry: entry,
+                          onEdit: () => _navigateToAddEntry(entry: entry),
+                          onDelete: () {
+                            controller.deleteEntry(entry.id);
+                          },
+                        ),
                       );
-                    }
-                    return FadeIn(
-                      duration: const Duration(milliseconds: 400),
-                      child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        itemCount: state.entries.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final VaultEntry entry = state.entries[index];
-                          return FadeInUp(
-                            duration: const Duration(milliseconds: 400),
-                            delay: Duration(milliseconds: index * 60),
-                            child: VaultEntryCard(
-                              entry: entry,
-                              onEdit: () => _navigateToAddEntry(entry: entry),
-                              onDelete: () {
-                                context.read<VaultBloc>().add(
-                                      DeleteEntry(entryId: entry.id),
-                                    );
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  }
-                  if (state is VaultError) {
-                    return Center(
-                      child: Text(
-                        state.message,
-                        style: TextStyle(color: theme.colorScheme.error),
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
+                    },
+                  ),
+                );
+              }),
             ),
           ],
         ),
@@ -181,6 +170,7 @@ class _VaultPageState extends State<VaultPage> {
 
   Widget _buildHeader(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final VaultController controller = Get.find<VaultController>();
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: Row(
@@ -219,16 +209,13 @@ class _VaultPageState extends State<VaultPage> {
                 ),
               ),
               const SizedBox(height: 2),
-              BlocBuilder<VaultBloc, VaultState>(
-                builder: (BuildContext context, VaultState state) {
-                  final int count =
-                      state is VaultLoaded ? state.entries.length : 0;
-                  return Text(
-                    '$count passwords stored',
-                    style: theme.textTheme.bodySmall,
-                  );
-                },
-              ),
+              Obx(() {
+                final int count = controller.state.entries.length;
+                return Text(
+                  '$count passwords stored',
+                  style: theme.textTheme.bodySmall,
+                );
+              }),
             ],
           ),
           const Spacer(),

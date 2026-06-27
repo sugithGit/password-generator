@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxget/rxget.dart';
 
 import '../../../../core/const/constants.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
-import '../../bloc/vault_bloc.dart';
+import '../../controller/vault_controller.dart';
 
 class AddEntryPage extends StatefulWidget {
   const AddEntryPage({this.existingEntry, super.key});
@@ -55,6 +55,8 @@ class _AddEntryPageState extends State<AddEntryPage> {
     if (!_formKey.currentState!.validate()) return;
     HapticFeedback.mediumImpact();
 
+    final VaultController controller = Get.find<VaultController>();
+
     if (_isEditing) {
       final VaultEntry updated = widget.existingEntry!.copyWith(
         title: _titleController.text.trim(),
@@ -69,22 +71,20 @@ class _AddEntryPageState extends State<AddEntryPage> {
         category: _selectedCategory,
         updatedAt: DateTime.now(),
       );
-      context.read<VaultBloc>().add(UpdateEntry(entry: updated));
+      controller.updateEntry(updated);
     } else {
-      context.read<VaultBloc>().add(
-            AddEntry(
-              title: _titleController.text.trim(),
-              username: _usernameController.text.trim(),
-              password: _passwordController.text.trim(),
-              website: _websiteController.text.trim().isNotEmpty
-                  ? _websiteController.text.trim()
-                  : null,
-              notes: _notesController.text.trim().isNotEmpty
-                  ? _notesController.text.trim()
-                  : null,
-              category: _selectedCategory,
-            ),
-          );
+      controller.addEntry(
+        title: _titleController.text.trim(),
+        username: _usernameController.text.trim(),
+        password: _passwordController.text.trim(),
+        website: _websiteController.text.trim().isNotEmpty
+            ? _websiteController.text.trim()
+            : null,
+        notes: _notesController.text.trim().isNotEmpty
+            ? _notesController.text.trim()
+            : null,
+        category: _selectedCategory,
+      );
     }
     Navigator.of(context).pop();
   }
@@ -264,13 +264,14 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                   title: Text(
                                     'Delete Password',
                                     style: TextStyle(
-                                        color: theme.colorScheme.onSurface,),
+                                      color: theme.colorScheme.onSurface,
+                                    ),
                                   ),
                                   content: Text(
                                     'Are you sure you want to delete this entry?',
                                     style: TextStyle(
-                                        color:
-                                            theme.colorScheme.onSurfaceVariant,),
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
                                   ),
                                   actions: <Widget>[
                                     TextButton(
@@ -278,25 +279,24 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                       child: Text(
                                         'Cancel',
                                         style: TextStyle(
-                                            color: theme
-                                                .colorScheme.onSurfaceVariant,),
+                                          color: theme
+                                              .colorScheme.onSurfaceVariant,
+                                        ),
                                       ),
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        context.read<VaultBloc>().add(
-                                              DeleteEntry(
-                                                entryId:
-                                                    widget.existingEntry!.id,
-                                              ),
-                                            );
+                                        Get.find<VaultController>().deleteEntry(
+                                          widget.existingEntry!.id,
+                                        );
                                         Navigator.of(ctx).pop();
                                         Navigator.of(context).pop();
                                       },
                                       child: Text(
                                         'Delete',
                                         style: TextStyle(
-                                            color: theme.colorScheme.error,),
+                                          color: theme.colorScheme.error,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -306,8 +306,8 @@ class _AddEntryPageState extends State<AddEntryPage> {
                             style: OutlinedButton.styleFrom(
                               foregroundColor: theme.colorScheme.error,
                               side: BorderSide(
-                                  color:
-                                      theme.colorScheme.error.withAlpha(100),),
+                                color: theme.colorScheme.error.withAlpha(100),
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),

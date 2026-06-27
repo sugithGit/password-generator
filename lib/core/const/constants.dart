@@ -40,4 +40,3 @@ const Color categoryBanking = Color(0xFF4CAF50);
 const Color categoryShopping = Color(0xFFFF9800);
 const Color categoryWork = Color(0xFF9C27B0);
 const Color categoryOther = Color(0xFF607D8B);
-
