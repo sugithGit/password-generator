@@ -7,6 +7,7 @@ import 'package:rxget/rxget.dart';
 import 'package:toastification/toastification.dart';
 
 import 'core/routes/app_router.dart';
+import 'core/routes/app_router_observer.dart';
 import 'core/theme/shadcn_theme.dart';
 import 'features/auth/controller/auth_controller.dart';
 import 'firebase_options.dart';
@@ -39,6 +40,7 @@ class _MyAppState extends State<MyApp> {
 
     final EncryptionLocal encryptionLocal =
         EncryptionLocal(sodium: sodiumInstance);
+
     final EncryptionRepo encryptionRepo = EncryptionRepoImpl(
       encryptionLocal: encryptionLocal,
     );
@@ -73,7 +75,9 @@ class _MyAppState extends State<MyApp> {
               theme: ShadcnTheme.darkTheme,
               darkTheme: ShadcnTheme.darkTheme,
               themeMode: ThemeMode.dark,
-              routerConfig: _appRouter.config(),
+              routerConfig: _appRouter.config(
+                navigatorObservers: () => [if (kDebugMode) AppRouterObserver()],
+              ),
             ),
           );
         },

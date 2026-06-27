@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -22,11 +20,9 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _startTimer() {
-    Timer(const Duration(seconds: 2), () {
-      if (mounted) {
-        context.router.replaceAll([const PasswordGenerateRoute()]);
-      }
-    });
+    if (mounted) {
+      context.router.replaceAll([const PasswordGenerateRoute()]);
+    }
   }
 
   @override

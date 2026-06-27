@@ -1,23 +1,11 @@
-import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class AppLogo extends StatelessWidget {
   const AppLogo({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return SvgPicture.asset(
-      'assets/svg/password_generator_log.svg',
-      colorFilter: ColorFilter.mode(
-        theme.colorScheme.onSurface,
-        BlendMode.srcIn,
-      ),
-      semanticsLabel: 'App Logo',
-    ).paddingSymmetric(
-      horizontal: 60,
-    );
+    return const SizedBox.shrink();
     // return Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
     //   children: <Widget>[

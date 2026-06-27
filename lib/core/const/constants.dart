@@ -15,7 +15,6 @@ final Color shade = primaryColor.withAlpha(50);
 
 const double defaultPadding = 16;
 
-const Color kScaffoldBackgroundColor = Color(0xFFF3FBFA);
 const double kDiameter = 300;
 const double kMinDegree = 9;
 const double kMaxDegree = 20;
