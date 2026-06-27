@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rxget/rxget.dart';
@@ -18,13 +19,9 @@ import '../widgets/password_button.dart';
 import '../widgets/password_length.dart';
 import '../widgets/password_settingfield.dart';
 
+@RoutePage()
 class PasswordGeneratePage extends StatelessWidget {
-  const PasswordGeneratePage({
-    required this.encryptionRepo,
-    super.key,
-  });
-
-  final EncryptionRepo encryptionRepo;
+  const PasswordGeneratePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,15 +41,13 @@ class PasswordGeneratePage extends StatelessWidget {
           );
         }),
       ],
-      child: _PassWordGeneratePage(encryptionRepo: encryptionRepo),
+      child: const _PassWordGeneratePage(),
     );
   }
 }
 
 class _PassWordGeneratePage extends StatelessWidget {
-  const _PassWordGeneratePage({required this.encryptionRepo});
-
-  final EncryptionRepo encryptionRepo;
+  const _PassWordGeneratePage();
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +64,7 @@ class _PassWordGeneratePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     if (kIsWeb) const AppLogo(),
-                    HistoryButton(encryptionRepo: encryptionRepo),
+                    const HistoryButton(),
                     const PasswordLength(),
                     const SizedBox(height: 10),
                     const PassWordSettingField(),

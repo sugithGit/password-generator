@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   animate_do: ^5.1.0
+  auto_route: ^11.0.0
   awesome_extensions: ^2.1.0
   cloud_firestore: ^5.6.7
   equatable: ^2.0.8

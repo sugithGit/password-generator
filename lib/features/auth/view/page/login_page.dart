@@ -1,10 +1,12 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:rxget/rxget.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../controller/auth_controller.dart';
 
+@RoutePage()
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -42,7 +44,7 @@ class _LoginPageState extends State<LoginPage>
         await controller.signIn(email: email, password: password);
       }
       if (mounted) {
-        Navigator.of(context).pop();
+        context.router.maybePop();
       }
     } on Exception catch (e) {
       if (mounted) {

@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rxget/rxget.dart';
 import 'package:sodium/sodium.dart';
 
+import '../../../../core/routes/app_router.gr.dart';
 import '../../../../service/auth/data/local/biometric_local.dart';
 import '../../../../service/auth/data/repositories/biometric_repo_impl.dart';
 import '../../../../service/auth/domain/repositories/biometric_repo.dart';
@@ -16,10 +18,9 @@ import '../../controller/vault_controller.dart';
 import 'master_key_page.dart';
 import 'vault_page.dart';
 
+@RoutePage()
 class BiometricGatePage extends StatefulWidget {
-  const BiometricGatePage({required this.encryptionRepo, super.key});
-
-  final EncryptionRepo encryptionRepo;
+  const BiometricGatePage({super.key});
 
   @override
   State<BiometricGatePage> createState() => _BiometricGatePageState();
@@ -93,12 +94,9 @@ class _BiometricGatePageState extends State<BiometricGatePage>
   }
 
   void _navigateToMasterKey() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(
-        builder: (_) => MasterKeyPage(
-          encryptionRepo: widget.encryptionRepo,
-          onAuthenticated: _onMasterKeyValidated,
-        ),
+    context.router.replace(
+      MasterKeyRoute(
+        onAuthenticated: _onMasterKeyValidated,
       ),
     );
   }
@@ -110,7 +108,8 @@ class _BiometricGatePageState extends State<BiometricGatePage>
     }
 
     // Derive the encryption key from UID + master key
-    final SecureKey encryptionKey = widget.encryptionRepo.deriveKey(
+    final EncryptionRepo encryptionRepo = Get.find<EncryptionRepo>();
+    final SecureKey encryptionKey = encryptionRepo.deriveKey(
       uid: user.uid,
       masterKey: masterKey,
     );
@@ -120,21 +119,12 @@ class _BiometricGatePageState extends State<BiometricGatePage>
     );
     final VaultRepoImpl repository = VaultRepoImpl(
       remoteDatasource: datasource,
-      encryptionRepo: widget.encryptionRepo,
+      encryptionRepo: encryptionRepo,
       encryptionKey: encryptionKey,
     );
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(
-        builder: (_) => GetInWidget(
-          dependencies: <GetIn<dynamic>>[
-            GetIn<VaultController>(
-              () => VaultController(repository: repository)..loadVault(),
-            ),
-          ],
-          child: const VaultPage(),
-        ),
-      ),
+    context.router.replace(
+      VaultRoute(repository: repository),
     );
   }
 
@@ -248,7 +238,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                         ),
                         const SizedBox(height: 16),
                         TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () => context.router.maybePop(),
                           child: const Text('Go Back'),
                         ),
                       ],

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxget/rxget.dart';
@@ -6,6 +7,7 @@ import '../../../../core/const/constants.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../controller/vault_controller.dart';
 
+@RoutePage()
 class AddEntryPage extends StatefulWidget {
   const AddEntryPage({this.existingEntry, super.key});
 
@@ -90,7 +92,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
         category: _selectedCategory,
       );
     }
-    Navigator.of(context).pop();
+    context.router.maybePop();
   }
 
   @override
@@ -279,7 +281,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                   ),
                                   actions: <Widget>[
                                     TextButton(
-                                      onPressed: () => Navigator.of(ctx).pop(),
+                                      onPressed: () => ctx.router.maybePop(),
                                       child: Text(
                                         'Cancel',
                                         style: TextStyle(
@@ -293,8 +295,8 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                         Get.find<VaultController>().deleteEntry(
                                           widget.existingEntry!.id,
                                         );
-                                        Navigator.of(ctx).pop();
-                                        Navigator.of(context).pop();
+                                        ctx.router.maybePop();
+                                        context.router.maybePop();
                                       },
                                       child: Text(
                                         'Delete',
@@ -345,7 +347,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
       child: Row(
         children: <Widget>[
           InkWell(
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () => context.router.maybePop(),
             customBorder: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),

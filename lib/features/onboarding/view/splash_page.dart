@@ -1,15 +1,15 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../service/auth/domain/repositories/encryption_repo.dart';
-import '../../generate_password/view/page/password_generate_page.dart';
+import '../../../../core/routes/app_router.gr.dart';
 import '../../generate_password/view/widgets/header.dart';
 
+@RoutePage()
 class SplashPage extends StatefulWidget {
-  const SplashPage({required this.encryptionRepo, super.key});
-
-  final EncryptionRepo encryptionRepo;
+  const SplashPage({super.key});
 
   @override
   State<SplashPage> createState() => _SplashPageState();
@@ -25,14 +25,7 @@ class _SplashPageState extends State<SplashPage> {
   void _startTimer() {
     Timer(const Duration(seconds: 2), () {
       if (mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute<dynamic>(
-            builder: (_) => PasswordGeneratePage(
-              encryptionRepo: widget.encryptionRepo,
-            ),
-          ),
-          (Route<dynamic> route) => false,
-        );
+        context.router.replaceAll([const PasswordGenerateRoute()]);
       }
     });
   }

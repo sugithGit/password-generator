@@ -1,19 +1,18 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/const/constants.dart';
 import '../../../../core/widgets/squircle.dart';
+import '../../../../core/routes/app_router.gr.dart';
 import '../../../../service/auth/domain/repositories/encryption_repo.dart';
 import '../../../auth/view/page/login_page.dart';
 import '../../../password_manager/view/page/biometric_gate_page.dart';
 
 class HistoryButton extends StatelessWidget {
   const HistoryButton({
-    required this.encryptionRepo,
     super.key,
   });
-
-  final EncryptionRepo encryptionRepo;
 
   @override
   Widget build(BuildContext context) {
@@ -49,20 +48,10 @@ class HistoryButton extends StatelessWidget {
 
     if (user == null) {
       // Not signed in → show login page
-      Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          builder: (_) => const LoginPage(),
-        ),
-      );
+      context.router.push(const LoginRoute());
     } else {
       // Signed in → biometric gate → master key → vault
-      Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          builder: (_) => BiometricGatePage(
-            encryptionRepo: encryptionRepo,
-          ),
-        ),
-      );
+      context.router.push(const BiometricGateRoute());
     }
   }
 }

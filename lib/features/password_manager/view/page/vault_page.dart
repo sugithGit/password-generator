@@ -1,8 +1,11 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:rxget/rxget.dart';
 
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
+import '../../../../core/routes/app_router.gr.dart';
+import '../../../../service/password_manager/data/repositories/vault_repo_impl.dart';
 import '../../controller/vault_controller.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/empty_vault_widget.dart';
@@ -10,8 +13,23 @@ import '../widgets/vault_entry_card.dart';
 import '../widgets/vault_search_bar.dart';
 import 'add_entry_page.dart';
 
-class VaultPage extends StatefulWidget {
-  const VaultPage({super.key});
+@RoutePage()
+class VaultPage extends StatefulWidget implements AutoRouteWrapper {
+  const VaultPage({required this.repository, super.key});
+
+  final VaultRepoImpl repository;
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
+    return GetInWidget(
+      dependencies: <GetIn<dynamic>>[
+        GetIn<VaultController>(
+          () => VaultController(repository: repository)..loadVault(),
+        ),
+      ],
+      child: this,
+    );
+  }
 
   @override
   State<VaultPage> createState() => _VaultPageState();
@@ -28,11 +46,7 @@ class _VaultPageState extends State<VaultPage> {
   }
 
   void _navigateToAddEntry({VaultEntry? entry}) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => AddEntryPage(existingEntry: entry),
-      ),
-    );
+    context.router.push(AddEntryRoute(existingEntry: entry));
   }
 
   @override
@@ -175,7 +189,7 @@ class _VaultPageState extends State<VaultPage> {
         children: <Widget>[
           // Back button
           InkWell(
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () => context.router.maybePop(),
             customBorder: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),

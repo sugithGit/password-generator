@@ -22,8 +22,18 @@ import 'service/auth/domain/use_cases/sign_in_use_case.dart';
 import 'service/auth/domain/use_cases/sign_out_use_case.dart';
 import 'service/auth/domain/use_cases/sign_up_use_case.dart';
 
-class MyApp extends StatelessWidget {
+import 'package:password_generator/core/routes/app_router.dart';
+import 'package:password_generator/core/routes/app_router.gr.dart';
+
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final AppRouter _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -59,16 +69,15 @@ class MyApp extends StatelessWidget {
                   signOutUseCase: SignOutUseCase(authRepo),
                 )..checkAuth();
               }),
+              GetIn<EncryptionRepo>(() => encryptionRepo),
             ],
-            child: MaterialApp(
+            child: MaterialApp.router(
               debugShowCheckedModeBanner: false,
               title: 'Password Manager',
               theme: ShadcnTheme.darkTheme,
               darkTheme: ShadcnTheme.darkTheme,
               themeMode: ThemeMode.dark,
-              home: PasswordGeneratePage(
-                encryptionRepo: encryptionRepo,
-              ),
+              routerConfig: _appRouter.config(),
             ),
           );
         },

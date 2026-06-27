@@ -1,7 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rxget/rxget.dart';
 
 import '../../../../service/auth/domain/repositories/encryption_repo.dart';
 
@@ -11,14 +13,12 @@ import '../../../../service/auth/domain/repositories/encryption_repo.dart';
 /// Returning users: Validates master key against stored hash.
 ///
 /// If the master key is lost, data is irrecoverable — this is by design.
+@RoutePage()
 class MasterKeyPage extends StatefulWidget {
   const MasterKeyPage({
-    required this.encryptionRepo,
     required this.onAuthenticated,
     super.key,
   });
-
-  final EncryptionRepo encryptionRepo;
 
   /// Called with the validated master key when authentication succeeds.
   final void Function(BuildContext context, String masterKey) onAuthenticated;
@@ -56,7 +56,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       if (mounted) {
-        Navigator.of(context).pop();
+        context.router.maybePop();
       }
       return;
     }
@@ -91,17 +91,19 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       if (mounted) {
-        Navigator.of(context).pop();
+        context.router.maybePop();
       }
       return;
     }
 
     final String masterKey = _masterKeyController.text.trim();
 
+    final EncryptionRepo encryptionRepo = Get.find<EncryptionRepo>();
+
     if (_isNewUser) {
       // First time: store verification hash
       final String verificationHash =
-          widget.encryptionRepo.createVerificationHash(
+          encryptionRepo.createVerificationHash(
         uid: user.uid,
         masterKey: masterKey,
       );
@@ -136,7 +138,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
         return;
       }
 
-      final bool isValid = widget.encryptionRepo.verifyMasterKey(
+      final bool isValid = encryptionRepo.verifyMasterKey(
         uid: user.uid,
         masterKey: masterKey,
         storedVerificationHash: storedHash,
@@ -410,7 +412,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
 
   Widget _buildBackButton() {
     return TextButton(
-      onPressed: () => Navigator.of(context).pop(),
+      onPressed: () => context.router.maybePop(),
       child: const Text('Go Back'),
     );
   }
