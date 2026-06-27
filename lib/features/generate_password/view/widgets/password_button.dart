@@ -11,7 +11,8 @@ class PasswordButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PasswordGeneratorController controller = Get.find<PasswordGeneratorController>();
+    final PasswordGeneratorController controller =
+        Get.find<PasswordGeneratorController>();
 
     void generatePassword() {
       HapticFeedback.heavyImpact();
@@ -29,7 +30,7 @@ class PasswordButton extends StatelessWidget {
     }
 
     return Obx(() {
-      final state = controller.state;
+      final PasswordGeneratorState state = controller.state;
       final ThemeData theme = Theme.of(context);
       return Column(
         children: <Widget>[

@@ -35,7 +35,8 @@ class _SavedPaaswordBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PasswordGeneratorController controller = Get.find<PasswordGeneratorController>();
+    final PasswordGeneratorController controller =
+        Get.find<PasswordGeneratorController>();
     return Container(
       padding: const EdgeInsets.all(defaultPadding),
       child: Column(
@@ -45,7 +46,7 @@ class _SavedPaaswordBottomSheet extends StatelessWidget {
           const SizedBox(height: defaultPadding),
           Expanded(
             child: Obx(() {
-              final state = controller.state;
+              final PasswordGeneratorState state = controller.state;
               return ListView.builder(
                 itemCount: state.passwordHistory.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -164,17 +165,16 @@ class _ClearPasswordHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final PasswordGeneratorController controller = Get.find<PasswordGeneratorController>();
+    final PasswordGeneratorController controller =
+        Get.find<PasswordGeneratorController>();
     return Obx(() {
-      final state = controller.state;
+      final PasswordGeneratorState state = controller.state;
       final bool isEnabled = state.passwordHistory.isNotEmpty;
       return ElevatedButton(
-        onPressed:
-            isEnabled ? controller.deletePasswordHistory : null,
+        onPressed: isEnabled ? controller.deletePasswordHistory : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isEnabled
-              ? theme.colorScheme.error
-              : theme.colorScheme.secondary,
+          backgroundColor:
+              isEnabled ? theme.colorScheme.error : theme.colorScheme.secondary,
           foregroundColor: isEnabled
               ? theme.colorScheme.onError
               : theme.colorScheme.onSurfaceVariant,

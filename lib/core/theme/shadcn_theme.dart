@@ -84,7 +84,9 @@ class ShadcnTheme {
         labelStyle:
             TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 14),
         hintStyle: TextStyle(
-            color: colorScheme.onSurfaceVariant.withAlpha(150), fontSize: 14),
+          color: colorScheme.onSurfaceVariant.withAlpha(150),
+          fontSize: 14,
+        ),
         prefixIconColor: colorScheme.onSurfaceVariant,
         suffixIconColor: colorScheme.onSurfaceVariant,
         border: OutlineInputBorder(

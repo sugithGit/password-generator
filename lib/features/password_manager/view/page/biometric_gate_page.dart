@@ -124,8 +124,9 @@ class _BiometricGatePageState extends State<BiometricGatePage>
       MaterialPageRoute<void>(
         builder: (_) => GetInWidget(
           dependencies: <GetIn<dynamic>>[
-            GetIn<VaultController>(() =>
-                VaultController(repository: repository)..loadVault()),
+            GetIn<VaultController>(
+              () => VaultController(repository: repository)..loadVault(),
+            ),
           ],
           child: const VaultPage(),
         ),

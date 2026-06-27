@@ -10,7 +10,8 @@ import '../../../service/generate_password/domain/use_cases/save_password_use_ca
 
 part 'password_generator_state.dart';
 
-class PasswordGeneratorController extends GetxController<PasswordGeneratorState> {
+class PasswordGeneratorController
+    extends GetxController<PasswordGeneratorState> {
   PasswordGeneratorController({
     required this.generatePasswordUseCase,
     required this.deletePasswordHistoryUseCase,
@@ -93,11 +94,21 @@ class PasswordGeneratorController extends GetxController<PasswordGeneratorState>
 
   void _updateMaxPasswordLength() {
     int max = 0;
-    if (state.isLowercase) max += 12;
-    if (state.isUppercase) max += 12;
-    if (state.isNumbers) max += 10;
-    if (state.isSymbols) max += 12;
-    if (state.isIncludeSpaces) max += 2;
+    if (state.isLowercase) {
+      max += 12;
+    }
+    if (state.isUppercase) {
+      max += 12;
+    }
+    if (state.isNumbers) {
+      max += 10;
+    }
+    if (state.isSymbols) {
+      max += 12;
+    }
+    if (state.isIncludeSpaces) {
+      max += 2;
+    }
 
     state._maxPasswordLength.value = max;
     if (state.passwordLength > max) {

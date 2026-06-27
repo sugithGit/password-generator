@@ -30,11 +30,13 @@ class _SliderWidgetState extends State<_SliderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final PasswordGeneratorController controller = Get.find<PasswordGeneratorController>();
+    final PasswordGeneratorController controller =
+        Get.find<PasswordGeneratorController>();
     return Obx(() {
-      final state = controller.state;
+      final PasswordGeneratorState state = controller.state;
       final double maxVal = state.maxPasswordLength.toDouble();
-      final double currentVal = state.passwordLength.toDouble().clamp(kMinDegree, maxVal);
+      final double currentVal =
+          state.passwordLength.toDouble().clamp(kMinDegree, maxVal);
 
       // Normalize progressVal for shader
       progressVal = normalize(currentVal, kMinDegree, maxVal).toDouble();

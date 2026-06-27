@@ -26,8 +26,10 @@ class AuthController extends GetxController<AuthState> {
   final AuthState state;
 
   void checkAuth() => _checkAuth();
-  Future<void> signIn({required String email, required String password}) => _signIn(email, password);
-  Future<void> signUp({required String email, required String password}) => _signUp(email, password);
+  Future<void> signIn({required String email, required String password}) =>
+      _signIn(email, password);
+  Future<void> signUp({required String email, required String password}) =>
+      _signUp(email, password);
   Future<void> signOut() => _signOut();
 
   void _checkAuth() {
@@ -48,7 +50,7 @@ class AuthController extends GetxController<AuthState> {
       state._error.value = parsedError;
       state._user.value = null;
       throw Exception(parsedError);
-    } catch (e) {
+    } on Exception catch (e) {
       final String errorMsg = e.toString();
       state._error.value = errorMsg;
       state._user.value = null;
@@ -71,7 +73,7 @@ class AuthController extends GetxController<AuthState> {
       state._error.value = parsedError;
       state._user.value = null;
       throw Exception(parsedError);
-    } catch (e) {
+    } on Exception catch (e) {
       final String errorMsg = e.toString();
       state._error.value = errorMsg;
       state._user.value = null;

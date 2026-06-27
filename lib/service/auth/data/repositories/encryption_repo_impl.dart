@@ -24,10 +24,14 @@ class EncryptionRepoImpl implements EncryptionRepo {
   }
 
   @override
-  String createVerificationHash(
-      {required String uid, required String masterKey}) {
+  String createVerificationHash({
+    required String uid,
+    required String masterKey,
+  }) {
     return _encryptionLocal.createVerificationHash(
-        uid: uid, masterKey: masterKey);
+      uid: uid,
+      masterKey: masterKey,
+    );
   }
 
   @override

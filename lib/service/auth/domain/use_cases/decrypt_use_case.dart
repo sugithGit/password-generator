@@ -15,6 +15,8 @@ class DecryptUseCase implements UseCase<String, DecryptParams> {
   @override
   String call(DecryptParams params) {
     return encryptionRepo.decrypt(
-        cipherText: params.cipherText, key: params.key);
+      cipherText: params.cipherText,
+      key: params.key,
+    );
   }
 }

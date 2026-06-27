@@ -12,7 +12,8 @@ void main() {
     sodiumInstance = await SodiumInit.init();
   });
 
-  testWidgets('Password Generator UI loads successfully', (WidgetTester tester) async {
+  testWidgets('Password Generator UI loads successfully',
+      (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();

@@ -56,9 +56,7 @@ class _VaultPageState extends State<VaultPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: VaultSearchBar(
                   controller: _searchController,
-                  onChanged: (String query) {
-                    controller.searchEntries(query);
-                  },
+                  onChanged: controller.searchEntries,
                 ),
               ),
             ),

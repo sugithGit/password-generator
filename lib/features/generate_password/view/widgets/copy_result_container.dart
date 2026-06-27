@@ -41,7 +41,8 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final PasswordGeneratorController controller = Get.find<PasswordGeneratorController>();
+    final PasswordGeneratorController controller =
+        Get.find<PasswordGeneratorController>();
     return Obx(() {
       return Column(
         children: <Widget>[
@@ -61,7 +62,8 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
                 hintText: 'Password will appear here...',
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.copy_rounded, size: 20),
-                  onPressed: () => _onTap(controller.state.passwordController.text),
+                  onPressed: () =>
+                      _onTap(controller.state.passwordController.text),
                 ),
               ),
               onTap: () => _onTap(controller.state.passwordController.text),

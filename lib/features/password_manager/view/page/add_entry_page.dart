@@ -52,7 +52,9 @@ class _AddEntryPageState extends State<AddEntryPage> {
   }
 
   void _save() {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
     HapticFeedback.mediumImpact();
 
     final VaultController controller = Get.find<VaultController>();

@@ -27,8 +27,10 @@ class _LoginPageState extends State<LoginPage>
     super.dispose();
   }
 
-  void _submit() async {
-    if (!_formKey.currentState!.validate()) return;
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
 
@@ -42,11 +44,14 @@ class _LoginPageState extends State<LoginPage>
       if (mounted) {
         Navigator.of(context).pop();
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         toastification.show(
           context: context,
-          title: Text(controller.state.error ?? e.toString().replaceAll('Exception: ', '')),
+          title: Text(
+            controller.state.error ??
+                e.toString().replaceAll('Exception: ', ''),
+          ),
           type: ToastificationType.error,
           autoCloseDuration: const Duration(seconds: 3),
           style: ToastificationStyle.flatColored,

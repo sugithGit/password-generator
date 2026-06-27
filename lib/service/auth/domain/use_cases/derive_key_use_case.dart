@@ -15,6 +15,8 @@ class DeriveKeyUseCase implements UseCase<SecureKey, DeriveKeyParams> {
   @override
   SecureKey call(DeriveKeyParams params) {
     return encryptionRepo.deriveKey(
-        uid: params.uid, masterKey: params.masterKey);
+      uid: params.uid,
+      masterKey: params.masterKey,
+    );
   }
 }

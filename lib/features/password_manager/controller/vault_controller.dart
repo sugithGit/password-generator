@@ -62,9 +62,9 @@ class VaultController extends GetxController<VaultState> {
     required String title,
     required String username,
     required String password,
+    required VaultCategory category,
     String? website,
     String? notes,
-    required VaultCategory category,
   }) async {
     state._error.value = null;
     try {
@@ -125,7 +125,8 @@ class VaultController extends GetxController<VaultState> {
 
     final VaultCategory? category = state.selectedCategory;
     if (category != null) {
-      filtered = filtered.where((VaultEntry e) => e.category == category).toList();
+      filtered =
+          filtered.where((VaultEntry e) => e.category == category).toList();
     }
 
     final String? query = state.searchQuery;

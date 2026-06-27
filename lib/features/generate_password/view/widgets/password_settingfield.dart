@@ -10,7 +10,8 @@ class PassWordSettingField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final PasswordGeneratorController controller = Get.find<PasswordGeneratorController>();
+    final PasswordGeneratorController controller =
+        Get.find<PasswordGeneratorController>();
     return Column(
       children: <Widget>[
         Text(
@@ -22,7 +23,7 @@ class PassWordSettingField extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Obx(() {
-          final state = controller.state;
+          final PasswordGeneratorState state = controller.state;
           return Row(
             children: <Widget>[
               Expanded(
