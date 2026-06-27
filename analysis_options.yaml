@@ -84,7 +84,7 @@ linter:
     library_annotations: true
     library_names: true
     library_prefixes: true
-    library_private_types_in_public_api: true
+    library_private_types_in_public_api: false
     lines_longer_than_80_chars: false
     literal_only_boolean_expressions: true
     matching_super_parameters: true

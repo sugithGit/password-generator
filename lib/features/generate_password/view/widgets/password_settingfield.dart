@@ -23,7 +23,7 @@ class PassWordSettingField extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Obx(() {
-          final PasswordGeneratorState state = controller.state;
+          final state = controller.state;
           return Row(
             children: <Widget>[
               Expanded(

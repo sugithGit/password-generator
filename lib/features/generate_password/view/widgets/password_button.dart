@@ -30,8 +30,9 @@ class PasswordButton extends StatelessWidget {
     }
 
     return Obx(() {
-      final PasswordGeneratorState state = controller.state;
+      final state = controller.state;
       final ThemeData theme = Theme.of(context);
+      final password = state.generatedPassword;
       return Column(
         children: <Widget>[
           Text(
@@ -44,21 +45,19 @@ class PasswordButton extends StatelessWidget {
             bottom: 10,
           ),
           Text(
-            state.passwordController.text.isNotEmpty
-                ? state.passwordController.text
-                : '________',
+            password.isNotEmpty ? password : '________',
             maxLines: 4,
             style: theme.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w900,
               letterSpacing: 2.5,
-              color: state.passwordController.text.isNotEmpty
+              color: password.isNotEmpty
                   ? theme.colorScheme.onSurface
                   : theme.colorScheme.onSurface.withAlpha(50),
             ),
           ).paddingOnly(
             bottom: 30,
           ),
-          if (state.passwordController.text.isNotEmpty)
+          if (password.isNotEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -79,9 +78,7 @@ class PasswordButton extends StatelessWidget {
                 10.widthBox,
                 IconButton.filled(
                   onPressed: () {
-                    copyPassword(
-                      state.passwordController.text,
-                    );
+                    copyPassword(password);
                   },
                   icon: Center(
                     child: Text(

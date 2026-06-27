@@ -46,7 +46,7 @@ class _SavedPaaswordBottomSheet extends StatelessWidget {
           const SizedBox(height: defaultPadding),
           Expanded(
             child: Obx(() {
-              final PasswordGeneratorState state = controller.state;
+              final state = controller.state;
               return ListView.builder(
                 itemCount: state.passwordHistory.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -168,7 +168,7 @@ class _ClearPasswordHistory extends StatelessWidget {
     final PasswordGeneratorController controller =
         Get.find<PasswordGeneratorController>();
     return Obx(() {
-      final PasswordGeneratorState state = controller.state;
+      final state = controller.state;
       final bool isEnabled = state.passwordHistory.isNotEmpty;
       return ElevatedButton(
         onPressed: isEnabled ? controller.deletePasswordHistory : null,

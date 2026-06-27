@@ -9,13 +9,13 @@ import '../../../service/auth/domain/use_cases/sign_up_use_case.dart';
 
 part 'auth_state.dart';
 
-class AuthController extends GetxController<AuthState> {
+class AuthController extends GetxController<_AuthState> {
   AuthController({
     required this.getCurrentUserUseCase,
     required this.signInUseCase,
     required this.signUpUseCase,
     required this.signOutUseCase,
-  }) : state = AuthState();
+  }) : state = _AuthState();
 
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final SignInUseCase signInUseCase;
@@ -23,7 +23,7 @@ class AuthController extends GetxController<AuthState> {
   final SignOutUseCase signOutUseCase;
 
   @override
-  final AuthState state;
+  final _AuthState state;
 
   void checkAuth() => _checkAuth();
   Future<void> signIn({required String email, required String password}) =>

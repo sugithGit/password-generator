@@ -11,13 +11,13 @@ import '../../../service/generate_password/domain/use_cases/save_password_use_ca
 part 'password_generator_state.dart';
 
 class PasswordGeneratorController
-    extends GetxController<PasswordGeneratorState> {
+    extends GetxController<_PasswordGeneratorState> {
   PasswordGeneratorController({
     required this.generatePasswordUseCase,
     required this.deletePasswordHistoryUseCase,
     required this.getPasswordHistoryUseCase,
     required this.savePasswordUseCase,
-  }) : state = PasswordGeneratorState();
+  }) : state = _PasswordGeneratorState();
 
   final GeneratePasswordUseCase generatePasswordUseCase;
   final DeletePasswordHistoryUseCase deletePasswordHistoryUseCase;
@@ -25,7 +25,7 @@ class PasswordGeneratorController
   final SavePasswordUseCase savePasswordUseCase;
 
   @override
-  final PasswordGeneratorState state;
+  final _PasswordGeneratorState state;
 
   void changePasswordLength(int length) => _changePasswordLength(length);
   void toggleLowercase() => _toggleLowercase();
@@ -129,6 +129,7 @@ class PasswordGeneratorController
 
     final String randomPassword = generatePasswordUseCase.call(params);
     state.passwordController.text = randomPassword;
+    state._generatedPassword.value = randomPassword;
   }
 
   void _savePassword() {

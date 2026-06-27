@@ -33,7 +33,7 @@ class _SliderWidgetState extends State<_SliderWidget> {
     final PasswordGeneratorController controller =
         Get.find<PasswordGeneratorController>();
     return Obx(() {
-      final PasswordGeneratorState state = controller.state;
+      final state = controller.state;
       final double maxVal = state.maxPasswordLength.toDouble();
       final double currentVal =
           state.passwordLength.toDouble().clamp(kMinDegree, maxVal);

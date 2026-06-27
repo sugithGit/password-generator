@@ -1,6 +1,6 @@
 part of 'auth_controller.dart';
 
-class AuthState extends GetxState {
+class _AuthState extends GetxState {
   final RxBool _isLoading = false.obs;
   final Rxn<AuthUser> _user = Rxn<AuthUser>();
   final RxnString _error = RxnString();
