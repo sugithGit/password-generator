@@ -1,6 +1,6 @@
 import 'package:sodium/sodium.dart';
 
-import '../../../../core/services/encryption_service.dart';
+import '../../../auth/encryption_service.dart';
 import '../../domain/entities/vault_entry.dart';
 import '../../domain/repositories/vault_repository.dart';
 import '../model/vault_entry_model.dart';

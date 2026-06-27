@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/const/constants.dart';
-import '../../../../core/services/encryption_service.dart';
+import '../../../../service/auth/encryption_service.dart';
 import '../../../password_manager/view/page/biometric_gate_page.dart';
 import '../../../auth/bloc/auth_bloc.dart';
 import '../../../auth/view/page/login_page.dart';

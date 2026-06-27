@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sodium/sodium.dart';
 
-import '../../../../core/services/biometric_service.dart';
-import '../../../../core/services/encryption_service.dart';
+import '../../../../service/auth/biometric_service.dart';
+import '../../../../service/auth/encryption_service.dart';
 import '../../../../service/password_manager/data/remote/vault_remote_datasource.dart';
 import '../../../../service/password_manager/data/repositories/vault_repo_impl.dart';
 import '../../bloc/vault_bloc.dart';

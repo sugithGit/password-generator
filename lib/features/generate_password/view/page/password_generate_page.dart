@@ -17,7 +17,7 @@ import '../widgets/password_button.dart';
 import '../widgets/password_length.dart';
 import '../widgets/password_settingfield.dart';
 
-import '../../../../core/services/encryption_service.dart';
+import '../../../../service/auth/encryption_service.dart';
 
 class PasswordGeneratePage extends StatelessWidget {
   const PasswordGeneratePage({

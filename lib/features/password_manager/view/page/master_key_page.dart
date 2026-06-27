@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../core/services/encryption_service.dart';
+import '../../../../service/auth/encryption_service.dart';
 
 /// Page prompting the user to enter (or setup) their master key.
 ///
