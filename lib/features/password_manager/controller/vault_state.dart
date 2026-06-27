@@ -7,11 +7,14 @@ class _VaultState extends GetxState {
   final RxnString _searchQuery = RxnString();
   final Rxn<VaultCategory> _selectedCategory = Rxn<VaultCategory>();
 
+  final _enableBtn = false.obs;
+
   bool get isLoading => _isLoading.value;
   String? get error => _error.value;
   List<VaultEntry> get entries => _entries;
   String? get searchQuery => _searchQuery.value;
   VaultCategory? get selectedCategory => _selectedCategory.value;
+  bool get enableBtn => _enableBtn.value;
 
   @override
   void onClose() {

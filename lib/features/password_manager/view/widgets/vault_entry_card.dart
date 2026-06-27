@@ -33,9 +33,10 @@ class _VaultEntryCardState extends State<VaultEntryCard>
       vsync: this,
       duration: const Duration(milliseconds: 150),
     );
-    _scaleAnimation = Tween<double>(begin: 1, end: 0.97).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1,
+      end: 0.97,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -85,10 +86,7 @@ class _VaultEntryCardState extends State<VaultEntryCard>
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (BuildContext context, Widget? child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: child,
-        );
+        return Transform.scale(scale: _scaleAnimation.value, child: child);
       },
       child: GestureDetector(
         onTapDown: (_) => _controller.forward(),
@@ -109,9 +107,7 @@ class _VaultEntryCardState extends State<VaultEntryCard>
                     decoration: BoxDecoration(
                       color: categoryColor.withAlpha(25),
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: categoryColor.withAlpha(50),
-                      ),
+                      border: Border.all(color: categoryColor.withAlpha(50)),
                     ),
                     child: Icon(
                       _getCategoryIcon(),
@@ -137,7 +133,7 @@ class _VaultEntryCardState extends State<VaultEntryCard>
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          widget.entry.username,
+                          widget.entry.username ?? "",
                           style: TextStyle(
                             color: theme.colorScheme.onSurfaceVariant,
                             fontSize: 13,
@@ -219,10 +215,7 @@ class _VaultEntryCardState extends State<VaultEntryCard>
 }
 
 class _ActionIcon extends StatelessWidget {
-  const _ActionIcon({
-    required this.icon,
-    required this.onTap,
-  });
+  const _ActionIcon({required this.icon, required this.onTap});
 
   final IconData icon;
   final VoidCallback onTap;
@@ -237,11 +230,7 @@ class _ActionIcon extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(6),
-        child: Icon(
-          icon,
-          color: theme.colorScheme.onSurfaceVariant,
-          size: 20,
-        ),
+        child: Icon(icon, color: theme.colorScheme.onSurfaceVariant, size: 20),
       ),
     );
   }

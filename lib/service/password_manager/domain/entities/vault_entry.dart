@@ -41,7 +41,7 @@ class VaultEntry with EquatableMixin {
 
   final String id;
   final String title;
-  final String username;
+  final String? username;
   final String encryptedPassword;
   final String? website;
   final String? notes;
@@ -75,14 +75,14 @@ class VaultEntry with EquatableMixin {
 
   @override
   List<Object?> get props => <Object?>[
-        id,
-        title,
-        username,
-        encryptedPassword,
-        website,
-        notes,
-        category,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    title,
+    username,
+    encryptedPassword,
+    website,
+    notes,
+    category,
+    createdAt,
+    updatedAt,
+  ];
 }

@@ -22,16 +22,18 @@ class VaultEntryModel {
       website: map['website'] as String?,
       notes: map['notes'] as String?,
       category: map['category'] as String? ?? 'other',
-      createdAt: DateTime.tryParse(map['createdAt'] as String? ?? '') ??
+      createdAt:
+          DateTime.tryParse(map['createdAt'] as String? ?? '') ??
           DateTime.now(),
-      updatedAt: DateTime.tryParse(map['updatedAt'] as String? ?? '') ??
+      updatedAt:
+          DateTime.tryParse(map['updatedAt'] as String? ?? '') ??
           DateTime.now(),
     );
   }
 
   final String id;
   final String title;
-  final String username;
+  final String? username;
   final String encryptedPassword;
   final String? website;
   final String? notes;

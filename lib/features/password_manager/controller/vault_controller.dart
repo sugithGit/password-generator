@@ -11,11 +11,23 @@ class VaultController extends GetxController<_VaultState> {
   VaultController({required this.repository}) : state = _VaultState();
 
   final VaultRepository repository;
-  StreamSubscription<List<VaultEntry>>? _subscription;
-  List<VaultEntry> _allEntries = <VaultEntry>[];
 
   @override
   final _VaultState state;
+
+  @override
+  void onInit() {
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    _subscription?.cancel();
+    super.onClose();
+  }
+
+  StreamSubscription<List<VaultEntry>>? _subscription;
+  List<VaultEntry> _allEntries = <VaultEntry>[];
 
   void loadVault() => _loadVault();
 
@@ -26,15 +38,14 @@ class VaultController extends GetxController<_VaultState> {
     String? website,
     String? notes,
     VaultCategory category = VaultCategory.other,
-  }) =>
-      _addEntry(
-        title: title,
-        username: username,
-        password: password,
-        website: website,
-        notes: notes,
-        category: category,
-      );
+  }) => _addEntry(
+    title: title,
+    username: username,
+    password: password,
+    website: website,
+    notes: notes,
+    category: category,
+  );
 
   Future<void> updateEntry(VaultEntry entry) => _updateEntry(entry);
   Future<void> deleteEntry(String entryId) => _deleteEntry(entryId);
@@ -89,11 +100,7 @@ class VaultController extends GetxController<_VaultState> {
   Future<void> _updateEntry(VaultEntry entry) async {
     state._error.value = null;
     try {
-      await repository.updateEntry(
-        entry.copyWith(
-          updatedAt: DateTime.now(),
-        ),
-      );
+      await repository.updateEntry(entry.copyWith(updatedAt: DateTime.now()));
     } catch (e) {
       state._error.value = 'Failed to update entry: $e';
       rethrow;
@@ -125,8 +132,9 @@ class VaultController extends GetxController<_VaultState> {
 
     final VaultCategory? category = state.selectedCategory;
     if (category != null) {
-      filtered =
-          filtered.where((VaultEntry e) => e.category == category).toList();
+      filtered = filtered
+          .where((VaultEntry e) => e.category == category)
+          .toList();
     }
 
     final String? query = state.searchQuery;
@@ -136,7 +144,6 @@ class VaultController extends GetxController<_VaultState> {
           .where(
             (VaultEntry e) =>
                 e.title.toLowerCase().contains(lowercaseQuery) ||
-                e.username.toLowerCase().contains(lowercaseQuery) ||
                 (e.website?.toLowerCase().contains(lowercaseQuery) ?? false),
           )
           .toList();
@@ -145,9 +152,5 @@ class VaultController extends GetxController<_VaultState> {
     state._entries.assignAll(filtered);
   }
 
-  @override
-  void onClose() {
-    _subscription?.cancel();
-    super.onClose();
-  }
+  void _enableBtn() {}
 }

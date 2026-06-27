@@ -24,27 +24,25 @@ class VaultRepoImpl implements VaultRepository {
 
   @override
   Stream<List<VaultEntry>> getEntries() {
-    return remoteDatasource.getEntries().map(
-      (List<VaultEntryModel> models) {
-        return models.map((VaultEntryModel m) {
-          // Decrypt all fields from Firestore
-          return VaultEntry(
-            id: m.id,
-            title: _decryptField(m.title),
-            username: _decryptField(m.username),
-            encryptedPassword: _decryptField(m.encryptedPassword),
-            website: m.website != null ? _decryptField(m.website!) : null,
-            notes: m.notes != null ? _decryptField(m.notes!) : null,
-            category: VaultCategory.values.firstWhere(
-              (VaultCategory c) => c.name == m.category,
-              orElse: () => VaultCategory.other,
-            ),
-            createdAt: m.createdAt,
-            updatedAt: m.updatedAt,
-          );
-        }).toList();
-      },
-    );
+    return remoteDatasource.getEntries().map((List<VaultEntryModel> models) {
+      return models.map((VaultEntryModel m) {
+        // Decrypt all fields from Firestore
+        return VaultEntry(
+          id: m.id,
+          title: _decryptField(m.title),
+          username: m.username != null ? _decryptField(m.username!) : null,
+          encryptedPassword: _decryptField(m.encryptedPassword),
+          website: m.website != null ? _decryptField(m.website!) : null,
+          notes: m.notes != null ? _decryptField(m.notes!) : null,
+          category: VaultCategory.values.firstWhere(
+            (VaultCategory c) => c.name == m.category,
+            orElse: () => VaultCategory.other,
+          ),
+          createdAt: m.createdAt,
+          updatedAt: m.updatedAt,
+        );
+      }).toList();
+    });
   }
 
   @override
@@ -53,7 +51,7 @@ class VaultRepoImpl implements VaultRepository {
     final VaultEntryModel model = VaultEntryModel(
       id: entry.id,
       title: _encryptField(entry.title),
-      username: _encryptField(entry.username),
+      username: entry.username != null ? _encryptField(entry.username!) : null,
       encryptedPassword: _encryptField(entry.encryptedPassword),
       website: entry.website != null ? _encryptField(entry.website!) : null,
       notes: entry.notes != null ? _encryptField(entry.notes!) : null,
@@ -69,7 +67,7 @@ class VaultRepoImpl implements VaultRepository {
     final VaultEntryModel model = VaultEntryModel(
       id: entry.id,
       title: _encryptField(entry.title),
-      username: _encryptField(entry.username),
+      username: entry.username != null ? _encryptField(entry.username!) : null,
       encryptedPassword: _encryptField(entry.encryptedPassword),
       website: entry.website != null ? _encryptField(entry.website!) : null,
       notes: entry.notes != null ? _encryptField(entry.notes!) : null,
@@ -86,16 +84,10 @@ class VaultRepoImpl implements VaultRepository {
   }
 
   String _encryptField(String plainText) {
-    return encryptionRepo.encrypt(
-      plainText: plainText,
-      key: encryptionKey,
-    );
+    return encryptionRepo.encrypt(plainText: plainText, key: encryptionKey);
   }
 
   String _decryptField(String cipherText) {
-    return encryptionRepo.decrypt(
-      cipherText: cipherText,
-      key: encryptionKey,
-    );
+    return encryptionRepo.decrypt(cipherText: cipherText, key: encryptionKey);
   }
 }

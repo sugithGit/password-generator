@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:rxget/rxget.dart';
 
 import '../../../../core/const/constants.dart';
+import '../../../../core/widgets/app_button/app_button.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../controller/vault_controller.dart';
 
@@ -186,71 +187,65 @@ class _AddEntryPageState extends State<AddEntryPage> {
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
-                        children: VaultCategory.values.map(
-                          (VaultCategory cat) {
-                            final bool isSelected = _selectedCategory == cat;
-                            final Color color = _getCategoryColor(cat);
-                            return GestureDetector(
-                              onTap: () =>
-                                  setState(() => _selectedCategory = cat),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 250),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 10,
-                                ),
-                                decoration: BoxDecoration(
+                        children: VaultCategory.values.map((VaultCategory cat) {
+                          final bool isSelected = _selectedCategory == cat;
+                          final Color color = _getCategoryColor(cat);
+                          return GestureDetector(
+                            onTap: () =>
+                                setState(() => _selectedCategory = cat),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 250),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? color.withAlpha(30)
+                                    : theme.cardColor,
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
                                   color: isSelected
-                                      ? color.withAlpha(30)
-                                      : theme.cardColor,
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(
-                                    color:
-                                        isSelected ? color : theme.dividerColor,
-                                    width: isSelected ? 1.5 : 1,
-                                  ),
+                                      ? color
+                                      : theme.dividerColor,
+                                  width: isSelected ? 1.5 : 1,
                                 ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Icon(
-                                      _getCategoryIcon(cat),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Icon(
+                                    _getCategoryIcon(cat),
+                                    color: isSelected
+                                        ? color
+                                        : theme.colorScheme.onSurfaceVariant,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    cat.label,
+                                    style: TextStyle(
                                       color: isSelected
                                           ? color
                                           : theme.colorScheme.onSurfaceVariant,
-                                      size: 18,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.w400,
+                                      fontSize: 13,
                                     ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      cat.label,
-                                      style: TextStyle(
-                                        color: isSelected
-                                            ? color
-                                            : theme
-                                                .colorScheme.onSurfaceVariant,
-                                        fontWeight: isSelected
-                                            ? FontWeight.w600
-                                            : FontWeight.w400,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            );
-                          },
-                        ).toList(),
+                            ),
+                          );
+                        }).toList(),
                       ),
                       const SizedBox(height: 40),
                       // Save button
-                      SizedBox(
-                        height: 52,
-                        child: ElevatedButton(
-                          onPressed: _save,
-                          child: Text(
-                            _isEditing ? 'UPDATE PASSWORD' : 'SAVE PASSWORD',
-                          ),
-                        ),
+                      AppButton(
+                        onPressed: _save,
+                        disabled: true,
+                        title: _isEditing ? 'UPDATE PASSWORD' : 'SAVE PASSWORD',
                       ),
                       if (_isEditing) ...<Widget>[
                         const SizedBox(height: 16),
@@ -286,7 +281,8 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                         'Cancel',
                                         style: TextStyle(
                                           color: theme
-                                              .colorScheme.onSurfaceVariant,
+                                              .colorScheme
+                                              .onSurfaceVariant,
                                         ),
                                       ),
                                     ),
@@ -356,9 +352,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
               decoration: BoxDecoration(
                 color: theme.cardColor,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: theme.dividerColor,
-                ),
+                border: Border.all(color: theme.dividerColor),
               ),
               child: Icon(
                 Icons.arrow_back_ios_new_rounded,
