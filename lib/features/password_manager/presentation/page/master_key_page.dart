@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../core/const/constants.dart';
 import '../../../../core/services/encryption_service.dart';
 
 /// Page prompting the user to enter (or setup) their master key.
@@ -191,23 +190,16 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
           height: 80,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: <Color>[vaultGradientStart, vaultGradientEnd],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+            color: theme.colorScheme.primary.withAlpha(20),
+            border: Border.all(
+              color: theme.colorScheme.primary.withAlpha(40),
+              width: 1.5,
             ),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: theme.colorScheme.primary.withAlpha(60),
-                blurRadius: 30,
-                spreadRadius: 5,
-              ),
-            ],
           ),
-          child: const Icon(
+          child: Icon(
             Icons.key_rounded,
             size: 36,
-            color: Colors.white,
+            color: theme.colorScheme.primary,
           ),
         ),
         const SizedBox(height: 24),
@@ -238,103 +230,89 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
   }
 
   Widget _buildFormCard() {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: theme.cardColor.withAlpha(180),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: theme.dividerColor.withAlpha(100),
-        ),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: Colors.black.withAlpha(theme.brightness == Brightness.dark ? 80 : 10),
-            blurRadius: 40,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            if (_isNewUser) ...<Widget>[
-              // Warning banner for new users
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.error.withAlpha(15),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                     color: theme.colorScheme.error.withAlpha(40),
-                  ),
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.warning_amber_rounded,
-                      color: theme.colorScheme.error,
-                      size: 20,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              if (_isNewUser) ...<Widget>[
+                // Warning banner for new users
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.error.withAlpha(15),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                       color: Theme.of(context).colorScheme.error.withAlpha(40),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        'Write this key down and keep it safe. It cannot be reset or recovered.',
-                        style: TextStyle(
-                          color: theme.colorScheme.error.withAlpha(200),
-                          fontSize: 12,
-                          height: 1.4,
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Theme.of(context).colorScheme.error,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'Write this key down and keep it safe. It cannot be reset or recovered.',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error.withAlpha(200),
+                            fontSize: 12,
+                            height: 1.4,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-            ],
-            // Master key field
-            _buildTextField(
-              controller: _masterKeyController,
-              label: 'Master Key',
-              icon: Icons.key_rounded,
-              obscureText: _obscureMasterKey,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _obscureMasterKey
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
-                  color: theme.colorScheme.onSurfaceVariant,
-                  size: 20,
-                ),
-                onPressed: () =>
-                    setState(() => _obscureMasterKey = !_obscureMasterKey),
-              ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Master key is required';
-                }
-                if (_isNewUser && value.length < 8) {
-                  return 'Master key must be at least 8 characters';
-                }
-                return null;
-              },
-            ),
-            if (_isNewUser) ...<Widget>[
-              const SizedBox(height: 16),
-              // Confirm field for new users
+                const SizedBox(height: 20),
+              ],
+              // Master key field
               _buildTextField(
-                controller: _confirmController,
-                label: 'Confirm Master Key',
-                icon: Icons.key_off_rounded,
-                obscureText: _obscureConfirm,
+                controller: _masterKeyController,
+                label: 'Master Key',
+                icon: Icons.key_rounded,
+                obscureText: _obscureMasterKey,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _obscureConfirm
+                    _obscureMasterKey
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: 20,
+                  ),
+                  onPressed: () =>
+                      setState(() => _obscureMasterKey = !_obscureMasterKey),
+                ),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Master key is required';
+                  }
+                  if (_isNewUser && value.length < 8) {
+                    return 'Master key must be at least 8 characters';
+                  }
+                  return null;
+                },
+              ),
+              if (_isNewUser) ...<Widget>[
+                const SizedBox(height: 16),
+                // Confirm field for new users
+                _buildTextField(
+                  controller: _confirmController,
+                  label: 'Confirm Master Key',
+                  icon: Icons.key_off_rounded,
+                  obscureText: _obscureConfirm,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureConfirm
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     size: 20,
                   ),
                   onPressed: () =>
@@ -349,47 +327,48 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
               ),
             ],
             if (_errorMessage != null) ...<Widget>[
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.error.withAlpha(15),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: theme.colorScheme.error.withAlpha(40),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.error.withAlpha(15),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.error.withAlpha(40),
+                    ),
+                  ),
+                  child: Text(
+                    _errorMessage!,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error.withAlpha(220),
+                      fontSize: 13,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                child: Text(
-                  _errorMessage!,
-                  style: TextStyle(
-                    color: theme.colorScheme.error.withAlpha(220),
-                    fontSize: 13,
-                  ),
-                  textAlign: TextAlign.center,
+              ],
+              const SizedBox(height: 28),
+              // Submit button
+              SizedBox(
+                height: 52,
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _submit,
+                  child: _isLoading
+                      ? SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        )
+                      : Text(
+                          _isNewUser ? 'CREATE VAULT' : 'UNLOCK VAULT',
+                        ),
                 ),
               ),
             ],
-            const SizedBox(height: 28),
-            // Submit button
-            SizedBox(
-              height: 52,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _submit,
-                child: _isLoading
-                    ? SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.5,
-                          color: theme.colorScheme.onPrimary,
-                        ),
-                      )
-                    : Text(
-                        _isNewUser ? 'CREATE VAULT' : 'UNLOCK VAULT',
-                      ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -411,7 +390,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
       style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: theme.colorScheme.primary, size: 20),
+        prefixIcon: Icon(icon, size: 20),
         suffixIcon: suffixIcon,
       ),
     );

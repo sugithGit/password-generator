@@ -146,16 +146,9 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                         shape: BoxShape.circle,
                         color: (_authFailed ? theme.colorScheme.error : theme.colorScheme.primary).withAlpha(20),
                         border: Border.all(
-                          color: (_authFailed ? theme.colorScheme.error : theme.colorScheme.primary).withAlpha(60),
-                          width: 2,
+                          color: (_authFailed ? theme.colorScheme.error : theme.colorScheme.primary).withAlpha(40),
+                          width: 1.5,
                         ),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            color: (_authFailed ? theme.colorScheme.error : theme.colorScheme.primary).withAlpha(30),
-                            blurRadius: 30,
-                            spreadRadius: 5,
-                          ),
-                        ],
                       ),
                       child: Icon(
                         _authFailed

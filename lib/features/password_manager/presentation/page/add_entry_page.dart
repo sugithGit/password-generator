@@ -390,7 +390,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
         hintText: hint,
         prefixIcon: Padding(
           padding: const EdgeInsets.only(left: 12, right: 8),
-          child: Icon(icon, color: theme.colorScheme.primary, size: 20),
+          child: Icon(icon, size: 20),
         ),
         prefixIconConstraints: const BoxConstraints(minWidth: 44),
         suffixIcon: suffixIcon,

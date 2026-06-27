@@ -54,49 +54,20 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
               show: state.passwordController.text.isNotEmpty,
             ),
             const SizedBox(height: 10),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.fastOutSlowIn,
-              margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: defaultPadding + 2),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(defaultPadding),
-                color: theme.cardColor,
-                border: Border.all(
-                  color: theme.dividerColor.withAlpha(50),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+              child: TextFormField(
+                controller: state.passwordController,
+                readOnly: true,
+                style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
+                decoration: InputDecoration(
+                  hintText: 'Password will appear here...',
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.copy_rounded, size: 20),
+                    onPressed: () => _onTap(state.passwordController.text),
+                  ),
                 ),
-              ),
-              child: Stack(
-                children: <Widget>[
-                  TextField(
-                    minLines: 1,
-                    controller: state.passwordController,
-                    readOnly: true,
-                    style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
-                    decoration: InputDecoration(
-                      hintText: 'Password will appear here...',
-                      hintStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant.withAlpha(150), fontSize: 15),
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      filled: false,
-                    ),
-                    onTap: () => _onTap(state.passwordController.text),
-                  ),
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    child: GestureDetector(
-                      onTap: () => _onTap(state.passwordController.text),
-                      child: Icon(
-                        Icons.copy,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                ],
+                onTap: () => _onTap(state.passwordController.text),
               ),
             ),
           ],

@@ -1,53 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'app_colors.dart';
 
 class ShadcnTheme {
-  static const Color accentColor = Color(0xFF09090B);
+  static const Color accentColor = AppColors.background;
 
   static ThemeData get darkTheme {
     const ColorScheme colorScheme = ColorScheme.dark(
-      background: Color(0xFF09090B),
-      onBackground: Color(0xFFFAFAFA),
-      surface: Color(0xFF09090B),
-      onSurface: Color(0xFFFAFAFA),
-      surfaceVariant: Color(0xFF18181B), // Used for cards/containers
-      onSurfaceVariant: Color(0xFFA1A1AA), // Muted text
-      primary: Color(0xFFFAFAFA),
-      onPrimary: Color(0xFF09090B),
-      secondary: Color(0xFF27272A),
-      onSecondary: Color(0xFFFAFAFA),
-      outline: Color(0xFF27272A),
-      error: Color(0xFFEF4444),
-      onError: Colors.white,
+      background: AppColors.background,
+      onBackground: AppColors.foreground,
+      surface: AppColors.background,
+      onSurface: AppColors.foreground,
+      surfaceVariant: AppColors.cardVariant,
+      onSurfaceVariant: AppColors.mutedForeground,
+      primary: AppColors.primary,
+      onPrimary: AppColors.onPrimary,
+      secondary: AppColors.secondary,
+      onSecondary: AppColors.onSecondary,
+      outline: AppColors.border,
+      error: AppColors.error,
+      onError: AppColors.onError,
     );
 
     return _buildTheme(colorScheme, Brightness.dark);
   }
 
-  static ThemeData get lightTheme {
-    const ColorScheme colorScheme = ColorScheme.light(
-      background: Color(0xFFFFFFFF),
-      onBackground: Color(0xFF09090B),
-      surface: Color(0xFFFFFFFF),
-      onSurface: Color(0xFF09090B),
-      surfaceVariant: Color(0xFFF4F4F5), // Used for cards/containers
-      onSurfaceVariant: Color(0xFF71717A), // Muted text
-      primary: Color(0xFF09090B),
-      onPrimary: Color(0xFFFFFFFF),
-      secondary: Color(0xFFE4E4E7),
-      onSecondary: Color(0xFF18181B),
-      outline: Color(0xFFE4E4E7),
-      error: Color(0xFFEF4444),
-      onError: Colors.white,
-    );
-
-    return _buildTheme(colorScheme, Brightness.light);
-  }
-
   static ThemeData _buildTheme(ColorScheme colorScheme, Brightness brightness) {
-    final isDark = brightness == Brightness.dark;
     final baseTextTheme = GoogleFonts.monaSansTextTheme(
-      isDark ? ThemeData.dark().textTheme : ThemeData.light().textTheme,
+      ThemeData.dark().textTheme,
     );
 
     final textTheme = baseTextTheme.copyWith(
@@ -83,6 +63,14 @@ class ShadcnTheme {
       dividerColor: colorScheme.outline,
       fontFamily: GoogleFonts.monaSans().fontFamily,
       textTheme: textTheme,
+      cardTheme: CardThemeData(
+        color: colorScheme.surfaceVariant,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: colorScheme.outline),
+        ),
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -96,6 +84,8 @@ class ShadcnTheme {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         labelStyle: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 14),
         hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withAlpha(150), fontSize: 14),
+        prefixIconColor: colorScheme.onSurfaceVariant,
+        suffixIconColor: colorScheme.onSurfaceVariant,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: colorScheme.outline),

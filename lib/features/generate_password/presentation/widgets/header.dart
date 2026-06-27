@@ -7,10 +7,11 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SvgPicture.asset(
       'assets/svg/password_generator_log.svg',
-      colorFilter: const ColorFilter.mode(
-        Color.fromARGB(255, 255, 255, 255),
+      colorFilter: ColorFilter.mode(
+        theme.colorScheme.onSurface,
         BlendMode.srcIn,
       ),
       semanticsLabel: 'App Logo',

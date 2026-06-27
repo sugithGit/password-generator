@@ -142,101 +142,87 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget _buildFormCard() {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: theme.dividerColor,
-        ),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: Colors.black.withAlpha(40),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            // Email field
-            _buildTextField(
-              controller: _emailController,
-              label: 'Email',
-              icon: Icons.email_outlined,
-              keyboardType: TextInputType.emailAddress,
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your email';
-                }
-                if (!value.contains('@')) {
-                  return 'Please enter a valid email';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            // Password field
-            _buildTextField(
-              controller: _passwordController,
-              label: 'Password',
-              icon: Icons.lock_outline_rounded,
-              obscureText: _obscurePassword,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _obscurePassword
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
-                  color: theme.colorScheme.onSurfaceVariant,
-                  size: 20,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              // Email field
+              _buildTextField(
+                controller: _emailController,
+                label: 'Email',
+                icon: Icons.email_outlined,
+                keyboardType: TextInputType.emailAddress,
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!value.contains('@')) {
+                    return 'Please enter a valid email';
+                  }
+                  return null;
                 },
               ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your password';
-                }
-                if (value.length < 6) {
-                  return 'Password must be at least 6 characters';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 28),
-            // Submit button
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (BuildContext context, AuthState state) {
-                final bool isLoading = state is AuthLoading;
-                return SizedBox(
-                  height: 52,
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : _submit,
-                    child: isLoading
-                        ? SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.5,
-                              color: theme.colorScheme.onPrimary,
-                            ),
-                          )
-                        : Text(
-                            _isSignUp ? 'SIGN UP' : 'SIGN IN',
-                          ),
+              const SizedBox(height: 16),
+              // Password field
+              _buildTextField(
+                controller: _passwordController,
+                label: 'Password',
+                icon: Icons.lock_outline_rounded,
+                obscureText: _obscurePassword,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscurePassword
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                    size: 20,
                   ),
-                );
-              },
-            ),
-          ],
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                ),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 28),
+              // Submit button
+              BlocBuilder<AuthBloc, AuthState>(
+                builder: (BuildContext context, AuthState state) {
+                  final bool isLoading = state is AuthLoading;
+                  return SizedBox(
+                    height: 52,
+                    child: ElevatedButton(
+                      onPressed: isLoading ? null : _submit,
+                      child: isLoading
+                          ? SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
+                            )
+                          : Text(
+                              _isSignUp ? 'SIGN UP' : 'SIGN IN',
+                            ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -260,7 +246,7 @@ class _LoginPageState extends State<LoginPage>
       style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: theme.colorScheme.onSurfaceVariant, size: 20),
+        prefixIcon: Icon(icon, size: 20),
         suffixIcon: suffixIcon,
       ),
     );

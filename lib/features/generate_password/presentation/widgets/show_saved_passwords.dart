@@ -21,10 +21,10 @@ abstract final class ShowSavedPasswords {
   ) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: bottomSheetColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25),
+          top: Radius.circular(16),
         ),
       ),
       builder: (BuildContext context) => _SavedPaaswordBottomSheet(bloc),
@@ -74,12 +74,13 @@ class _Indicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: 40,
       height: 4,
       margin: const EdgeInsets.only(bottom: defaultPadding),
       decoration: BoxDecoration(
-        color: Colors.grey[600],
+        color: theme.colorScheme.onSurfaceVariant.withAlpha(80),
         borderRadius: BorderRadius.circular(2),
       ),
     );
@@ -94,21 +95,27 @@ class _HistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
-      color: cardColor,
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(12),
         child: Row(
           children: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(passwordHistory.password),
+                Text(
+                  passwordHistory.password,
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const SizedBox(height: 5),
                 Text(
                   passwordHistory.date.formattedDate,
                   style: context.bodySmall?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.5),
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -118,7 +125,7 @@ class _HistoryCard extends StatelessWidget {
               tooltip: 'Copy',
               icon: Icon(
                 Icons.copy,
-                color: Colors.white.withValues(alpha: 0.5),
+                color: theme.colorScheme.onSurfaceVariant,
               ),
               onPressed: () {
                 Clipboard.setData(
@@ -139,15 +146,17 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Row(
         children: <Widget>[
           Text(
             'Password History',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Colors.white,
-                ),
+            style: theme.textTheme.titleLarge?.copyWith(
+              color: theme.colorScheme.onSurface,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           const Spacer(),
           _ClearPasswordHistory(bloc),
@@ -163,6 +172,7 @@ class _ClearPasswordHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<PasswordGenratorBloc, PasswordGenratorState>(
       bloc: bloc,
       builder: (BuildContext context, PasswordGenratorState state) {
@@ -171,14 +181,21 @@ class _ClearPasswordHistory extends StatelessWidget {
           onPressed:
               isEnabled ? () => bloc.add(DeletePasswordHistoryEvent()) : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: isEnabled ? null : Colors.grey[800],
-            disabledBackgroundColor: Colors.grey[800],
-            disabledForegroundColor: Colors.grey[600],
+            backgroundColor: isEnabled ? theme.colorScheme.error : theme.colorScheme.secondary,
+            foregroundColor: isEnabled ? theme.colorScheme.onError : theme.colorScheme.onSurfaceVariant,
+            disabledBackgroundColor: theme.colorScheme.secondary.withAlpha(100),
+            disabledForegroundColor: theme.colorScheme.onSurfaceVariant.withAlpha(100),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            minimumSize: Size.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
           child: Text(
             'Clear All',
             style: context.bodySmall?.copyWith(
-              color: isEnabled ? null : Colors.grey[600],
+              fontWeight: FontWeight.w600,
+              color: isEnabled ? theme.colorScheme.onError : theme.colorScheme.onSurfaceVariant.withAlpha(100),
             ),
           ),
         );

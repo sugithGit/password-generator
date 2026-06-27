@@ -23,7 +23,7 @@ class CustomCheckBox extends StatelessWidget {
       ),
       child: InkWell(
         customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(defaultPadding),
+          borderRadius: BorderRadius.circular(8),
         ),
         onTap: () {
           onChanged();
@@ -37,10 +37,11 @@ class CustomCheckBox extends StatelessWidget {
             color: theme.cardColor,
             border: Border.all(
               color: value
-                  ? theme.colorScheme.primary.withAlpha(128)
-                  : Colors.transparent,
+                  ? theme.colorScheme.primary
+                  : theme.dividerColor,
+              width: 1,
             ),
-            borderRadius: BorderRadius.circular(defaultPadding),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
             child: Text(

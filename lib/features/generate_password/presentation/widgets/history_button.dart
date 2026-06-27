@@ -18,6 +18,7 @@ class HistoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Align(
       alignment: Alignment.centerLeft,
       child: Tooltip(
@@ -26,28 +27,21 @@ class HistoryButton extends StatelessWidget {
         child: InkWell(
           onTap: () => _handleTap(context),
           customBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: <Color>[
-                  vaultAccent.withAlpha(30),
-                  vaultGradientEnd.withAlpha(20),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: theme.cardColor,
               border: Border.all(
-                width: 2,
-                color: vaultAccent.withAlpha(60),
+                width: 1.5,
+                color: theme.dividerColor,
               ),
-              borderRadius: BorderRadius.circular(50),
+              borderRadius: BorderRadius.circular(8),
             ),
             padding: const EdgeInsets.all(defaultPadding),
             child: Icon(
               Icons.shield_rounded,
-              color: Colors.white.withValues(alpha: 0.8),
+              color: theme.colorScheme.primary,
             ),
           ),
         ),
