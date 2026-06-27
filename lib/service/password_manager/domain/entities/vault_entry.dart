@@ -32,11 +32,9 @@ class VaultEntry with EquatableMixin {
     required this.title,
     required this.username,
     required this.encryptedPassword,
-    this.website,
+    required this.createdAt, required this.updatedAt, this.website,
     this.notes,
     this.category = VaultCategory.other,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   final String id;

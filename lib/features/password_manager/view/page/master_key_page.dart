@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../service/auth/encryption_service.dart';
+import '../../../../service/auth/domain/repositories/encryption_repo.dart';
 
 /// Page prompting the user to enter (or setup) their master key.
 ///
@@ -13,12 +13,12 @@ import '../../../../service/auth/encryption_service.dart';
 /// If the master key is lost, data is irrecoverable — this is by design.
 class MasterKeyPage extends StatefulWidget {
   const MasterKeyPage({
-    required this.encryptionService,
+    required this.encryptionRepo,
     required this.onAuthenticated,
     super.key,
   });
 
-  final EncryptionService encryptionService;
+  final EncryptionRepo encryptionRepo;
 
   /// Called with the validated master key when authentication succeeds.
   final void Function(String masterKey) onAuthenticated;
@@ -69,7 +69,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
       setState(() {
         _isNewUser = !doc.exists ||
             doc.data() == null ||
-            !(doc.data()!.containsKey('verificationHash'));
+            !doc.data()!.containsKey('verificationHash');
         _isLoading = false;
       });
     }
@@ -95,7 +95,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     if (_isNewUser) {
       // First time: store verification hash
       final String verificationHash =
-          widget.encryptionService.createVerificationHash(
+          widget.encryptionRepo.createVerificationHash(
         uid: user.uid,
         masterKey: masterKey,
       );
@@ -129,7 +129,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
         return;
       }
 
-      final bool isValid = widget.encryptionService.verifyMasterKey(
+      final bool isValid = widget.encryptionRepo.verifyMasterKey(
         uid: user.uid,
         masterKey: masterKey,
         storedVerificationHash: storedHash,
@@ -150,7 +150,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -182,7 +182,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
   }
 
   Widget _buildHeader() {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Column(
       children: <Widget>[
         Container(
@@ -382,7 +382,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     Widget? suffixIcon,
     String? Function(String?)? validator,
   }) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return TextFormField(
       controller: controller,
       obscureText: obscureText,

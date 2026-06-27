@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sodium/sodium.dart';
 
-import '../../../../service/auth/biometric_service.dart';
-import '../../../../service/auth/encryption_service.dart';
+import '../../../../service/auth/data/local/biometric_local.dart';
+import '../../../../service/auth/data/repositories/biometric_repo_impl.dart';
+import '../../../../service/auth/domain/repositories/biometric_repo.dart';
+import '../../../../service/auth/domain/repositories/encryption_repo.dart';
+import '../../../../service/auth/domain/use_cases/authenticate_biometrics_use_case.dart';
+import '../../../../service/auth/domain/use_cases/check_biometrics_support_use_case.dart';
 import '../../../../service/password_manager/data/remote/vault_remote_datasource.dart';
 import '../../../../service/password_manager/data/repositories/vault_repo_impl.dart';
 import '../../bloc/vault_bloc.dart';
@@ -13,9 +17,9 @@ import 'master_key_page.dart';
 import 'vault_page.dart';
 
 class BiometricGatePage extends StatefulWidget {
-  const BiometricGatePage({required this.encryptionService, super.key});
+  const BiometricGatePage({required this.encryptionRepo, super.key});
 
-  final EncryptionService encryptionService;
+  final EncryptionRepo encryptionRepo;
 
   @override
   State<BiometricGatePage> createState() => _BiometricGatePageState();
@@ -23,7 +27,10 @@ class BiometricGatePage extends StatefulWidget {
 
 class _BiometricGatePageState extends State<BiometricGatePage>
     with SingleTickerProviderStateMixin {
-  final BiometricService _biometricService = BiometricService();
+  late final BiometricRepo _biometricRepo;
+  late final CheckBiometricsSupportUseCase _checkBiometricsSupportUseCase;
+  late final AuthenticateBiometricsUseCase _authenticateBiometricsUseCase;
+
   bool _isAuthenticating = false;
   bool _authFailed = false;
   late AnimationController _pulseController;
@@ -32,6 +39,10 @@ class _BiometricGatePageState extends State<BiometricGatePage>
   @override
   void initState() {
     super.initState();
+    _biometricRepo = BiometricRepoImpl(biometricLocal: BiometricLocal());
+    _checkBiometricsSupportUseCase = CheckBiometricsSupportUseCase(_biometricRepo);
+    _authenticateBiometricsUseCase = AuthenticateBiometricsUseCase(_biometricRepo);
+
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
@@ -55,7 +66,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
       _authFailed = false;
     });
 
-    final bool isSupported = await _biometricService.isDeviceSupported();
+    final bool isSupported = await _checkBiometricsSupportUseCase.call(null);
 
     if (!isSupported) {
       // If device doesn't support biometrics, skip to master key
@@ -63,7 +74,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
       return;
     }
 
-    final bool success = await _biometricService.authenticate();
+    final bool success = await _authenticateBiometricsUseCase.call('Authenticate to access your Password Vault');
 
     if (mounted) {
       setState(() {
@@ -80,7 +91,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
         builder: (_) => MasterKeyPage(
-          encryptionService: widget.encryptionService,
+          encryptionRepo: widget.encryptionRepo,
           onAuthenticated: _onMasterKeyValidated,
         ),
       ),
@@ -92,7 +103,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
     if (user == null) return;
 
     // Derive the encryption key from UID + master key
-    final SecureKey encryptionKey = widget.encryptionService.deriveKey(
+    final SecureKey encryptionKey = widget.encryptionRepo.deriveKey(
       uid: user.uid,
       masterKey: masterKey,
     );
@@ -102,7 +113,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
     );
     final VaultRepoImpl repository = VaultRepoImpl(
       remoteDatasource: datasource,
-      encryptionService: widget.encryptionService,
+      encryptionRepo: widget.encryptionRepo,
       encryptionKey: encryptionKey,
     );
 
@@ -119,7 +130,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
         child: Center(

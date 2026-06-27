@@ -4,16 +4,23 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:toastification/toastification.dart';
 
 import 'core/theme/shadcn_theme.dart';
-import 'service/auth/auth_service.dart';
-import 'service/auth/encryption_service.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/generate_password/view/page/password_generate_page.dart';
 import 'firebase_options.dart';
 import 'main.dart';
+
+import 'service/auth/data/local/encryption_local.dart';
+import 'service/auth/data/remote/firebase_auth_remote.dart';
+import 'service/auth/data/repositories/auth_repo_impl.dart';
+import 'service/auth/data/repositories/encryption_repo_impl.dart';
+import 'service/auth/domain/repositories/encryption_repo.dart';
+import 'service/auth/domain/use_cases/get_current_user_use_case.dart';
+import 'service/auth/domain/use_cases/sign_in_use_case.dart';
+import 'service/auth/domain/use_cases/sign_out_use_case.dart';
+import 'service/auth/domain/use_cases/sign_up_use_case.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -24,8 +31,9 @@ class MyApp extends StatelessWidget {
       options: firebaseOptions,
     );
 
-    final EncryptionService encryptionService = EncryptionService(
-      sodium: sodiumInstance,
+    final EncryptionLocal encryptionLocal = EncryptionLocal(sodium: sodiumInstance);
+    final EncryptionRepo encryptionRepo = EncryptionRepoImpl(
+      encryptionLocal: encryptionLocal,
     );
 
     return ToastificationWrapper(
@@ -38,8 +46,16 @@ class MyApp extends StatelessWidget {
             }
           }
           return BlocProvider<AuthBloc>(
-            create: (_) =>
-                AuthBloc(authService: AuthService())..add(AuthCheckRequested()),
+            create: (_) {
+              final FirebaseAuthRemote authRemote = FirebaseAuthRemote();
+              final AuthRepoImpl authRepo = AuthRepoImpl(firebaseAuthRemote: authRemote);
+              return AuthBloc(
+                getCurrentUserUseCase: GetCurrentUserUseCase(authRepo),
+                signInUseCase: SignInUseCase(authRepo),
+                signUpUseCase: SignUpUseCase(authRepo),
+                signOutUseCase: SignOutUseCase(authRepo),
+              )..add(AuthCheckRequested());
+            },
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Password Manager',
@@ -47,7 +63,7 @@ class MyApp extends StatelessWidget {
               darkTheme: ShadcnTheme.darkTheme,
               themeMode: ThemeMode.dark,
               home: PasswordGeneratePage(
-                encryptionService: encryptionService,
+                encryptionRepo: encryptionRepo,
               ),
             ),
           );

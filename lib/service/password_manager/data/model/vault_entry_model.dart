@@ -6,22 +6,9 @@ class VaultEntryModel {
     required this.title,
     required this.username,
     required this.encryptedPassword,
-    this.website,
+    required this.category, required this.createdAt, required this.updatedAt, this.website,
     this.notes,
-    required this.category,
-    required this.createdAt,
-    required this.updatedAt,
   });
-
-  final String id;
-  final String title;
-  final String username;
-  final String encryptedPassword;
-  final String? website;
-  final String? notes;
-  final String category;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   factory VaultEntryModel.fromMap(Map<String, dynamic> map, String docId) {
     return VaultEntryModel(
@@ -38,6 +25,16 @@ class VaultEntryModel {
           DateTime.now(),
     );
   }
+
+  final String id;
+  final String title;
+  final String username;
+  final String encryptedPassword;
+  final String? website;
+  final String? notes;
+  final String category;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

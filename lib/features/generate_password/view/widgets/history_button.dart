@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/const/constants.dart';
-import '../../../../service/auth/encryption_service.dart';
-import '../../../password_manager/view/page/biometric_gate_page.dart';
+import '../../../../service/auth/domain/repositories/encryption_repo.dart';
 import '../../../auth/bloc/auth_bloc.dart';
 import '../../../auth/view/page/login_page.dart';
+import '../../../password_manager/view/page/biometric_gate_page.dart';
 
 class HistoryButton extends StatelessWidget {
   const HistoryButton({
-    required this.encryptionService,
+    required this.encryptionRepo,
     super.key,
   });
 
-  final EncryptionService encryptionService;
+  final EncryptionRepo encryptionRepo;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Align(
       alignment: Alignment.centerLeft,
       child: Tooltip(
@@ -67,7 +67,7 @@ class HistoryButton extends StatelessWidget {
       Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: (_) => BiometricGatePage(
-            encryptionService: encryptionService,
+            encryptionRepo: encryptionRepo,
           ),
         ),
       );

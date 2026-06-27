@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../service/auth/domain/repositories/encryption_repo.dart';
 import '../../../../service/generate_password/data/local/password_gnerator.dart';
 import '../../../../service/generate_password/data/local/save_password.dart';
 import '../../../../service/generate_password/data/repositories/password_repo_impl.dart';
@@ -17,15 +18,13 @@ import '../widgets/password_button.dart';
 import '../widgets/password_length.dart';
 import '../widgets/password_settingfield.dart';
 
-import '../../../../service/auth/encryption_service.dart';
-
 class PasswordGeneratePage extends StatelessWidget {
   const PasswordGeneratePage({
-    required this.encryptionService,
+    required this.encryptionRepo,
     super.key,
   });
 
-  final EncryptionService encryptionService;
+  final EncryptionRepo encryptionRepo;
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +42,15 @@ class PasswordGeneratePage extends StatelessWidget {
           savePasswordUseCase: SavePasswordUseCase(passwordRepo),
         );
       },
-      child: _PassWordGeneratePage(encryptionService: encryptionService),
+      child: _PassWordGeneratePage(encryptionRepo: encryptionRepo),
     );
   }
 }
 
 class _PassWordGeneratePage extends StatelessWidget {
-  const _PassWordGeneratePage({required this.encryptionService});
+  const _PassWordGeneratePage({required this.encryptionRepo});
 
-  final EncryptionService encryptionService;
+  final EncryptionRepo encryptionRepo;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +67,7 @@ class _PassWordGeneratePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     if (kIsWeb) const AppLogo(),
-                    HistoryButton(encryptionService: encryptionService),
+                    HistoryButton(encryptionRepo: encryptionRepo),
                     const PasswordLength(),
                     const SizedBox(height: 10),
                     const PassWordSettingField(),

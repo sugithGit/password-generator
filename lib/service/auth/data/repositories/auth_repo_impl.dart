@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../../domain/entities/auth_user.dart';
 import '../../domain/repositories/auth_repo.dart';
 import '../model/auth_user_model.dart';
@@ -11,14 +13,14 @@ class AuthRepoImpl implements AuthRepo {
 
   @override
   AuthUser? get currentUser {
-    final user = _firebaseAuthRemote.currentUser;
+    final User? user = _firebaseAuthRemote.currentUser;
     return user == null ? null : AuthUserModel.fromFirebaseUser(user).toAuthUser();
   }
 
   @override
   Stream<AuthUser?> get authStateChanges {
     return _firebaseAuthRemote.authStateChanges.map(
-      (user) => user == null ? null : AuthUserModel.fromFirebaseUser(user).toAuthUser(),
+      (User? user) => user == null ? null : AuthUserModel.fromFirebaseUser(user).toAuthUser(),
     );
   }
 
@@ -30,7 +32,7 @@ class AuthRepoImpl implements AuthRepo {
     required String email,
     required String password,
   }) async {
-    final credential = await _firebaseAuthRemote.signIn(
+    final UserCredential credential = await _firebaseAuthRemote.signIn(
       email: email,
       password: password,
     );
@@ -42,7 +44,7 @@ class AuthRepoImpl implements AuthRepo {
     required String email,
     required String password,
   }) async {
-    final credential = await _firebaseAuthRemote.signUp(
+    final UserCredential credential = await _firebaseAuthRemote.signUp(
       email: email,
       password: password,
     );

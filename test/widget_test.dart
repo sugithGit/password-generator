@@ -7,7 +7,7 @@ import 'package:sodium/sodium.dart';
 
 void main() {
   setUpAll(() async {
-    final tempDir = Directory.systemTemp.createTempSync();
+    final Directory tempDir = Directory.systemTemp.createTempSync();
     Hive.init(tempDir.path);
     sodiumInstance = await SodiumInit.init();
   });

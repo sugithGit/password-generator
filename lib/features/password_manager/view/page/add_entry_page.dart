@@ -91,7 +91,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -264,13 +264,13 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                   title: Text(
                                     'Delete Password',
                                     style: TextStyle(
-                                        color: theme.colorScheme.onSurface),
+                                        color: theme.colorScheme.onSurface,),
                                   ),
                                   content: Text(
                                     'Are you sure you want to delete this entry?',
                                     style: TextStyle(
                                         color:
-                                            theme.colorScheme.onSurfaceVariant),
+                                            theme.colorScheme.onSurfaceVariant,),
                                   ),
                                   actions: <Widget>[
                                     TextButton(
@@ -279,7 +279,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                         'Cancel',
                                         style: TextStyle(
                                             color: theme
-                                                .colorScheme.onSurfaceVariant),
+                                                .colorScheme.onSurfaceVariant,),
                                       ),
                                     ),
                                     TextButton(
@@ -296,7 +296,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                       child: Text(
                                         'Delete',
                                         style: TextStyle(
-                                            color: theme.colorScheme.error),
+                                            color: theme.colorScheme.error,),
                                       ),
                                     ),
                                   ],
@@ -307,7 +307,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                               foregroundColor: theme.colorScheme.error,
                               side: BorderSide(
                                   color:
-                                      theme.colorScheme.error.withAlpha(100)),
+                                      theme.colorScheme.error.withAlpha(100),),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -335,7 +335,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: Row(
@@ -384,7 +384,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
     int maxLines = 1,
     String? Function(String?)? validator,
   }) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,

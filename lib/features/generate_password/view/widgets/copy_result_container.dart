@@ -44,7 +44,7 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return BlocBuilder<PasswordGenratorBloc, PasswordGenratorState>(
       builder: (BuildContext context, PasswordGenratorState state) {
         return Column(

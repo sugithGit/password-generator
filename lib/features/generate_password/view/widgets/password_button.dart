@@ -47,7 +47,7 @@ class PasswordButton extends StatelessWidget {
         BuildContext context,
         PasswordGenratorState state,
       ) {
-        final theme = Theme.of(context);
+        final ThemeData theme = Theme.of(context);
         return Column(
           children: <Widget>[
             Text(
@@ -84,7 +84,7 @@ class PasswordButton extends StatelessWidget {
                       height: 30,
                       width: 30,
                       child: Icon(Iconsax.refresh,
-                          color: theme.colorScheme.onSecondary),
+                          color: theme.colorScheme.onSecondary,),
                     ),
                     style: IconButton.styleFrom(
                       backgroundColor: theme.colorScheme.secondary,

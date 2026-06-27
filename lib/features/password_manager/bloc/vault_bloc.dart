@@ -32,7 +32,7 @@ class VaultBloc extends Bloc<VaultEvent, VaultState> {
         add(_EntriesUpdated(entries));
       },
       onError: (Object error) {
-        add(_EntriesUpdated(const <VaultEntry>[]));
+        add(const _EntriesUpdated(<VaultEntry>[]));
       },
     );
   }
@@ -69,7 +69,7 @@ class VaultBloc extends Bloc<VaultEvent, VaultState> {
     try {
       await repository.updateEntry(event.entry.copyWith(
         updatedAt: DateTime.now(),
-      ));
+      ),);
     } catch (e) {
       emit(VaultError(message: 'Failed to update entry: $e'));
       emit(VaultLoaded(entries: _allEntries));
@@ -98,7 +98,7 @@ class VaultBloc extends Bloc<VaultEvent, VaultState> {
         .where((VaultEntry e) =>
             e.title.toLowerCase().contains(query) ||
             e.username.toLowerCase().contains(query) ||
-            (e.website?.toLowerCase().contains(query) ?? false))
+            (e.website?.toLowerCase().contains(query) ?? false),)
         .toList();
     emit(VaultLoaded(entries: filtered, searchQuery: event.query));
   }

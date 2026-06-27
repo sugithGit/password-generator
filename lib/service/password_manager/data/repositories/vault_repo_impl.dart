@@ -1,6 +1,6 @@
 import 'package:sodium/sodium.dart';
 
-import '../../../auth/encryption_service.dart';
+import '../../../auth/domain/repositories/encryption_repo.dart';
 import '../../domain/entities/vault_entry.dart';
 import '../../domain/repositories/vault_repository.dart';
 import '../model/vault_entry_model.dart';
@@ -14,12 +14,12 @@ import '../remote/vault_remote_datasource.dart';
 class VaultRepoImpl implements VaultRepository {
   VaultRepoImpl({
     required this.remoteDatasource,
-    required this.encryptionService,
+    required this.encryptionRepo,
     required this.encryptionKey,
   });
 
   final VaultRemoteDatasource remoteDatasource;
-  final EncryptionService encryptionService;
+  final EncryptionRepo encryptionRepo;
   final SecureKey encryptionKey;
 
   @override
@@ -88,14 +88,14 @@ class VaultRepoImpl implements VaultRepository {
   }
 
   String _encryptField(String plainText) {
-    return encryptionService.encrypt(
+    return encryptionRepo.encrypt(
       plainText: plainText,
       key: encryptionKey,
     );
   }
 
   String _decryptField(String cipherText) {
-    return encryptionService.decrypt(
+    return encryptionRepo.decrypt(
       cipherText: cipherText,
       key: encryptionKey,
     );

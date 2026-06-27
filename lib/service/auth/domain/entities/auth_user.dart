@@ -10,7 +10,7 @@ class AuthUser with EquatableMixin {
   final String? email;
 
   @override
-  List<Object?> get props => [uid, email];
+  List<Object?> get props => <Object?>[uid, email];
 
   @override
   String toString() {

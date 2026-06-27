@@ -12,7 +12,7 @@ class VaultSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return TextField(
       controller: controller,
       onChanged: onChanged,

@@ -7,11 +7,9 @@ class ShadcnTheme {
 
   static ThemeData get darkTheme {
     const ColorScheme colorScheme = ColorScheme.dark(
-      background: AppColors.background,
-      onBackground: AppColors.foreground,
       surface: AppColors.background,
       onSurface: AppColors.foreground,
-      surfaceVariant: AppColors.cardVariant,
+      surfaceContainerHighest: AppColors.cardVariant,
       onSurfaceVariant: AppColors.mutedForeground,
       primary: AppColors.primary,
       onPrimary: AppColors.onPrimary,
@@ -26,11 +24,11 @@ class ShadcnTheme {
   }
 
   static ThemeData _buildTheme(ColorScheme colorScheme, Brightness brightness) {
-    final baseTextTheme = GoogleFonts.monaSansTextTheme(
+    final TextTheme baseTextTheme = GoogleFonts.monaSansTextTheme(
       ThemeData.dark().textTheme,
     );
 
-    final textTheme = baseTextTheme.copyWith(
+    final TextTheme textTheme = baseTextTheme.copyWith(
       bodyLarge: baseTextTheme.bodyLarge?.copyWith(
         color: colorScheme.onSurface,
         fontSize: 16,
@@ -58,13 +56,13 @@ class ShadcnTheme {
       useMaterial3: true,
       brightness: brightness,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.background,
-      cardColor: colorScheme.surfaceVariant,
+      scaffoldBackgroundColor: colorScheme.surface,
+      cardColor: colorScheme.surfaceContainerHighest,
       dividerColor: colorScheme.outline,
       fontFamily: GoogleFonts.monaSans().fontFamily,
       textTheme: textTheme,
       cardTheme: CardThemeData(
-        color: colorScheme.surfaceVariant,
+        color: colorScheme.surfaceContainerHighest,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
@@ -80,7 +78,7 @@ class ShadcnTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: colorScheme.surfaceVariant,
+        fillColor: colorScheme.surfaceContainerHighest,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         labelStyle: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 14),
         hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withAlpha(150), fontSize: 14),
@@ -141,8 +139,8 @@ class ShadcnTheme {
         ),
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+          if (states.contains(WidgetState.selected)) {
             return colorScheme.primary;
           }
           return Colors.transparent;

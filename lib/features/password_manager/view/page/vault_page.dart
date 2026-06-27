@@ -108,7 +108,7 @@ class _VaultPageState extends State<VaultPage> {
             Expanded(
               child: BlocBuilder<VaultBloc, VaultState>(
                 builder: (BuildContext context, VaultState state) {
-                  final theme = Theme.of(context);
+                  final ThemeData theme = Theme.of(context);
                   if (state is VaultLoading) {
                     return Center(
                       child: CircularProgressIndicator(
@@ -120,7 +120,7 @@ class _VaultPageState extends State<VaultPage> {
                   if (state is VaultLoaded) {
                     if (state.entries.isEmpty) {
                       return EmptyVaultWidget(
-                        onAdd: () => _navigateToAddEntry(),
+                        onAdd: _navigateToAddEntry,
                       );
                     }
                     return FadeIn(
@@ -167,7 +167,7 @@ class _VaultPageState extends State<VaultPage> {
         duration: const Duration(milliseconds: 600),
         delay: const Duration(milliseconds: 300),
         child: FloatingActionButton(
-          onPressed: () => _navigateToAddEntry(),
+          onPressed: _navigateToAddEntry,
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           shape: RoundedRectangleBorder(
@@ -180,7 +180,7 @@ class _VaultPageState extends State<VaultPage> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: Row(

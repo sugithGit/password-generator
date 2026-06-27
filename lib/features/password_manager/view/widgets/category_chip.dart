@@ -35,7 +35,7 @@ class CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     final Color color = _getColor(context);
     return GestureDetector(
       onTap: onTap,

@@ -21,7 +21,7 @@ abstract final class ShowSavedPasswords {
   ) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(16),
@@ -74,7 +74,7 @@ class _Indicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Container(
       width: 40,
       height: 4,
@@ -95,7 +95,7 @@ class _HistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -146,7 +146,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Row(
@@ -172,7 +172,7 @@ class _ClearPasswordHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return BlocBuilder<PasswordGenratorBloc, PasswordGenratorState>(
       bloc: bloc,
       builder: (BuildContext context, PasswordGenratorState state) {

@@ -1,10 +1,8 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toastification/toastification.dart';
 
-import '../../../../core/const/constants.dart';
 import '../../bloc/auth_bloc.dart';
 
 class LoginPage extends StatefulWidget {
@@ -85,7 +83,6 @@ class _LoginPageState extends State<LoginPage>
                     const SizedBox(height: 24),
                     // ── Toggle sign in / sign up ──────────────
                     FadeInUp(
-                      duration: const Duration(milliseconds: 800),
                       child: _buildToggle(),
                     ),
                   ],
@@ -99,7 +96,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget _buildHeader() {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Column(
       children: <Widget>[
         // Animated shield/lock icon
@@ -237,7 +234,7 @@ class _LoginPageState extends State<LoginPage>
     Widget? suffixIcon,
     String? Function(String?)? validator,
   }) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
@@ -253,7 +250,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget _buildToggle() {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[

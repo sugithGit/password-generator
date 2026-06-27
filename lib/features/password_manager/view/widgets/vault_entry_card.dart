@@ -33,7 +33,7 @@ class _VaultEntryCardState extends State<VaultEntryCard>
       vsync: this,
       duration: const Duration(milliseconds: 150),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.97).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.97).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -80,7 +80,7 @@ class _VaultEntryCardState extends State<VaultEntryCard>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     final Color categoryColor = _getCategoryColor();
     return AnimatedBuilder(
       animation: _scaleAnimation,
@@ -229,7 +229,7 @@ class _ActionIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
       customBorder: RoundedRectangleBorder(

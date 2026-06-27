@@ -1,26 +1,38 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../service/auth/auth_service.dart';
+import '../../../service/auth/domain/entities/auth_user.dart';
+import '../../../service/auth/domain/use_cases/get_current_user_use_case.dart';
+import '../../../service/auth/domain/use_cases/sign_in_use_case.dart';
+import '../../../service/auth/domain/use_cases/sign_out_use_case.dart';
+import '../../../service/auth/domain/use_cases/sign_up_use_case.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc({required this.authService}) : super(AuthInitial()) {
+  AuthBloc({
+    required this.getCurrentUserUseCase,
+    required this.signInUseCase,
+    required this.signUpUseCase,
+    required this.signOutUseCase,
+  }) : super(AuthInitial()) {
     on<AuthCheckRequested>(_onAuthCheck);
     on<SignInRequested>(_onSignIn);
     on<SignUpRequested>(_onSignUp);
     on<SignOutRequested>(_onSignOut);
   }
 
-  final AuthService authService;
+  final GetCurrentUserUseCase getCurrentUserUseCase;
+  final SignInUseCase signInUseCase;
+  final SignUpUseCase signUpUseCase;
+  final SignOutUseCase signOutUseCase;
 
   Future<void> _onAuthCheck(
     AuthCheckRequested event,
     Emitter<AuthState> emit,
   ) async {
-    final User? user = authService.currentUser;
+    final AuthUser? user = getCurrentUserUseCase.call(null);
     if (user != null) {
       emit(Authenticated(user: user));
     } else {
@@ -34,11 +46,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final UserCredential credential = await authService.signIn(
-        email: event.email,
-        password: event.password,
+      final AuthUser user = await signInUseCase.call(
+        SignInParams(email: event.email, password: event.password),
       );
-      emit(Authenticated(user: credential.user!));
+      emit(Authenticated(user: user));
     } on FirebaseAuthException catch (e) {
       emit(AuthError(message: _parseAuthError(e.code)));
       emit(Unauthenticated());
@@ -54,11 +65,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final UserCredential credential = await authService.signUp(
-        email: event.email,
-        password: event.password,
+      final AuthUser user = await signUpUseCase.call(
+        SignUpParams(email: event.email, password: event.password),
       );
-      emit(Authenticated(user: credential.user!));
+      emit(Authenticated(user: user));
     } on FirebaseAuthException catch (e) {
       emit(AuthError(message: _parseAuthError(e.code)));
       emit(Unauthenticated());
@@ -72,7 +82,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SignOutRequested event,
     Emitter<AuthState> emit,
   ) async {
-    await authService.signOut();
+    await signOutUseCase.call(null);
     emit(Unauthenticated());
   }
 
