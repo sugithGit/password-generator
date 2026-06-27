@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/const/constants.dart';
-import '../../domain/entities/vault_entry.dart';
-import '../bloc/vault_bloc.dart';
+import '../../../../service/password_manager/domain/entities/vault_entry.dart';
+import '../../bloc/vault_bloc.dart';
 
 class AddEntryPage extends StatefulWidget {
   const AddEntryPage({this.existingEntry, super.key});
@@ -121,8 +121,9 @@ class _AddEntryPageState extends State<AddEntryPage> {
                         label: 'Username / Email',
                         icon: Icons.person_outline_rounded,
                         hint: 'e.g. john@example.com',
-                        validator: (String? v) =>
-                            v == null || v.isEmpty ? 'Username is required' : null,
+                        validator: (String? v) => v == null || v.isEmpty
+                            ? 'Username is required'
+                            : null,
                       ),
                       const SizedBox(height: 16),
                       // Password
@@ -198,9 +199,8 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                       : theme.cardColor,
                                   borderRadius: BorderRadius.circular(14),
                                   border: Border.all(
-                                    color: isSelected
-                                        ? color
-                                        : theme.dividerColor,
+                                    color:
+                                        isSelected ? color : theme.dividerColor,
                                     width: isSelected ? 1.5 : 1,
                                   ),
                                 ),
@@ -220,7 +220,8 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                       style: TextStyle(
                                         color: isSelected
                                             ? color
-                                            : theme.colorScheme.onSurfaceVariant,
+                                            : theme
+                                                .colorScheme.onSurfaceVariant,
                                         fontWeight: isSelected
                                             ? FontWeight.w600
                                             : FontWeight.w400,
@@ -262,20 +263,23 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                   ),
                                   title: Text(
                                     'Delete Password',
-                                    style: TextStyle(color: theme.colorScheme.onSurface),
+                                    style: TextStyle(
+                                        color: theme.colorScheme.onSurface),
                                   ),
                                   content: Text(
                                     'Are you sure you want to delete this entry?',
                                     style: TextStyle(
-                                        color: theme.colorScheme.onSurfaceVariant),
+                                        color:
+                                            theme.colorScheme.onSurfaceVariant),
                                   ),
                                   actions: <Widget>[
                                     TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(ctx).pop(),
+                                      onPressed: () => Navigator.of(ctx).pop(),
                                       child: Text(
                                         'Cancel',
-                                        style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                                        style: TextStyle(
+                                            color: theme
+                                                .colorScheme.onSurfaceVariant),
                                       ),
                                     ),
                                     TextButton(
@@ -291,7 +295,8 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                       },
                                       child: Text(
                                         'Delete',
-                                        style: TextStyle(color: theme.colorScheme.error),
+                                        style: TextStyle(
+                                            color: theme.colorScheme.error),
                                       ),
                                     ),
                                   ],
@@ -300,7 +305,9 @@ class _AddEntryPageState extends State<AddEntryPage> {
                             },
                             style: OutlinedButton.styleFrom(
                               foregroundColor: theme.colorScheme.error,
-                              side: BorderSide(color: theme.colorScheme.error.withAlpha(100)),
+                              side: BorderSide(
+                                  color:
+                                      theme.colorScheme.error.withAlpha(100)),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),

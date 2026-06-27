@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../generate_password/presentation/widgets/header.dart';
+import '../../generate_password/view/widgets/header.dart';
 
 class LoadingPage extends StatelessWidget {
   const LoadingPage({

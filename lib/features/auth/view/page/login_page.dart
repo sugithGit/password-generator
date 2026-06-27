@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../../core/const/constants.dart';
-import '../bloc/auth_bloc.dart';
+import '../../bloc/auth_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -258,9 +258,7 @@ class _LoginPageState extends State<LoginPage>
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          _isSignUp
-              ? 'Already have an account?'
-              : "Don't have an account?",
+          _isSignUp ? 'Already have an account?' : "Don't have an account?",
           style: TextStyle(
             color: theme.colorScheme.onSurfaceVariant,
             fontSize: 14,

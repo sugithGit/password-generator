@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc/password_generate_bloc.dart';
+import '../../bloc/password_generate_bloc.dart';
 import 'coustom_check_box.dart';
 
 class PassWordSettingField extends StatelessWidget {

@@ -2,8 +2,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/entities/vault_entry.dart';
-import '../bloc/vault_bloc.dart';
+import '../../../../service/password_manager/domain/entities/vault_entry.dart';
+import '../../bloc/vault_bloc.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/empty_vault_widget.dart';
 import '../widgets/vault_entry_card.dart';
@@ -59,9 +59,7 @@ class _VaultPageState extends State<VaultPage> {
                 child: VaultSearchBar(
                   controller: _searchController,
                   onChanged: (String query) {
-                    context
-                        .read<VaultBloc>()
-                        .add(SearchEntries(query: query));
+                    context.read<VaultBloc>().add(SearchEntries(query: query));
                   },
                 ),
               ),
@@ -82,9 +80,7 @@ class _VaultPageState extends State<VaultPage> {
                       isSelected: _selectedCategory == null,
                       onTap: () {
                         setState(() => _selectedCategory = null);
-                        context
-                            .read<VaultBloc>()
-                            .add(const FilterByCategory());
+                        context.read<VaultBloc>().add(const FilterByCategory());
                       },
                     ),
                     const SizedBox(width: 8),
@@ -139,8 +135,7 @@ class _VaultPageState extends State<VaultPage> {
                             delay: Duration(milliseconds: index * 60),
                             child: VaultEntryCard(
                               entry: entry,
-                              onEdit: () =>
-                                  _navigateToAddEntry(entry: entry),
+                              onEdit: () => _navigateToAddEntry(entry: entry),
                               onDelete: () {
                                 context.read<VaultBloc>().add(
                                       DeleteEntry(entryId: entry.id),

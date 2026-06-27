@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/const/constants.dart';
-import '../../domain/entities/vault_entry.dart';
+import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 
 class CategoryChip extends StatelessWidget {
   const CategoryChip({

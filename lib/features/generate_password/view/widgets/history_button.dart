@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/const/constants.dart';
 import '../../../../core/services/encryption_service.dart';
-import '../../../auth/presentation/bloc/auth_bloc.dart';
-import '../../../auth/presentation/page/login_page.dart';
-import '../../../password_manager/presentation/page/biometric_gate_page.dart';
+import '../../../password_manager/view/page/biometric_gate_page.dart';
+import '../../../auth/bloc/auth_bloc.dart';
+import '../../../auth/view/page/login_page.dart';
 
 class HistoryButton extends StatelessWidget {
   const HistoryButton({

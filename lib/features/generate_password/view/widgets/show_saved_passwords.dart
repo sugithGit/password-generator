@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/const/constants.dart';
 import '../../../../core/extension/date_time_extension.dart';
 import '../../../../service/generate_password/domain/entities/password.dart';
-import '../bloc/password_generate_bloc.dart';
+import '../../bloc/password_generate_bloc.dart';
 
 abstract final class ShowSavedPasswords {
   static void call({
@@ -181,10 +181,15 @@ class _ClearPasswordHistory extends StatelessWidget {
           onPressed:
               isEnabled ? () => bloc.add(DeletePasswordHistoryEvent()) : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: isEnabled ? theme.colorScheme.error : theme.colorScheme.secondary,
-            foregroundColor: isEnabled ? theme.colorScheme.onError : theme.colorScheme.onSurfaceVariant,
+            backgroundColor: isEnabled
+                ? theme.colorScheme.error
+                : theme.colorScheme.secondary,
+            foregroundColor: isEnabled
+                ? theme.colorScheme.onError
+                : theme.colorScheme.onSurfaceVariant,
             disabledBackgroundColor: theme.colorScheme.secondary.withAlpha(100),
-            disabledForegroundColor: theme.colorScheme.onSurfaceVariant.withAlpha(100),
+            disabledForegroundColor:
+                theme.colorScheme.onSurfaceVariant.withAlpha(100),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             minimumSize: Size.zero,
             shape: RoundedRectangleBorder(
@@ -195,7 +200,9 @@ class _ClearPasswordHistory extends StatelessWidget {
             'Clear All',
             style: context.bodySmall?.copyWith(
               fontWeight: FontWeight.w600,
-              color: isEnabled ? theme.colorScheme.onError : theme.colorScheme.onSurfaceVariant.withAlpha(100),
+              color: isEnabled
+                  ? theme.colorScheme.onError
+                  : theme.colorScheme.onSurfaceVariant.withAlpha(100),
             ),
           ),
         );

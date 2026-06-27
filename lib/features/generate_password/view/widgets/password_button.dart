@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
-import '../bloc/password_generate_bloc.dart';
+import '../../bloc/password_generate_bloc.dart';
 
 class PasswordButton extends StatelessWidget {
   const PasswordButton({super.key});
@@ -83,7 +83,8 @@ class PasswordButton extends StatelessWidget {
                     icon: SizedBox(
                       height: 30,
                       width: 30,
-                      child: Icon(Iconsax.refresh, color: theme.colorScheme.onSecondary),
+                      child: Icon(Iconsax.refresh,
+                          color: theme.colorScheme.onSecondary),
                     ),
                     style: IconButton.styleFrom(
                       backgroundColor: theme.colorScheme.secondary,

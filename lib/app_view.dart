@@ -10,8 +10,8 @@ import 'package:toastification/toastification.dart';
 import 'core/theme/shadcn_theme.dart';
 import 'core/services/auth_service.dart';
 import 'core/services/encryption_service.dart';
-import 'features/auth/presentation/bloc/auth_bloc.dart';
-import 'features/generate_password/presentation/page/password_generate_page.dart';
+import 'features/auth/bloc/auth_bloc.dart';
+import 'features/generate_password/view/page/password_generate_page.dart';
 import 'firebase_options.dart';
 import 'main.dart';
 

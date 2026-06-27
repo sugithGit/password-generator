@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/const/constants.dart';
-import '../bloc/password_generate_bloc.dart';
+import '../../bloc/password_generate_bloc.dart';
 import 'info_text.dart';
 
 class CopyResultContainer extends StatefulWidget {
@@ -59,7 +59,8 @@ class _CopyResultContainerState extends State<CopyResultContainer> {
               child: TextFormField(
                 controller: state.passwordController,
                 readOnly: true,
-                style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
+                style:
+                    TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
                 decoration: InputDecoration(
                   hintText: 'Password will appear here...',
                   suffixIcon: IconButton(

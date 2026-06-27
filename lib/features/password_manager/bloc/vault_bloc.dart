@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../domain/entities/vault_entry.dart';
-import '../../domain/repositories/vault_repository.dart';
+import '../../../service/password_manager/domain/entities/vault_entry.dart';
+import '../../../service/password_manager/domain/repositories/vault_repository.dart';
 
 part 'vault_event.dart';
 part 'vault_state.dart';

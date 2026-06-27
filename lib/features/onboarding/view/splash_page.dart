@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/services/encryption_service.dart';
-import '../../generate_password/presentation/page/password_generate_page.dart';
-import '../../generate_password/presentation/widgets/header.dart';
+import '../../generate_password/view/page/password_generate_page.dart';
+import '../../generate_password/view/widgets/header.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({required this.encryptionService, super.key});

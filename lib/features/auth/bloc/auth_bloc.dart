@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/services/auth_service.dart';
+import '../../../core/services/auth_service.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';

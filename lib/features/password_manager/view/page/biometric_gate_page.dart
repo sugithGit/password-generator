@@ -6,9 +6,9 @@ import 'package:sodium/sodium.dart';
 
 import '../../../../core/services/biometric_service.dart';
 import '../../../../core/services/encryption_service.dart';
-import '../../data/remote/vault_remote_datasource.dart';
-import '../../data/repositories/vault_repo_impl.dart';
-import '../bloc/vault_bloc.dart';
+import '../../../../service/password_manager/data/remote/vault_remote_datasource.dart';
+import '../../../../service/password_manager/data/repositories/vault_repo_impl.dart';
+import '../../bloc/vault_bloc.dart';
 import 'master_key_page.dart';
 import 'vault_page.dart';
 
@@ -144,9 +144,15 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                       height: 120,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: (_authFailed ? theme.colorScheme.error : theme.colorScheme.primary).withAlpha(20),
+                        color: (_authFailed
+                                ? theme.colorScheme.error
+                                : theme.colorScheme.primary)
+                            .withAlpha(20),
                         border: Border.all(
-                          color: (_authFailed ? theme.colorScheme.error : theme.colorScheme.primary).withAlpha(40),
+                          color: (_authFailed
+                                  ? theme.colorScheme.error
+                                  : theme.colorScheme.primary)
+                              .withAlpha(40),
                           width: 1.5,
                         ),
                       ),
@@ -155,7 +161,9 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                             ? Icons.lock_outline_rounded
                             : Icons.fingerprint_rounded,
                         size: 52,
-                        color: _authFailed ? theme.colorScheme.error : theme.colorScheme.primary,
+                        color: _authFailed
+                            ? theme.colorScheme.error
+                            : theme.colorScheme.primary,
                       ),
                     ),
                   ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/const/constants.dart';
-import '../../domain/entities/vault_entry.dart';
+import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 
 class VaultEntryCard extends StatefulWidget {
   const VaultEntryCard({
@@ -190,7 +190,8 @@ class _VaultEntryCardState extends State<VaultEntryCard>
                         icon: Icons.copy_rounded,
                         onTap: () {
                           HapticFeedback.mediumImpact();
-                          final String decrypted = widget.entry.encryptedPassword;
+                          final String decrypted =
+                              widget.entry.encryptedPassword;
                           Clipboard.setData(ClipboardData(text: decrypted));
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

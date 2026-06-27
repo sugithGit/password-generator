@@ -7,7 +7,7 @@ import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 import '../../../../core/const/constants.dart';
 import '../../../../core/util/utils.dart';
-import '../bloc/password_generate_bloc.dart';
+import '../../bloc/password_generate_bloc.dart';
 
 class PasswordLength extends StatelessWidget {
   const PasswordLength({super.key});

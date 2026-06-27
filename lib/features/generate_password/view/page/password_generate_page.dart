@@ -9,7 +9,7 @@ import '../../../../service/generate_password/domain/use_cases/delete_password_u
 import '../../../../service/generate_password/domain/use_cases/get_password_history_use_case.dart';
 import '../../../../service/generate_password/domain/use_cases/pasword_use_case.dart';
 import '../../../../service/generate_password/domain/use_cases/save_password_use_case.dart';
-import '../bloc/password_generate_bloc.dart';
+import '../../bloc/password_generate_bloc.dart';
 import '../widgets/get_divider.dart';
 import '../widgets/header.dart';
 import '../widgets/history_button.dart';
