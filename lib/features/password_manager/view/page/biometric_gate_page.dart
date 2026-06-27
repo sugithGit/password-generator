@@ -1,5 +1,5 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rxget/rxget.dart';
@@ -14,9 +14,6 @@ import '../../../../service/auth/domain/use_cases/authenticate_biometrics_use_ca
 import '../../../../service/auth/domain/use_cases/check_biometrics_support_use_case.dart';
 import '../../../../service/password_manager/data/remote/vault_remote_datasource.dart';
 import '../../../../service/password_manager/data/repositories/vault_repo_impl.dart';
-import '../../controller/vault_controller.dart';
-import 'master_key_page.dart';
-import 'vault_page.dart';
 
 @RoutePage()
 class BiometricGatePage extends StatefulWidget {

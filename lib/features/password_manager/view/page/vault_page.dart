@@ -3,15 +3,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:rxget/rxget.dart';
 
-import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../service/password_manager/data/repositories/vault_repo_impl.dart';
+import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../controller/vault_controller.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/empty_vault_widget.dart';
 import '../widgets/vault_entry_card.dart';
 import '../widgets/vault_search_bar.dart';
-import 'add_entry_page.dart';
 
 @RoutePage()
 class VaultPage extends StatefulWidget implements AutoRouteWrapper {

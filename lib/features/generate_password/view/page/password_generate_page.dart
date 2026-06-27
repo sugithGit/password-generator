@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rxget/rxget.dart';
 
-import '../../../../service/auth/domain/repositories/encryption_repo.dart';
 import '../../../../service/generate_password/data/local/password_gnerator.dart';
 import '../../../../service/generate_password/data/local/save_password.dart';
 import '../../../../service/generate_password/data/repositories/password_repo_impl.dart';
@@ -58,20 +57,20 @@ class _PassWordGeneratePage extends StatelessWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 700),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    if (kIsWeb) const AppLogo(),
-                    const HistoryButton(),
-                    const PasswordLength(),
-                    const SizedBox(height: 10),
-                    const PassWordSettingField(),
-                    const SizedBox(height: 20),
-                    const GetDivider(),
-                    const SizedBox(height: 20),
-                    const PasswordButton(),
+                    if (kIsWeb) AppLogo(),
+                    HistoryButton(),
+                    PasswordLength(),
+                    SizedBox(height: 10),
+                    PassWordSettingField(),
+                    SizedBox(height: 20),
+                    GetDivider(),
+                    SizedBox(height: 20),
+                    PasswordButton(),
                   ],
                 ),
               ),

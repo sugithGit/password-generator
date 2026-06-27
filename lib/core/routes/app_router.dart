@@ -15,9 +15,7 @@ class AppRouter extends RootStackRouter {
   late final List<AutoRoute> routes = _routeList();
 
   List<AutoRoute> _routeList() {
-    return AppRouteEnum.values.map<AutoRoute>((route) {
-      return _route(route);
-    }).toList();
+    return AppRouteEnum.values.map<AutoRoute>(_route).toList();
   }
 
   AutoRoute _route(AppRouteEnum route) {

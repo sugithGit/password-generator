@@ -56,7 +56,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       if (mounted) {
-        context.router.maybePop();
+        await context.router.maybePop();
       }
       return;
     }
@@ -91,7 +91,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       if (mounted) {
-        context.router.maybePop();
+        await context.router.maybePop();
       }
       return;
     }
@@ -102,8 +102,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
 
     if (_isNewUser) {
       // First time: store verification hash
-      final String verificationHash =
-          encryptionRepo.createVerificationHash(
+      final String verificationHash = encryptionRepo.createVerificationHash(
         uid: user.uid,
         masterKey: masterKey,
       );

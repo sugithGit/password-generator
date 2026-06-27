@@ -6,12 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:rxget/rxget.dart';
 import 'package:toastification/toastification.dart';
 
+import 'core/routes/app_router.dart';
 import 'core/theme/shadcn_theme.dart';
 import 'features/auth/controller/auth_controller.dart';
-import 'features/generate_password/view/page/password_generate_page.dart';
 import 'firebase_options.dart';
 import 'main.dart';
-
 import 'service/auth/data/local/encryption_local.dart';
 import 'service/auth/data/remote/firebase_auth_remote.dart';
 import 'service/auth/data/repositories/auth_repo_impl.dart';
@@ -21,9 +20,6 @@ import 'service/auth/domain/use_cases/get_current_user_use_case.dart';
 import 'service/auth/domain/use_cases/sign_in_use_case.dart';
 import 'service/auth/domain/use_cases/sign_out_use_case.dart';
 import 'service/auth/domain/use_cases/sign_up_use_case.dart';
-
-import 'package:password_generator/core/routes/app_router.dart';
-import 'package:password_generator/core/routes/app_router.gr.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage>
         await controller.signIn(email: email, password: password);
       }
       if (mounted) {
-        context.router.maybePop();
+        await context.router.maybePop();
       }
     } on Exception catch (e) {
       if (mounted) {
