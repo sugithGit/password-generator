@@ -1,22 +1,41 @@
 import 'package:flutter/material.dart';
 
 abstract final class AppColors {
-  // Pure Dark Shadcn (Zinc Palette)
-  static const Color background = Color(0xFF09090B); // Zinc 950
-  static const Color foreground = Color(0xFFFAFAFA); // Zinc 50
-  static const Color card = Color(0xFF09090B); // Zinc 950 (or zinc-950/900 mix)
-  static const Color cardVariant = Color(0xFF18181B); // Zinc 900
-  static const Color primary = Color(0xFFFAFAFA); // Zinc 50
-  static const Color onPrimary = Color(0xFF09090B); // Zinc 950
-  static const Color secondary = Color(0xFF27272A); // Zinc 800
-  static const Color onSecondary = Color(0xFFFAFAFA); // Zinc 50
-  static const Color muted = Color(0xFF27272A); // Zinc 800
-  static const Color mutedForeground = Color(0xFFA1A1AA); // Zinc 400
-  static const Color border = Color(0xFF27272A); // Zinc 800
-  static const Color error = Color(0xFFEF4444); // Red 500
+  // Supabase Green Glowing Theme
+  static const Color background = Color(0xFF0A0A0A); // Deep dark background
+  static const Color foreground = Color(
+    0xFFFAFAFA,
+  ); // Off-white for readability
+  static const Color card = Color(0x0CFFFFFF); // Translucent for glassmorphism
+  static const Color cardVariant = Color(
+    0x14FFFFFF,
+  ); // Slightly lighter translucent
+
+  static const Color primary = Color(0xFF3ECF8E); // Supabase Green
+  static const Color deepTeal = Color(0xFF3ECF8E); // Supabase Green
+  static const Color onPrimary = Color(
+    0xFF0A0A0A,
+  ); // High contrast text on green
+
+  static const Color secondary = Color(
+    0xFF1E293B,
+  ); // Slate 800 - dark subtle accent
+  static const Color onSecondary = Color(0xFFFAFAFA);
+
+  static const Color muted = Color(0xFF27272A);
+  static const Color mutedForeground = Color(0xFFA1A1AA);
+
+  static const Color border = Color(
+    0x1AFFFFFF,
+  ); // Very subtle thin border for glass effect
+
+  static const Color error = Color(0xFFEF4444);
   static const Color onError = Colors.white;
-  static const textSecondary = Color.fromARGB(255, 207, 207, 207);
-  static const textDisabled = Color(0xFFE3E3E3);
-  static const textPrimary = Color(0xFFFFFCFC);
-  static const deepTeal = Color(0xFFFFFCFC);
+
+  static const textSecondary = Color(0xFFA1A1AA);
+  static const textDisabled = Color(0xFF52525B);
+  static const textPrimary = Color(0xFFFFFFFF);
+
+  // Custom glowing accents
+  static const glowGreen = Color(0x333ECF8E);
 }

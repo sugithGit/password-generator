@@ -1,15 +1,17 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:rxget/rxget.dart';
 
+import '../../../../core/extension/color_ext.dart';
 import '../../../../core/routes/app_router.gr.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/squircle.dart';
 import '../../../../service/password_manager/data/repositories/vault_repo_impl.dart';
 import '../../../../service/password_manager/domain/entities/decrypted_vault_entry.dart';
-import '../../../../service/password_manager/domain/entities/vault_category.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../controller/vault/vault_controller.dart';
-import '../widgets/category_chip.dart';
 import '../widgets/empty_vault_widget.dart';
 import '../widgets/vault_entry_card.dart';
 import '../widgets/vault_search_bar.dart';
@@ -38,7 +40,6 @@ class VaultPage extends StatefulWidget implements AutoRouteWrapper {
 
 class _VaultPageState extends State<VaultPage> {
   final TextEditingController _searchController = TextEditingController();
-  VaultCategory? _selectedCategory;
 
   @override
   void dispose() {
@@ -54,94 +55,148 @@ class _VaultPageState extends State<VaultPage> {
   Widget build(BuildContext context) {
     final VaultController controller = Get.find<VaultController>();
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            // ── Header ──────────────────────────────────────
-            FadeInDown(
-              duration: const Duration(milliseconds: 400),
-              child: _buildHeader(context),
-            ),
-            const SizedBox(height: 16),
-            // ── Search Bar ──────────────────────────────────
-            FadeInDown(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 100),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: VaultSearchBar(
-                  controller: _searchController,
-                  onChanged: controller.searchEntries,
+      backgroundColor: AppColors.background,
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: <Color>[
+              Color(0xFF3ECF8E), // Vibrant Supabase Green at the top
+              Color(0xFF1B6A42), // Transition to dark green
+              AppColors.background, // Fades perfectly into black
+            ],
+            stops: <double>[0, 0.20, 0.35],
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: CustomScrollView(
+            slivers: <Widget>[
+              // ── Top Bar ──────────────────────────────────────
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      _buildGlassIconButton(Icons.menu_rounded, () {}),
+                      _buildGlassIconButton(Icons.more_vert_rounded, () {}),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            // ── Category Chips ──────────────────────────────
-            FadeInDown(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 200),
-              child: SizedBox(
-                height: 40,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  children: <Widget>[
-                    CategoryChip(
-                      category: null,
-                      isSelected: _selectedCategory == null,
-                      onTap: () {
-                        setState(() => _selectedCategory = null);
-                        controller.filterByCategory(null);
-                      },
+
+              // ── Hero Text ────────────────────────────────────
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 24,
+                  ),
+                  child: FadeInDown(
+                    duration: const Duration(milliseconds: 600),
+                    child: _buildHeroText(),
+                  ),
+                ),
+              ),
+
+              // ── Search Bar ──────────────────────────────────
+              SliverToBoxAdapter(
+                child: FadeInDown(
+                  duration: const Duration(milliseconds: 600),
+                  delay: const Duration(milliseconds: 100),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: VaultSearchBar(
+                      controller: _searchController,
+                      onChanged: controller.searchEntries,
                     ),
-                    const SizedBox(width: 8),
-                    ...VaultCategory.values.map(
-                      (VaultCategory cat) => Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: CategoryChip(
-                          category: cat,
-                          isSelected: _selectedCategory == cat,
-                          onTap: () {
-                            setState(() => _selectedCategory = cat);
-                            controller.filterByCategory(cat);
-                          },
+                  ),
+                ),
+              ),
+
+              // ── List Header ──────────────────────────────────
+              const SliverToBoxAdapter(
+                child: FadeInDown(
+                  duration: Duration(milliseconds: 600),
+                  delay: Duration(milliseconds: 300),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(24, 32, 24, 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Today',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        Text(
+                          'See All',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // ── Vault List ──────────────────────────────────
+              Obx(() {
+                if (controller.state.isLoading) {
+                  return const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // ── Vault List ──────────────────────────────────
-            Expanded(
-              child: Obx(() {
-                final ThemeData theme = Theme.of(context);
-                if (controller.state.isLoading) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: theme.colorScheme.primary,
-                      strokeWidth: 2.5,
                     ),
                   );
                 }
                 if (controller.state.error != null) {
-                  return Center(
-                    child: Text(
-                      controller.state.error!,
-                      style: TextStyle(color: theme.colorScheme.error),
+                  return SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: Center(
+                        child: Text(
+                          controller.state.error!,
+                          style: const TextStyle(color: AppColors.error),
+                        ),
+                      ),
                     ),
                   );
                 }
                 if (controller.state.entries.isEmpty) {
-                  return EmptyVaultWidget(onAdd: _navigateToAddEntry);
+                  return SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: EmptyVaultWidget(onAdd: _navigateToAddEntry),
+                    ),
+                  );
                 }
-                return FadeIn(
-                  duration: const Duration(milliseconds: 400),
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: controller.state.entries.length,
-                    itemBuilder: (BuildContext context, int index) {
+
+                return SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate((
+                      BuildContext context,
+                      int index,
+                    ) {
                       final DecryptedVaultEntry entry =
                           controller.state.entries[index];
                       return FadeInUp(
@@ -156,81 +211,123 @@ class _VaultPageState extends State<VaultPage> {
                           },
                         ),
                       );
-                    },
+                    }, childCount: controller.state.entries.length),
                   ),
                 );
               }),
-            ),
-          ],
+
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 100),
+              ), // Bottom padding
+            ],
+          ),
         ),
       ),
-      // ── FAB ────────────────────────────────────────────
+      // Floating Bottom Add Button (matches the image aesthetic)
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FadeInUp(
         duration: const Duration(milliseconds: 600),
-        delay: const Duration(milliseconds: 300),
-        child: FloatingActionButton(
-          onPressed: _navigateToAddEntry,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Theme.of(context).colorScheme.onPrimary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+        delay: const Duration(milliseconds: 400),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+          decoration: ShapeDecoration(
+            color: Colors.white.op(0.12),
+            shape: const Squircle().shape(),
           ),
-          child: const Icon(Icons.add_rounded, size: 28),
+          child: Text("🔑 NEW", style: context.titleLarge),
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final VaultController controller = Get.find<VaultController>();
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-      child: Row(
-        children: <Widget>[
-          // Back button
-          InkWell(
-            onTap: () => context.router.maybePop(),
-            customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+  Widget _buildGlassIconButton(IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 48,
+        height: 48,
+        decoration: ShapeDecoration(
+          color: Colors.white.op(0.15),
+          shape: const CircleBorder(),
+          shadows: <BoxShadow>[
+            BoxShadow(
+              color: Colors.black.op(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: theme.cardColor,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: theme.dividerColor),
-              ),
-              child: Icon(
-                Icons.arrow_back_ios_new_rounded,
-                color: theme.colorScheme.onSurface,
-                size: 18,
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Title
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'Password Vault',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Obx(() {
-                final int count = controller.state.entries.length;
-                return Text(
-                  '$count passwords stored',
-                  style: theme.textTheme.bodySmall,
-                );
-              }),
-            ],
-          ),
-        ],
+          ],
+        ),
+        child: Icon(icon, color: AppColors.textPrimary, size: 20),
       ),
+    );
+  }
+
+  Widget _buildHeroText() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            const Text(
+              'Keep',
+              style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.w500,
+                color: AppColors.textPrimary,
+                letterSpacing: -1,
+                height: 1.1,
+              ),
+            ),
+            const SizedBox(width: 12),
+            _buildEmojiPill('🔒', Colors.black.op(0.2)),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: <Widget>[
+            _buildEmojiPill('🗄️', Colors.black.op(0.2)),
+            const SizedBox(width: 12),
+            const Text(
+              'Your Life',
+              style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.w400,
+                color: AppColors.textPrimary,
+                letterSpacing: -1,
+                height: 1.1,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: <Widget>[
+            const Text(
+              'Safe',
+              style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.w400,
+                color: AppColors.textPrimary,
+                letterSpacing: -1,
+                height: 1.1,
+              ),
+            ),
+            const SizedBox(width: 12),
+            _buildEmojiPill('🌍', Colors.black.op(0.2)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEmojiPill(String emoji, Color bgColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      decoration: ShapeDecoration(
+        color: bgColor,
+        shape: const Squircle(radius: 100).shape(),
+      ),
+      child: Text(emoji, style: const TextStyle(fontSize: 26)),
     );
   }
 }
