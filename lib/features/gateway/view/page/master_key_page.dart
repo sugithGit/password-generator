@@ -3,8 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rxget/rxget.dart';
 
+import '../../../../service/auth/data/remote/master_key_remote_datasource.dart';
 import '../../../../service/auth/domain/repositories/encryption_repo.dart';
 
 /// Page prompting the user to enter (or setup) their master key.
@@ -58,18 +60,12 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
       return;
     }
 
-    final DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
-        .instance
-        .collection('users')
-        .doc(user.uid)
-        .get();
+    final MasterKeyRemoteDatasource ds = MasterKeyRemoteDatasource();
+    final String? encryptedKey = await ds.getEncryptedMasterKey(uid: user.uid);
 
     if (mounted) {
       setState(() {
-        _isNewUser =
-            !doc.exists ||
-            doc.data() == null ||
-            !doc.data()!.containsKey('verificationHash');
+        _isNewUser = encryptedKey == null;
         _isLoading = false;
       });
     }
@@ -97,36 +93,32 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     final String masterKey = _masterKeyController.text.trim();
 
     final EncryptionRepo encryptionRepo = Get.find<EncryptionRepo>();
+    final MasterKeyRemoteDatasource ds = MasterKeyRemoteDatasource();
 
     if (_isNewUser) {
-      // First time: store verification hash
-      final String verificationHash = encryptionRepo.createVerificationHash(
+      // First time: store encrypted master key
+      final String encryptedMasterKey = encryptionRepo.encryptMasterKeyForSync(
         uid: user.uid,
         masterKey: masterKey,
       );
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .set(<String, dynamic>{
-            'verificationHash': verificationHash,
-            'createdAt': DateTime.now().toIso8601String(),
-          });
+      await ds.saveEncryptedMasterKey(
+        uid: user.uid,
+        encryptedMasterKey: encryptedMasterKey,
+      );
+
+      // Store in secure storage for biometrics
+      const FlutterSecureStorage storage = FlutterSecureStorage();
+      await storage.write(key: 'master_key_${user.uid}', value: masterKey);
 
       if (mounted) {
         widget.onAuthenticated(context, masterKey);
       }
     } else {
       // Returning user: validate master key
-      final DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
-          .instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+      final String? storedEncryptedMasterKey = await ds.getEncryptedMasterKey(uid: user.uid);
 
-      final String? storedHash = doc.data()?['verificationHash'] as String?;
-
-      if (storedHash == null) {
+      if (storedEncryptedMasterKey == null) {
         setState(() {
           _errorMessage =
               'Verification data not found. Please contact support.';
@@ -135,13 +127,17 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
         return;
       }
 
-      final bool isValid = encryptionRepo.verifyMasterKey(
+      final bool isValid = encryptionRepo.verifyEncryptedMasterKey(
         uid: user.uid,
         masterKey: masterKey,
-        storedVerificationHash: storedHash,
+        storedEncryptedMasterKey: storedEncryptedMasterKey,
       );
 
       if (isValid) {
+        // Store in secure storage for future biometrics
+        const FlutterSecureStorage storage = FlutterSecureStorage();
+        await storage.write(key: 'master_key_${user.uid}', value: masterKey);
+
         if (mounted) {
           widget.onAuthenticated(context, masterKey);
         }

@@ -53,9 +53,20 @@ class BiometricGatePage extends HookWidget {
     final VoidCallback authenticate = useCallback(() {
       controller.authenticate(
         onBiometricsUnsupported: navigateToMasterKey,
-        onSuccess: navigateToMasterKey,
+        onBiometricsSuccessWithKey: (String masterKey) {
+          controller.onMasterKeyValidated(
+            masterKey,
+            onReady: (VaultRepoImpl repository) {
+              if (!context.mounted) {
+                return;
+              }
+              context.router.replace(VaultRoute(repository: repository));
+            },
+          );
+        },
+        onBiometricsSuccessWithoutKey: navigateToMasterKey,
       );
-    }, <Object?>[controller, navigateToMasterKey]);
+    }, <Object?>[controller, navigateToMasterKey, context]);
 
     useEffect(() {
       pulseController.repeat(reverse: true);

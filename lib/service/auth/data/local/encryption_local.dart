@@ -55,31 +55,30 @@ class EncryptionLocal {
     return utf8.decode(decrypted);
   }
 
-  String createVerificationHash({
+  String encryptMasterKeyForSync({
     required String uid,
     required String masterKey,
   }) {
-    final String verificationPlaintext = 'VAULT_KEY_VERIFY:$uid';
     final SecureKey key = deriveKey(uid: uid, masterKey: masterKey);
     try {
-      return encrypt(plainText: verificationPlaintext, key: key);
+      return encrypt(plainText: masterKey, key: key);
     } finally {
       key.dispose();
     }
   }
 
-  bool verifyMasterKey({
+  bool verifyEncryptedMasterKey({
     required String uid,
     required String masterKey,
-    required String storedVerificationHash,
+    required String storedEncryptedMasterKey,
   }) {
     final SecureKey key = deriveKey(uid: uid, masterKey: masterKey);
     try {
       final String decrypted = decrypt(
-        cipherText: storedVerificationHash,
+        cipherText: storedEncryptedMasterKey,
         key: key,
       );
-      return decrypted == 'VAULT_KEY_VERIFY:$uid';
+      return decrypted == masterKey;
     } on Exception catch (_) {
       return false;
     } finally {

@@ -49,6 +49,10 @@ class AppRouter extends RootStackRouter {
         path: AppRouteEnum.addEntry.path,
         page: AddEntryRoute.page,
       ),
+      AppRouteEnum.viewPassword => AutoRoute(
+        path: AppRouteEnum.viewPassword.path,
+        page: ViewPasswordRoute.page,
+      ),
       AppRouteEnum.passwordGenerate => AutoRoute(
         path: AppRouteEnum.passwordGenerate.path,
         page: PasswordGenerateRoute.page,

@@ -86,3 +86,13 @@ class VaultEntry with EquatableMixin {
     updatedAt,
   ];
 }
+
+class DecryptedVaultEntry {
+  const DecryptedVaultEntry({
+    required this.decryptedTitle,
+    required this.entry,
+  });
+
+  final String decryptedTitle;
+  final VaultEntry entry;
+}

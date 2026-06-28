@@ -10,8 +10,13 @@ class VaultRemoteDatasource {
   final String _userId;
   final FirebaseFirestore _firestore;
 
-  CollectionReference<Map<String, dynamic>> get _collection =>
-      _firestore.collection('users').doc(_userId).collection('vault');
+  CollectionReference<Map<String, dynamic>> get _collection {
+    final String reversedUserId = _userId.split('').reversed.join('');
+    return _firestore
+        .collection('vault')
+        .doc(reversedUserId)
+        .collection('entries');
+  }
 
   Stream<List<VaultEntryModel>> getEntries() {
     return _collection.orderBy('updatedAt', descending: true).snapshots().map((

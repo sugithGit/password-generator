@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rxget/rxget.dart';
 import 'package:sodium/sodium.dart';
 
@@ -37,7 +38,8 @@ class GatewayController extends GetxController<_GatewayState> {
 
   Future<void> authenticate({
     required void Function() onBiometricsUnsupported,
-    required void Function() onSuccess,
+    required void Function(String masterKey) onBiometricsSuccessWithKey,
+    required void Function() onBiometricsSuccessWithoutKey,
   }) async {
     state._isAuthenticating.value = true;
     state._authFailed.value = false;
@@ -58,7 +60,16 @@ class GatewayController extends GetxController<_GatewayState> {
     state._authFailed.value = !success;
 
     if (success) {
-      onSuccess();
+      final User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        const FlutterSecureStorage storage = FlutterSecureStorage();
+        final String? masterKey = await storage.read(key: 'master_key_${user.uid}');
+        if (masterKey != null) {
+          onBiometricsSuccessWithKey(masterKey);
+          return;
+        }
+      }
+      onBiometricsSuccessWithoutKey();
     }
   }
 

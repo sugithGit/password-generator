@@ -140,15 +140,14 @@ class _VaultPageState extends State<VaultPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     itemCount: controller.state.entries.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final VaultEntry entry = controller.state.entries[index];
+                      final DecryptedVaultEntry entry = controller.state.entries[index];
                       return FadeInUp(
                         duration: const Duration(milliseconds: 400),
                         delay: Duration(milliseconds: index * 60),
                         child: VaultEntryCard(
                           entry: entry,
-                          onEdit: () => _navigateToAddEntry(entry: entry),
-                          onDelete: () {
-                            // controller.deleteEntry(entry.id);
+                          onTap: () {
+                            context.router.push(ViewPasswordRoute(entry: entry.entry));
                           },
                         ),
                       );

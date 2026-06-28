@@ -26,7 +26,7 @@ class VaultController extends GetxController<_VaultState> {
   }
 
   StreamSubscription<List<VaultEntry>>? _subscription;
-  List<VaultEntry> _allEntries = <VaultEntry>[];
+  List<DecryptedVaultEntry> _allEntries = <DecryptedVaultEntry>[];
 
   void loadVault() => _loadVault();
 
@@ -39,7 +39,10 @@ class VaultController extends GetxController<_VaultState> {
     _subscription?.cancel();
     _subscription = repository.getEntries().listen(
       (List<VaultEntry> entries) {
-        _allEntries = entries;
+        _allEntries = entries.map((e) => DecryptedVaultEntry(
+          decryptedTitle: repository.decryptField(e.title),
+          entry: e,
+        )).toList();
         _applyFilterAndSearch();
         state._isLoading.value = false;
       },
@@ -61,12 +64,12 @@ class VaultController extends GetxController<_VaultState> {
   }
 
   void _applyFilterAndSearch() {
-    List<VaultEntry> filtered = _allEntries;
+    List<DecryptedVaultEntry> filtered = _allEntries;
 
     final VaultCategory? category = state.selectedCategory;
     if (category != null) {
       filtered = filtered
-          .where((VaultEntry e) => e.category == category)
+          .where((DecryptedVaultEntry e) => e.entry.category == category)
           .toList();
     }
 
@@ -75,13 +78,16 @@ class VaultController extends GetxController<_VaultState> {
       final String lowercaseQuery = query.toLowerCase();
       filtered = filtered
           .where(
-            (VaultEntry e) =>
-                e.title.toLowerCase().contains(lowercaseQuery) ||
-                (e.website?.toLowerCase().contains(lowercaseQuery) ?? false),
+            (DecryptedVaultEntry e) =>
+                e.decryptedTitle.toLowerCase().contains(lowercaseQuery),
           )
           .toList();
     }
 
     state._entries.assignAll(filtered);
+  }
+
+  String decrypt(String cipherText) {
+    return repository.decryptField(cipherText);
   }
 }

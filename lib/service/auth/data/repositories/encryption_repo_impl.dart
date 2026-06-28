@@ -24,26 +24,26 @@ class EncryptionRepoImpl implements EncryptionRepo {
   }
 
   @override
-  String createVerificationHash({
+  String encryptMasterKeyForSync({
     required String uid,
     required String masterKey,
   }) {
-    return _encryptionLocal.createVerificationHash(
+    return _encryptionLocal.encryptMasterKeyForSync(
       uid: uid,
       masterKey: masterKey,
     );
   }
 
   @override
-  bool verifyMasterKey({
+  bool verifyEncryptedMasterKey({
     required String uid,
     required String masterKey,
-    required String storedVerificationHash,
+    required String storedEncryptedMasterKey,
   }) {
-    return _encryptionLocal.verifyMasterKey(
+    return _encryptionLocal.verifyEncryptedMasterKey(
       uid: uid,
       masterKey: masterKey,
-      storedVerificationHash: storedVerificationHash,
+      storedEncryptedMasterKey: storedEncryptedMasterKey,
     );
   }
 }

@@ -7,14 +7,12 @@ import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 class VaultEntryCard extends StatefulWidget {
   const VaultEntryCard({
     required this.entry,
-    required this.onEdit,
-    required this.onDelete,
+    required this.onTap,
     super.key,
   });
 
-  final VaultEntry entry;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final DecryptedVaultEntry entry;
+  final VoidCallback onTap;
 
   @override
   State<VaultEntryCard> createState() => _VaultEntryCardState();
@@ -22,7 +20,6 @@ class VaultEntryCard extends StatefulWidget {
 
 class _VaultEntryCardState extends State<VaultEntryCard>
     with SingleTickerProviderStateMixin {
-  bool _showPassword = false;
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -46,7 +43,7 @@ class _VaultEntryCardState extends State<VaultEntryCard>
   }
 
   Color _getCategoryColor() {
-    switch (widget.entry.category) {
+    switch (widget.entry.entry.category) {
       case VaultCategory.social:
         return categorySocial;
       case VaultCategory.email:
@@ -63,7 +60,7 @@ class _VaultEntryCardState extends State<VaultEntryCard>
   }
 
   IconData _getCategoryIcon() {
-    switch (widget.entry.category) {
+    switch (widget.entry.entry.category) {
       case VaultCategory.social:
         return Icons.people_outline_rounded;
       case VaultCategory.email:
@@ -92,7 +89,7 @@ class _VaultEntryCardState extends State<VaultEntryCard>
         onTapDown: (_) => _controller.forward(),
         onTapUp: (_) => _controller.reverse(),
         onTapCancel: () => _controller.reverse(),
-        onTap: widget.onEdit,
+        onTap: widget.onTap,
         child: Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Card(
@@ -116,94 +113,38 @@ class _VaultEntryCardState extends State<VaultEntryCard>
                     ),
                   ),
                   const SizedBox(width: 14),
-                  // Title & username
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          widget.entry.title,
-                          style: TextStyle(
-                            color: theme.colorScheme.onSurface,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            widget.entry.decryptedTitle,
+                            style: TextStyle(
+                              color: theme.colorScheme.onSurface,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          widget.entry.username ?? "",
-                          style: TextStyle(
-                            color: theme.colorScheme.onSurfaceVariant,
-                            fontSize: 13,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        if (_showPassword) ...<Widget>[
-                          const SizedBox(height: 6),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
+                          const SizedBox(height: 4),
+                          Text(
+                            'Tap to view details',
+                            style: TextStyle(
+                              color: theme.colorScheme.onSurfaceVariant,
+                              fontSize: 13,
                             ),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.onSurface.withAlpha(10),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              widget.entry.encryptedPassword,
-                              style: TextStyle(
-                                color: theme.colorScheme.primary,
-                                fontSize: 13,
-                                fontFamily: 'monospace',
-                                letterSpacing: 1,
-                              ),
-                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
-                      ],
+                      ),
                     ),
-                  ),
-                  // Actions
-                  Column(
-                    children: <Widget>[
-                      // Toggle password visibility
-                      _ActionIcon(
-                        icon: _showPassword
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
-                        onTap: () {
-                          setState(() {
-                            _showPassword = !_showPassword;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 4),
-                      // Copy password
-                      _ActionIcon(
-                        icon: Icons.copy_rounded,
-                        onTap: () {
-                          HapticFeedback.mediumImpact();
-                          final String decrypted =
-                              widget.entry.encryptedPassword;
-                          Clipboard.setData(ClipboardData(text: decrypted));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text('Password copied!'),
-                              backgroundColor: theme.colorScheme.primary,
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              duration: const Duration(seconds: 1),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      color: theme.colorScheme.onSurfaceVariant.withAlpha(100),
+                    ),
+
                 ],
               ),
             ),
@@ -214,24 +155,3 @@ class _VaultEntryCardState extends State<VaultEntryCard>
   }
 }
 
-class _ActionIcon extends StatelessWidget {
-  const _ActionIcon({required this.icon, required this.onTap});
-
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return InkWell(
-      onTap: onTap,
-      customBorder: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(6),
-        child: Icon(icon, color: theme.colorScheme.onSurfaceVariant, size: 20),
-      ),
-    );
-  }
-}

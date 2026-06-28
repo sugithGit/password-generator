@@ -29,11 +29,11 @@ class VaultRepoImpl implements VaultRepository {
         // Decrypt all fields from Firestore
         return VaultEntry(
           id: m.id,
-          title: _decryptField(m.title),
-          username: m.username != null ? _decryptField(m.username!) : null,
-          encryptedPassword: _decryptField(m.encryptedPassword),
-          website: m.website != null ? _decryptField(m.website!) : null,
-          notes: m.notes != null ? _decryptField(m.notes!) : null,
+          title: m.title,
+          username: m.username,
+          encryptedPassword: m.encryptedPassword,
+          website: m.website,
+          notes: m.notes,
           category: VaultCategory.values.firstWhere(
             (VaultCategory c) => c.name == m.category,
             orElse: () => VaultCategory.other,
@@ -87,7 +87,8 @@ class VaultRepoImpl implements VaultRepository {
     return encryptionRepo.encrypt(plainText: plainText, key: encryptionKey);
   }
 
-  String _decryptField(String cipherText) {
+  @override
+  String decryptField(String cipherText) {
     return encryptionRepo.decrypt(cipherText: cipherText, key: encryptionKey);
   }
 }

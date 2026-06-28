@@ -5,4 +5,5 @@ abstract interface class VaultRepository {
   Future<void> addEntry(VaultEntry entry);
   Future<void> updateEntry(VaultEntry entry);
   Future<void> deleteEntry(String entryId);
+  String decryptField(String cipherText);
 }

@@ -3,7 +3,7 @@ part of 'vault_controller.dart';
 class _VaultState extends GetxState {
   final RxBool _isLoading = false.obs;
   final RxnString _error = RxnString();
-  final RxList<VaultEntry> _entries = <VaultEntry>[].obs;
+  final RxList<DecryptedVaultEntry> _entries = <DecryptedVaultEntry>[].obs;
   final RxnString _searchQuery = RxnString();
   final Rxn<VaultCategory> _selectedCategory = Rxn<VaultCategory>();
 
@@ -11,7 +11,7 @@ class _VaultState extends GetxState {
 
   bool get isLoading => _isLoading.value;
   String? get error => _error.value;
-  List<VaultEntry> get entries => _entries;
+  List<DecryptedVaultEntry> get entries => _entries;
   String? get searchQuery => _searchQuery.value;
   VaultCategory? get selectedCategory => _selectedCategory.value;
   bool get enableBtn => _enableBtn.value;
