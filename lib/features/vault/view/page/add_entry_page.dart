@@ -5,6 +5,7 @@ import 'package:rxget/rxget.dart';
 
 import '../../../../core/widgets/app_bar/page_app_bar.dart';
 import '../../../../core/widgets/app_button/app_button.dart';
+import '../../../../service/password_manager/domain/entities/vault_category.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../controller/add_password/add_password_controller.dart';
 import '../../controller/vault/vault_controller.dart';
@@ -24,7 +25,10 @@ class AddEntryPage extends StatefulWidget implements AutoRouteWrapper {
       dependencies: <GetIn<dynamic>>[
         GetIn<AddPasswordController>(
           () => AddPasswordController(
-            selectedCategory: initialCategory ?? existingEntry?.category ?? VaultCategory.other,
+            selectedCategory:
+                initialCategory ??
+                existingEntry?.category ??
+                VaultCategory.other,
             repository: Get.find<VaultController>().repository,
           ),
         ),
@@ -250,9 +254,10 @@ class _AddEntryPageState extends State<AddEntryPage> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      Get.find<AddPasswordController>().deleteEntry(
-                                        widget.existingEntry!.id,
-                                      );
+                                      Get.find<AddPasswordController>()
+                                          .deleteEntry(
+                                            widget.existingEntry!.id,
+                                          );
                                       ctx.router.maybePop();
                                       context.router.maybePop();
                                     },

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:rxget/rxget.dart';
 
+import '../../../../service/password_manager/domain/entities/decrypted_vault_entry.dart';
+import '../../../../service/password_manager/domain/entities/vault_category.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../../../service/password_manager/domain/repositories/vault_repository.dart';
 
@@ -39,10 +41,14 @@ class VaultController extends GetxController<_VaultState> {
     _subscription?.cancel();
     _subscription = repository.getEntries().listen(
       (List<VaultEntry> entries) {
-        _allEntries = entries.map((e) => DecryptedVaultEntry(
-          decryptedTitle: repository.decryptField(e.title),
-          entry: e,
-        )).toList();
+        _allEntries = entries
+            .map(
+              (e) => DecryptedVaultEntry(
+                decryptedTitle: repository.decryptField(e.title),
+                entry: e,
+              ),
+            )
+            .toList();
         _applyFilterAndSearch();
         state._isLoading.value = false;
       },

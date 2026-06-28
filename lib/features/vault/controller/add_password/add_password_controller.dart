@@ -2,6 +2,7 @@ import 'package:rxget/rxget.dart';
 import 'package:rxget_annotation/rxget_annotation.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../service/password_manager/domain/entities/vault_category.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../../../service/password_manager/domain/repositories/vault_repository.dart';
 

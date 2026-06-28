@@ -34,6 +34,9 @@ import 'package:password_generator/service/password_manager/data/repositories/va
 import 'package:password_generator/service/password_manager/domain/entities/vault_entry.dart'
     as _i11;
 
+import '../../service/password_manager/domain/entities/vault_category.dart'
+    as _i11;
+
 /// generated route for
 /// [_i1.AddEntryPage]
 class AddEntryRoute extends _i10.PageRouteInfo<AddEntryRouteArgs> {

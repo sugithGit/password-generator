@@ -1,30 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum VaultCategory {
-  social,
-  email,
-  banking,
-  shopping,
-  work,
-  other;
-
-  String get label {
-    switch (this) {
-      case VaultCategory.banking:
-        return 'Banking';
-      case VaultCategory.email:
-        return 'Email';
-      case VaultCategory.social:
-        return 'Social';
-      case VaultCategory.shopping:
-        return 'Shopping';
-      case VaultCategory.work:
-        return 'Work';
-      case VaultCategory.other:
-        return 'Other';
-    }
-  }
-}
+import 'vault_category.dart';
 
 class VaultEntry with EquatableMixin {
   const VaultEntry({
@@ -85,14 +61,4 @@ class VaultEntry with EquatableMixin {
     createdAt,
     updatedAt,
   ];
-}
-
-class DecryptedVaultEntry {
-  const DecryptedVaultEntry({
-    required this.decryptedTitle,
-    required this.entry,
-  });
-
-  final String decryptedTitle;
-  final VaultEntry entry;
 }

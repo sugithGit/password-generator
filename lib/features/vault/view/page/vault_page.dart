@@ -5,6 +5,8 @@ import 'package:rxget/rxget.dart';
 
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../service/password_manager/data/repositories/vault_repo_impl.dart';
+import '../../../../service/password_manager/domain/entities/decrypted_vault_entry.dart';
+import '../../../../service/password_manager/domain/entities/vault_category.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../controller/vault/vault_controller.dart';
 import '../widgets/category_chip.dart';
@@ -140,14 +142,17 @@ class _VaultPageState extends State<VaultPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     itemCount: controller.state.entries.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final DecryptedVaultEntry entry = controller.state.entries[index];
+                      final DecryptedVaultEntry entry =
+                          controller.state.entries[index];
                       return FadeInUp(
                         duration: const Duration(milliseconds: 400),
                         delay: Duration(milliseconds: index * 60),
                         child: VaultEntryCard(
                           entry: entry,
                           onTap: () {
-                            context.router.push(ViewPasswordRoute(entry: entry.entry));
+                            context.router.push(
+                              ViewPasswordRoute(entry: entry.entry),
+                            );
                           },
                         ),
                       );

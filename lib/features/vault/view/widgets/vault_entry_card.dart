@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/const/constants.dart';
+import '../../../../service/password_manager/domain/entities/decrypted_vault_entry.dart';
+import '../../../../service/password_manager/domain/entities/vault_category.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 
 class VaultEntryCard extends StatefulWidget {
-  const VaultEntryCard({
-    required this.entry,
-    required this.onTap,
-    super.key,
-  });
+  const VaultEntryCard({required this.entry, required this.onTap, super.key});
 
   final DecryptedVaultEntry entry;
   final VoidCallback onTap;
@@ -113,38 +111,37 @@ class _VaultEntryCardState extends State<VaultEntryCard>
                     ),
                   ),
                   const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            widget.entry.decryptedTitle,
-                            style: TextStyle(
-                              color: theme.colorScheme.onSurface,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          widget.entry.decryptedTitle,
+                          style: TextStyle(
+                            color: theme.colorScheme.onSurface,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Tap to view details',
-                            style: TextStyle(
-                              color: theme.colorScheme.onSurfaceVariant,
-                              fontSize: 13,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Tap to view details',
+                          style: TextStyle(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontSize: 13,
                           ),
-                        ],
-                      ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                    Icon(
-                      Icons.chevron_right_rounded,
-                      color: theme.colorScheme.onSurfaceVariant.withAlpha(100),
-                    ),
-
+                  ),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: theme.colorScheme.onSurfaceVariant.withAlpha(100),
+                  ),
                 ],
               ),
             ),
@@ -154,4 +151,3 @@ class _VaultEntryCardState extends State<VaultEntryCard>
     );
   }
 }
-

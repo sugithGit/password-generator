@@ -1,3 +1,4 @@
+import '../../domain/entities/vault_category.dart';
 import '../../domain/entities/vault_entry.dart';
 
 class VaultEntryModel {
