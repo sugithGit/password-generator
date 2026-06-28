@@ -13,19 +13,19 @@ import 'package:auto_route/auto_route.dart' as _i9;
 import 'package:flutter/material.dart' as _i11;
 import 'package:password_generator/features/auth/view/page/login_page.dart'
     as _i4;
+import 'package:password_generator/features/gateway/view/page/biometric_gate_page.dart'
+    as _i2;
+import 'package:password_generator/features/gateway/view/page/master_key_page.dart'
+    as _i5;
 import 'package:password_generator/features/generate_password/view/page/password_generate_page.dart'
     as _i6;
 import 'package:password_generator/features/onboarding/view/loading_page.dart'
     as _i3;
 import 'package:password_generator/features/onboarding/view/splash_page.dart'
     as _i7;
-import 'package:password_generator/features/password_manager/view/page/add_entry_page.dart'
+import 'package:password_generator/features/vault/view/page/add_entry_page.dart'
     as _i1;
-import 'package:password_generator/features/password_manager/view/page/biometric_gate_page.dart'
-    as _i2;
-import 'package:password_generator/features/password_manager/view/page/master_key_page.dart'
-    as _i5;
-import 'package:password_generator/features/password_manager/view/page/vault_page.dart'
+import 'package:password_generator/features/vault/view/page/vault_page.dart'
     as _i8;
 import 'package:password_generator/service/password_manager/data/repositories/vault_repo_impl.dart'
     as _i12;
@@ -37,11 +37,16 @@ import 'package:password_generator/service/password_manager/domain/entities/vaul
 class AddEntryRoute extends _i9.PageRouteInfo<AddEntryRouteArgs> {
   AddEntryRoute({
     _i10.VaultEntry? existingEntry,
+    _i10.VaultCategory? initialCategory,
     _i11.Key? key,
     List<_i9.PageRouteInfo>? children,
   }) : super(
          AddEntryRoute.name,
-         args: AddEntryRouteArgs(existingEntry: existingEntry, key: key),
+         args: AddEntryRouteArgs(
+           existingEntry: existingEntry,
+           initialCategory: initialCategory,
+           key: key,
+         ),
          initialChildren: children,
        );
 
@@ -53,32 +58,43 @@ class AddEntryRoute extends _i9.PageRouteInfo<AddEntryRouteArgs> {
       final args = data.argsAs<AddEntryRouteArgs>(
         orElse: () => const AddEntryRouteArgs(),
       );
-      return _i1.AddEntryPage(existingEntry: args.existingEntry, key: args.key);
+      return _i9.WrappedRoute(
+        child: _i1.AddEntryPage(
+          existingEntry: args.existingEntry,
+          initialCategory: args.initialCategory,
+          key: args.key,
+        ),
+      );
     },
   );
 }
 
 class AddEntryRouteArgs {
-  const AddEntryRouteArgs({this.existingEntry, this.key});
+  const AddEntryRouteArgs({this.existingEntry, this.initialCategory, this.key});
 
   final _i10.VaultEntry? existingEntry;
+
+  final _i10.VaultCategory? initialCategory;
 
   final _i11.Key? key;
 
   @override
   String toString() {
-    return 'AddEntryRouteArgs{existingEntry: $existingEntry, key: $key}';
+    return 'AddEntryRouteArgs{existingEntry: $existingEntry, initialCategory: $initialCategory, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! AddEntryRouteArgs) return false;
-    return existingEntry == other.existingEntry && key == other.key;
+    return existingEntry == other.existingEntry &&
+        initialCategory == other.initialCategory &&
+        key == other.key;
   }
 
   @override
-  int get hashCode => existingEntry.hashCode ^ key.hashCode;
+  int get hashCode =>
+      existingEntry.hashCode ^ initialCategory.hashCode ^ key.hashCode;
 }
 
 /// generated route for

@@ -12,7 +12,7 @@ class AppRouter extends RootStackRouter {
   List<AutoRouteGuard> get guards => <AutoRouteGuard>[];
 
   @override
-  late final List<AutoRoute> routes = _routeList();
+  List<AutoRoute> get routes => _routeList();
 
   List<AutoRoute> _routeList() {
     return AppRouteEnum.values.map<AutoRoute>(_route).toList();
