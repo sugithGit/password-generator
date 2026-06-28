@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rxget/rxget.dart';
+import '../../../../core/widgets/app_button/app_button.dart';
 import '../../controller/auth_controller.dart';
 
 class AuthFormCard extends StatelessWidget {
@@ -76,21 +77,9 @@ class AuthFormCard extends StatelessWidget {
           Obx(() {
             final AuthController controller = Get.find<AuthController>();
             final bool isLoading = controller.state.isLoading;
-            return SizedBox(
-              height: 52,
-              child: ElevatedButton(
-                onPressed: isLoading ? null : onSubmit,
-                child: isLoading
-                    ? SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.5,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      )
-                    : Text(isSignUp ? 'SIGN UP' : 'SIGN IN'),
-              ),
+            return AppButton(
+              onPressed: isLoading ? null : onSubmit,
+              title: isSignUp ? 'SIGN UP' : 'SIGN IN',
             );
           }),
         ],

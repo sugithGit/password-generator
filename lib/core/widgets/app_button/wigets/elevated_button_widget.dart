@@ -19,7 +19,6 @@ class _ElevatedButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Color disabledBg;
   final Color? bgColor;
-
   final double elevation;
   final bool isLoading;
   final String title;
@@ -54,7 +53,7 @@ class _ElevatedButton extends StatelessWidget {
                 Text(
                   title,
                   style: context.titleMedium?.copyWith(
-                    color: isBtnDisabled ? AppColors.textDisabled : null,
+                    color: isBtnDisabled ? AppColors.textDisabled : textColor,
                     fontWeight: FontWeight.w600,
                     fontSize: largeButton ? 18 : null,
                   ),

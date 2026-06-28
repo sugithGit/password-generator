@@ -45,7 +45,7 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = this.textColor ?? Colors.white;
+    final textColor = this.textColor ?? Colors.black;
     final isBtnDisabled = disabled || onPressed == null;
     final disabledBg =
         this.disabledBg ?? AppColors.muted; // Soft neutral gray for disabled

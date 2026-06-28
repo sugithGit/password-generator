@@ -83,7 +83,7 @@ class LoginPage extends HookWidget {
                   children: <Widget>[
                     // ── Hero Text / Header ────────────────────────────
                     const SafeArea(child: Empty()),
-                    const Gap(60),
+                    const Gap(80),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: FadeInDown(
@@ -91,7 +91,7 @@ class LoginPage extends HookWidget {
                         child: AuthHeader(isSignUp: isSignUp),
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 42),
                     // ── Glassmorphism card ─────────────────────
                     FadeInUp(
                       duration: const Duration(milliseconds: 700),

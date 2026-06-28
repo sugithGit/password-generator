@@ -68,9 +68,9 @@ class ShadcnTheme {
       cardTheme: CardThemeData(
         color: colorScheme.surfaceContainerHighest,
         elevation: 0,
-        shape: Squircle(radius: 24).shape(
-          side: BorderSide(color: colorScheme.outline, width: 1),
-        ),
+        shape: Squircle(
+          radius: 24,
+        ).shape(side: BorderSide(color: colorScheme.outline)),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
@@ -98,23 +98,23 @@ class ShadcnTheme {
         prefixIconColor: colorScheme.onSurfaceVariant,
         suffixIconColor: colorScheme.onSurfaceVariant,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100), // Pill shape
-          borderSide: BorderSide(color: colorScheme.outline, width: 1),
+          borderRadius: BorderRadius.circular(2), // Pill shape
+          borderSide: BorderSide(color: colorScheme.outline),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100),
-          borderSide: BorderSide(color: colorScheme.outline, width: 1),
+          borderRadius: BorderRadius.circular(2),
+          borderSide: BorderSide(color: colorScheme.outline),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(2),
           borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100),
-          borderSide: BorderSide(color: colorScheme.error, width: 1),
+          borderRadius: BorderRadius.circular(2),
+          borderSide: BorderSide(color: colorScheme.error),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(2),
           borderSide: BorderSide(color: colorScheme.error, width: 1.5),
         ),
       ),

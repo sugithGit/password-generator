@@ -10,4 +10,4 @@ const cR = 20.0;
 const circleBR = 20.0;
 
 // button radius₹
-const bR = 16.0;
+const bR = 2.0;
