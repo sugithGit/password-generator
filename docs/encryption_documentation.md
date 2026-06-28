@@ -39,19 +39,21 @@ Instead, the key is dynamically derived in memory whenever the user unlocks thei
 
 ### Key Derivation
 When the user enters their Master Password:
-1. The user's Master Password and their unique User ID (`uid`) are concatenated in the format: `$uid:$masterKey`.
-2. This combined string is converted into a seed byte array.
-3. The seed is passed through libsodium's `genericHash` function (which implements the **BLAKE2b** hashing algorithm).
-4. The output of this hash is exactly the required length to be used as a symmetric encryption key (`secretBox.keyBytes`).
+1. A 16-byte cryptographically secure random **salt** is generated when the user first sets up their master key. This salt is stored alongside their verification data in Firestore.
+2. When unlocking the vault, the user's Master Password and their stored salt are passed through the **Argon2id** password hashing algorithm (via libsodium's `pwhash` API).
+3. Argon2id is memory-hard and computationally expensive by design, drastically slowing down offline brute-force attacks compared to standard fast hashing algorithms.
+4. The output of this Argon2id function is precisely the required length to be used as a symmetric encryption key (`secretBox.keyBytes`).
 
 ### Master Key Verification
-Since the master key isn't stored, the app needs a way to verify if the entered password is correct. 
-When the vault is first set up, a verification hash is created:
-1. The app takes a known plaintext string: `VAULT_KEY_VERIFY:$uid`.
-2. It encrypts this string using the derived key.
-3. The resulting ciphertext is stored in the database.
+Since the plaintext master key isn't stored, the app needs a way to verify if the entered password is correct. 
+When the vault is first set up, a verification blob is created:
+1. A random 16-byte salt is generated.
+2. The encryption key is derived using Argon2id with the master key and the salt.
+3. The app takes a known plaintext string (e.g. `VAULT_KEY_VERIFY`).
+4. It encrypts this string using the derived key.
+5. The resulting ciphertext and the Base64-encoded salt are stored in the database.
 
-When the user attempts to log in, the app derives the key from their input and attempts to decrypt this stored verification hash. If it successfully decrypts back to `VAULT_KEY_VERIFY:$uid`, the Master Password is correct, and the derived key is kept in memory to decrypt the vault entries.
+When the user attempts to log in, the app fetches the salt and the stored verification ciphertext. It derives the key from their input and the salt, and attempts to decrypt the stored verification ciphertext. If it successfully decrypts back to the expected `VAULT_KEY_VERIFY` string, the Master Password is correct, and the derived key is kept in memory to decrypt the vault entries.
 
 ## 3. How Decryption Happens
 

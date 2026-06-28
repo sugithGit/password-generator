@@ -1,5 +1,7 @@
 import 'package:rxget/rxget.dart';
 
+import '../../../core/enum/status_enum.dart';
+import '../../../core/routes/app_route_enum.dart';
 import '../../../service/auth/domain/entities/auth_exceptions.dart';
 import '../../../service/auth/domain/entities/auth_user.dart';
 import '../../../service/auth/domain/use_cases/get_current_user_use_case.dart';
@@ -26,11 +28,17 @@ class AuthController extends GetxController<_AuthState> {
   final _AuthState state;
 
   void checkAuth() => _checkAuth();
-  Future<void> signIn({required String email, required String password}) =>
-      _signIn(email, password);
-  Future<void> signUp({required String email, required String password}) =>
-      _signUp(email, password);
+  Future<void> sign({required String email, required String password}) {
+    if (state.isSignUp) {
+      return _signUp(email, password);
+    } else {
+      return _signIn(email, password);
+    }
+  }
+
   Future<void> signOut() => _signOut();
+
+  void toggleSignUp() => state._isSignUp.value = !state._isSignUp.value;
 
   void _checkAuth() {
     final AuthUser? user = getCurrentUserUseCase.call(null);
@@ -38,7 +46,7 @@ class AuthController extends GetxController<_AuthState> {
   }
 
   Future<void> _signIn(String email, String password) async {
-    state._isLoading.value = true;
+    state._status.value = .loading;
     state._error.value = null;
     try {
       final AuthUser user = await signInUseCase.call(
@@ -55,12 +63,12 @@ class AuthController extends GetxController<_AuthState> {
       state._user.value = null;
       throw Exception(errorMsg);
     } finally {
-      state._isLoading.value = false;
+      state._status.value = .base;
     }
   }
 
   Future<void> _signUp(String email, String password) async {
-    state._isLoading.value = true;
+    state._status.value = .loading;
     state._error.value = null;
     try {
       final AuthUser user = await signUpUseCase.call(
@@ -77,7 +85,7 @@ class AuthController extends GetxController<_AuthState> {
       state._user.value = null;
       throw Exception(errorMsg);
     } finally {
-      state._isLoading.value = false;
+      state._status.value = .base;
     }
   }
 
