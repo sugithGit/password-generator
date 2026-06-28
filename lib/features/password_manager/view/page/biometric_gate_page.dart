@@ -1,6 +1,8 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_rxget/hooks_rxget.dart';
 import 'package:rxget/rxget.dart';
 
 import '../../../../core/routes/app_router.gr.dart';
@@ -8,79 +10,63 @@ import '../../../../service/password_manager/data/repositories/vault_repo_impl.d
 import '../../controller/gateway/gateway_controller.dart';
 
 @RoutePage()
-class BiometricGatePage extends StatefulWidget implements AutoRouteWrapper {
+class BiometricGatePage extends HookWidget {
   const BiometricGatePage({super.key});
 
   @override
-  Widget wrappedRoute(BuildContext context) {
-    return GetInWidget(
-      dependencies: [GetIn<GatewayController>(GatewayController.new)],
-      child: this,
-    );
-  }
-
-  @override
-  State<BiometricGatePage> createState() => _BiometricGatePageState();
-}
-
-class _BiometricGatePageState extends State<BiometricGatePage>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _pulseController;
-  late Animation<double> _pulseAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2000),
-    )..repeat(reverse: true);
-    _pulseAnimation = Tween<double>(begin: 0.95, end: 1.05).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
-    );
-    // Auto-trigger auth
-    WidgetsBinding.instance.addPostFrameCallback((_) => _authenticate());
-  }
-
-  @override
-  void dispose() {
-    _pulseController.dispose();
-    super.dispose();
-  }
-
-  void _authenticate() {
-    Get.find<GatewayController>().authenticate(
-      onBiometricsUnsupported: _navigateToMasterKey,
-      onSuccess: _navigateToMasterKey,
-    );
-  }
-
-  void _navigateToMasterKey() {
-    if (!mounted) {
-      return;
-    }
-    context.router.replace(
-      MasterKeyRoute(onAuthenticated: _onMasterKeyValidated),
-    );
-  }
-
-  void _onMasterKeyValidated(BuildContext context, String masterKey) {
-    final GatewayController controller = Get.find<GatewayController>();
-    controller.onMasterKeyValidated(
-      masterKey,
-      onReady: (VaultRepoImpl repository) {
-        if (!mounted) {
-          return;
-        }
-        context.router.replace(VaultRoute(repository: repository));
-      },
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    useGetIn<GatewayController>(GetIn(GatewayController.new));
     final GatewayController controller = Get.find<GatewayController>();
+
+    final AnimationController pulseController = useAnimationController(
+      duration: const Duration(milliseconds: 2000),
+    );
+
+    final Animation<double> pulseAnimation = useMemoized(
+      () => Tween<double>(begin: 0.95, end: 1.05).animate(
+        CurvedAnimation(parent: pulseController, curve: Curves.easeInOut),
+      ),
+      <Object?>[pulseController],
+    );
+
+    final VoidCallback navigateToMasterKey = useCallback(() {
+      if (!context.mounted) {
+        return;
+      }
+      context.router.replace(
+        MasterKeyRoute(
+          onAuthenticated: (BuildContext ctx, String masterKey) {
+            controller.onMasterKeyValidated(
+              masterKey,
+              onReady: (VaultRepoImpl repository) {
+                if (!ctx.mounted) {
+                  return;
+                }
+                ctx.router.replace(VaultRoute(repository: repository));
+              },
+            );
+          },
+        ),
+      );
+    }, <Object?>[context, controller]);
+
+    final VoidCallback authenticate = useCallback(() {
+      controller.authenticate(
+        onBiometricsUnsupported: navigateToMasterKey,
+        onSuccess: navigateToMasterKey,
+      );
+    }, <Object?>[controller, navigateToMasterKey]);
+
+    useEffect(() {
+      pulseController.repeat(reverse: true);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        authenticate();
+      });
+      return null;
+    }, const <Object?>[]);
+
+    final ThemeData theme = Theme.of(context);
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -94,10 +80,10 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                   FadeInDown(
                     duration: const Duration(milliseconds: 500),
                     child: AnimatedBuilder(
-                      animation: _pulseAnimation,
+                      animation: pulseAnimation,
                       builder: (BuildContext context, Widget? child) {
                         return Transform.scale(
-                          scale: _pulseAnimation.value,
+                          scale: pulseAnimation.value,
                           child: child,
                         );
                       },
@@ -185,7 +171,7 @@ class _BiometricGatePageState extends State<BiometricGatePage>
                             height: 52,
                             width: 180,
                             child: ElevatedButton(
-                              onPressed: _authenticate,
+                              onPressed: authenticate,
                               child: const Text('TRY AGAIN'),
                             ),
                           ),
