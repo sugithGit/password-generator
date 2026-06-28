@@ -9,7 +9,6 @@ import 'package:toastification/toastification.dart';
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/empty_widget.dart';
-import '../../../vault/view/widgets/hero_text.dart';
 import '../../controller/auth_controller.dart';
 import '../widgets/auth_form_card.dart';
 import '../widgets/auth_header.dart';
@@ -82,22 +81,16 @@ class LoginPage extends HookWidget {
                 final bool isSignUp = controller.state.isSignUp;
                 return Column(
                   children: <Widget>[
-                    // ── Hero Text ────────────────────────────────────
+                    // ── Hero Text / Header ────────────────────────────
                     const SafeArea(child: Empty()),
                     const Gap(60),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: FadeInDown(
-                        duration: Duration(milliseconds: 600),
-                        child: HeroText(),
+                        duration: const Duration(milliseconds: 600),
+                        child: AuthHeader(isSignUp: isSignUp),
                       ),
                     ),
-                    // const Gap(20),
-                    // // ── Header ─────────────────────────────────
-                    // FadeInDown(
-                    //   duration: const Duration(milliseconds: 600),
-                    //   child: AuthHeader(isSignUp: isSignUp),
-                    // ),
                     const SizedBox(height: 40),
                     // ── Glassmorphism card ─────────────────────
                     FadeInUp(
