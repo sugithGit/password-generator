@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rxget/rxget.dart';
 import 'package:toastification/toastification.dart';
 
+import '../../../../core/routes/app_router.gr.dart';
 import '../../controller/auth_controller.dart';
 
 @RoutePage()
@@ -44,7 +45,7 @@ class _LoginPageState extends State<LoginPage>
         await controller.signIn(email: email, password: password);
       }
       if (mounted) {
-        await context.router.maybePop();
+        await context.router.replace(const BiometricGateRoute());
       }
     } on Exception catch (e) {
       if (mounted) {

@@ -43,39 +43,53 @@ class GatewayController extends GetxController<_GatewayState> {
   Future<void> authenticate({
     required void Function() onBiometricsUnsupported,
     required void Function(String masterKey) onBiometricsSuccessWithKey,
-    required void Function() onBiometricsSuccessWithoutKey,
+    required void Function() onRequiresMasterKeyCreation,
+    required void Function() onRequiresMasterKeyInput,
   }) async {
     state._isAuthenticating.value = true;
     state._authFailed.value = false;
 
-    final bool isSupported = await _checkBiometricsSupportUseCase.call(null);
-
-    if (!isSupported) {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
       state._isAuthenticating.value = false;
-      onBiometricsUnsupported();
       return;
     }
 
-    final bool success = await _authenticateBiometricsUseCase.call(
-      'Authenticate to access your Password Vault',
-    );
+    const FlutterSecureStorage storage = FlutterSecureStorage();
+    final String? masterKey = await storage.read(key: 'master_key_${user.uid}');
 
-    state._isAuthenticating.value = false;
-    state._authFailed.value = !success;
+    if (masterKey != null) {
+      final bool isSupported = await _checkBiometricsSupportUseCase.call(null);
 
-    if (success) {
-      final User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        const FlutterSecureStorage storage = FlutterSecureStorage();
-        final String? masterKey = await storage.read(
-          key: 'master_key_${user.uid}',
-        );
-        if (masterKey != null) {
-          onBiometricsSuccessWithKey(masterKey);
-          return;
-        }
+      if (!isSupported) {
+        state._isAuthenticating.value = false;
+        onBiometricsUnsupported();
+        return;
       }
-      onBiometricsSuccessWithoutKey();
+
+      final bool success = await _authenticateBiometricsUseCase.call(
+        'Authenticate to access your Password Vault',
+      );
+
+      state._isAuthenticating.value = false;
+      state._authFailed.value = !success;
+
+      if (success) {
+        onBiometricsSuccessWithKey(masterKey);
+      }
+    } else {
+      final MasterKeyRemoteDatasource ds = MasterKeyRemoteDatasource();
+      final Map<String, String>? keyData = await ds.getMasterKeyData(
+        uid: user.uid,
+      );
+
+      state._isAuthenticating.value = false;
+
+      if (keyData == null) {
+        onRequiresMasterKeyCreation();
+      } else {
+        onRequiresMasterKeyInput();
+      }
     }
   }
 

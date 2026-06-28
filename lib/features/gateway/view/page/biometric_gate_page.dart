@@ -78,7 +78,8 @@ class BiometricGatePage extends HookWidget {
             },
           );
         },
-        onBiometricsSuccessWithoutKey: navigateToMasterKey,
+        onRequiresMasterKeyCreation: navigateToMasterKey,
+        onRequiresMasterKeyInput: navigateToMasterKey,
       );
     }, <Object?>[controller, navigateToMasterKey, context]);
 
