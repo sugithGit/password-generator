@@ -52,7 +52,7 @@ class LoginPage extends HookWidget {
     return Obl(
       () {
         if (controller.state.status == .success) {
-          context.router.replace(MasterKeyRoute());
+          context.router.replace(const MasterKeyRoute());
         }
       },
       child: Scaffold(

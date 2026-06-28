@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:rxget/rxget.dart';
 import 'package:sodium/sodium.dart';
 
+import '../../../../core/enum/status_enum.dart';
 import '../../../../service/auth/data/local/biometric_local.dart';
 import '../../../../service/auth/data/repositories/biometric_repo_impl.dart';
 import '../../../../service/auth/domain/entities/auth_exceptions.dart';
@@ -48,7 +49,7 @@ class GatewayController extends GetxController<_GatewayState> {
     required void Function() onRequiresMasterKeyInput,
     required void Function(String error) onAuthError,
   }) async {
-    state._isAuthenticating.value = true;
+    state._status.value = StatusEnum.loading;
     state._authFailed.value = false;
 
     final AuthRepo authRepo = Get.find<AuthRepo>();
@@ -56,7 +57,7 @@ class GatewayController extends GetxController<_GatewayState> {
 
     final AuthUser? user = authRepo.currentUser;
     if (user == null) {
-      state._isAuthenticating.value = false;
+      state._status.value = StatusEnum.base;
       return;
     }
 
@@ -66,7 +67,7 @@ class GatewayController extends GetxController<_GatewayState> {
       final bool isSupported = await _checkBiometricsSupportUseCase.call(null);
 
       if (!isSupported) {
-        state._isAuthenticating.value = false;
+        state._status.value = StatusEnum.base;
         onBiometricsUnsupported();
         return;
       }
@@ -75,7 +76,7 @@ class GatewayController extends GetxController<_GatewayState> {
         'Authenticate to access your Password Vault',
       );
 
-      state._isAuthenticating.value = false;
+      state._status.value = StatusEnum.base;
       state._authFailed.value = !success;
 
       if (success) {
@@ -86,7 +87,7 @@ class GatewayController extends GetxController<_GatewayState> {
         final Map<String, String>? keyData = await masterKeyRepo
             .getMasterKeyData(user.uid);
 
-        state._isAuthenticating.value = false;
+        state._status.value = StatusEnum.base;
 
         if (keyData == null) {
           onRequiresMasterKeyCreation();
@@ -94,14 +95,14 @@ class GatewayController extends GetxController<_GatewayState> {
           onRequiresMasterKeyInput();
         }
       } on AuthPermissionDeniedException {
-        state._isAuthenticating.value = false;
+        state._status.value = StatusEnum.base;
         await authRepo.signOut();
         onAuthError('Session expired or user deleted. Please log in again.');
       } on AuthException catch (e) {
-        state._isAuthenticating.value = false;
+        state._status.value = StatusEnum.base;
         onAuthError(e.message);
       } on Exception catch (_) {
-        state._isAuthenticating.value = false;
+        state._status.value = StatusEnum.base;
         onAuthError('An unexpected error occurred.');
       }
     }
@@ -156,13 +157,13 @@ class GatewayController extends GetxController<_GatewayState> {
     required void Function(String masterKey) onSuccess,
     required void Function(String error) onAuthError,
   }) async {
-    state._isLoading.value = true;
+    state._status.value = StatusEnum.loading;
     final AuthRepo authRepo = Get.find<AuthRepo>();
     final MasterKeyRepo masterKeyRepo = Get.find<MasterKeyRepo>();
 
     final AuthUser? user = authRepo.currentUser;
     if (user == null) {
-      state._isLoading.value = false;
+      state._status.value = StatusEnum.base;
       return;
     }
 
@@ -173,7 +174,7 @@ class GatewayController extends GetxController<_GatewayState> {
       state._isNewUser.value = keyData == null;
 
       if (keyData == null) {
-        state._isLoading.value = false;
+        state._status.value = StatusEnum.base;
         onRequiresMasterKeyCreation();
         return;
       }
@@ -194,24 +195,24 @@ class GatewayController extends GetxController<_GatewayState> {
         );
 
         if (isValid) {
-          state._isLoading.value = false;
+          state._status.value = StatusEnum.base;
           onSuccess(localMasterKey);
           return;
         }
       }
 
       // No valid local key found, require input
-      state._isLoading.value = false;
+      state._status.value = StatusEnum.base;
       onRequiresMasterKeyInput();
     } on AuthPermissionDeniedException {
       await authRepo.signOut();
       onAuthError('Session expired or user deleted. Please log in again.');
     } on AuthException catch (e) {
       state._errorMessage.value = e.message;
-      state._isLoading.value = false;
+      state._status.value = StatusEnum.base;
     } catch (e) {
       state._errorMessage.value = 'An unexpected error occurred.';
-      state._isLoading.value = false;
+      state._status.value = StatusEnum.base;
     }
   }
 
@@ -220,7 +221,7 @@ class GatewayController extends GetxController<_GatewayState> {
     required void Function(String masterKey) onSuccess,
     required void Function(String error) onAuthError,
   }) async {
-    state._isLoading.value = true;
+    state._status.value = StatusEnum.loading;
     state._errorMessage.value = null;
 
     final AuthRepo authRepo = Get.find<AuthRepo>();
@@ -228,7 +229,7 @@ class GatewayController extends GetxController<_GatewayState> {
 
     final AuthUser? user = authRepo.currentUser;
     if (user == null) {
-      state._isLoading.value = false;
+      state._status.value = StatusEnum.base;
       return;
     }
 
@@ -264,7 +265,7 @@ class GatewayController extends GetxController<_GatewayState> {
         if (keyData == null) {
           state._errorMessage.value =
               'Verification data not found. Please contact support.';
-          state._isLoading.value = false;
+          state._status.value = StatusEnum.base;
           return;
         }
 
@@ -287,7 +288,7 @@ class GatewayController extends GetxController<_GatewayState> {
           onSuccess(masterKey);
         } else {
           state._errorMessage.value = 'Incorrect master key. Please try again.';
-          state._isLoading.value = false;
+          state._status.value = StatusEnum.base;
         }
       }
     } on AuthPermissionDeniedException {
@@ -295,10 +296,10 @@ class GatewayController extends GetxController<_GatewayState> {
       onAuthError('Session expired or user deleted. Please log in again.');
     } on AuthException catch (e) {
       state._errorMessage.value = e.message;
-      state._isLoading.value = false;
+      state._status.value = StatusEnum.base;
     } catch (e) {
       state._errorMessage.value = 'An unexpected error occurred.';
-      state._isLoading.value = false;
+      state._status.value = StatusEnum.base;
     }
   }
 

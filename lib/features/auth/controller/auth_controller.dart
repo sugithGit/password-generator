@@ -1,7 +1,6 @@
 import 'package:rxget/rxget.dart';
 
 import '../../../core/enum/status_enum.dart';
-import '../../../core/routes/app_route_enum.dart';
 import '../../../service/auth/domain/entities/auth_exceptions.dart';
 import '../../../service/auth/domain/entities/auth_user.dart';
 import '../../../service/auth/domain/use_cases/get_current_user_use_case.dart';
