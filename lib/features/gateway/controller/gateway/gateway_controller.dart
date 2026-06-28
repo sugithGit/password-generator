@@ -42,6 +42,9 @@ class GatewayController extends GetxController<_GatewayState> {
     );
   }
 
+  Future<bool> get isBiometricsSupported =>
+      _checkBiometricsSupportUseCase.call(null);
+
   Future<void> authenticate({
     required void Function() onBiometricsUnsupported,
     required void Function(String masterKey) onBiometricsSuccessWithKey,
@@ -179,29 +182,7 @@ class GatewayController extends GetxController<_GatewayState> {
         return;
       }
 
-      // Existing user, check local storage
-      final String? localMasterKey = await masterKeyRepo.getLocalMasterKey(
-        user.uid,
-      );
-      if (localMasterKey != null) {
-        final EncryptionRepo encryptionRepo = Get.find<EncryptionRepo>();
-        final String storedEncryptedMasterKey = keyData['encryptedKey']!;
-        final Uint8List saltBytes = base64Decode(keyData['salt']!);
-
-        final bool isValid = encryptionRepo.verifyEncryptedMasterKey(
-          masterKey: localMasterKey,
-          salt: saltBytes,
-          storedEncryptedMasterKey: storedEncryptedMasterKey,
-        );
-
-        if (isValid) {
-          state._status.value = StatusEnum.base;
-          onSuccess(localMasterKey);
-          return;
-        }
-      }
-
-      // No valid local key found, require input
+      // Existing user, require input manually
       state._status.value = StatusEnum.base;
       onRequiresMasterKeyInput();
     } on AuthPermissionDeniedException {
