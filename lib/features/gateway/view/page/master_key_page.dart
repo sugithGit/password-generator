@@ -8,6 +8,7 @@ import 'package:rxget/rxget.dart';
 import '../../../../core/db/hive/user_prefs_local.dart';
 import '../../../../core/routes/app_router.gr.dart';
 import '../../controller/gateway/gateway_controller.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../widgets/master_key_back_button.dart';
 import '../widgets/master_key_form_card.dart';
 import '../widgets/master_key_header.dart';
@@ -137,39 +138,54 @@ class MasterKeyPage extends HookWidget {
     final ThemeData theme = Theme.of(context);
 
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: Obx(() {
-                if (controller.state.isLoading &&
-                    masterKeyController.text.isEmpty) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: theme.colorScheme.primary,
-                      strokeWidth: 2.5,
-                    ),
-                  );
-                }
+      backgroundColor: AppColors.background,
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: <Color>[
+              Color(0xFF3ECF8E), // Vibrant Supabase Green at the top
+              Color(0xFF1B6A42), // Transition to dark green
+              AppColors.background, // Fades perfectly into black
+            ],
+            stops: <double>[0, 0.20, 0.35],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Obx(() {
+                  if (controller.state.isLoading &&
+                      masterKeyController.text.isEmpty) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: theme.colorScheme.primary,
+                        strokeWidth: 2.5,
+                      ),
+                    );
+                  }
 
-                return Column(
-                  children: <Widget>[
-                    MasterKeyHeader(isNewUser: controller.state.isNewUser),
-                    const SizedBox(height: 32),
-                    MasterKeyFormCard(
-                      controller: controller,
-                      masterKeyController: masterKeyController,
-                      confirmController: confirmController,
-                      formKey: formKey,
-                      submit: submit,
-                    ),
-                    const SizedBox(height: 24),
-                    const MasterKeyBackButton(),
-                  ],
-                );
-              }),
+                  return Column(
+                    children: <Widget>[
+                      MasterKeyHeader(isNewUser: controller.state.isNewUser),
+                      const SizedBox(height: 32),
+                      MasterKeyFormCard(
+                        controller: controller,
+                        masterKeyController: masterKeyController,
+                        confirmController: confirmController,
+                        formKey: formKey,
+                        submit: submit,
+                      ),
+                      const SizedBox(height: 24),
+                      const MasterKeyBackButton(),
+                    ],
+                  );
+                }),
+              ),
             ),
           ),
         ),

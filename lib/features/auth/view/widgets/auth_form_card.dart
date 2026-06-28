@@ -24,81 +24,76 @@ class AuthFormCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              // Email field
-              _AuthTextField(
-                controller: emailController,
-                label: 'Email',
-                icon: Icons.email_outlined,
-                keyboardType: TextInputType.emailAddress,
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!value.contains('@')) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              // Password field
-              _AuthTextField(
-                controller: passwordController,
-                label: 'Password',
-                icon: Icons.lock_outline_rounded,
-                obscureText: obscurePassword,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    obscurePassword
-                        ? Icons.visibility_off_outlined
-                        : Icons.visibility_outlined,
-                    size: 20,
-                  ),
-                  onPressed: onObscurePressed,
-                ),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 28),
-              // Submit button
-              Obx(() {
-                final AuthController controller = Get.find<AuthController>();
-                final bool isLoading = controller.state.isLoading;
-                return SizedBox(
-                  height: 52,
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : onSubmit,
-                    child: isLoading
-                        ? SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.5,
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                          )
-                        : Text(isSignUp ? 'SIGN UP' : 'SIGN IN'),
-                  ),
-                );
-              }),
-            ],
+    return Form(
+      key: formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          // Email field
+          _AuthTextField(
+            controller: emailController,
+            label: 'Email',
+            icon: Icons.email_outlined,
+            keyboardType: TextInputType.emailAddress,
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your email';
+              }
+              if (!value.contains('@')) {
+                return 'Please enter a valid email';
+              }
+              return null;
+            },
           ),
-        ),
+          const SizedBox(height: 16),
+          // Password field
+          _AuthTextField(
+            controller: passwordController,
+            label: 'Password',
+            icon: Icons.lock_outline_rounded,
+            obscureText: obscurePassword,
+            suffixIcon: IconButton(
+              icon: Icon(
+                obscurePassword
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined,
+                size: 20,
+              ),
+              onPressed: onObscurePressed,
+            ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your password';
+              }
+              if (value.length < 6) {
+                return 'Password must be at least 6 characters';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 28),
+          // Submit button
+          Obx(() {
+            final AuthController controller = Get.find<AuthController>();
+            final bool isLoading = controller.state.isLoading;
+            return SizedBox(
+              height: 52,
+              child: ElevatedButton(
+                onPressed: isLoading ? null : onSubmit,
+                child: isLoading
+                    ? SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      )
+                    : Text(isSignUp ? 'SIGN UP' : 'SIGN IN'),
+              ),
+            );
+          }),
+        ],
       ),
     );
   }

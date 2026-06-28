@@ -2,10 +2,14 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gap/gap.dart';
 import 'package:rxget/rxget.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../../core/routes/app_router.gr.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/empty_widget.dart';
+import '../../../vault/view/widgets/hero_text.dart';
 import '../../controller/auth_controller.dart';
 import '../widgets/auth_form_card.dart';
 import '../widgets/auth_header.dart';
@@ -56,49 +60,71 @@ class LoginPage extends HookWidget {
         }
       },
       child: Scaffold(
-        body: SafeArea(
-          child: Center(
+        backgroundColor: AppColors.background,
+        resizeToAvoidBottomInset: false,
+        body: DecoratedBox(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: <Color>[
+                Color(0xFF3ECF8E), // Vibrant Supabase Green at the top
+                Color(0xFF1B6A42), // Transition to dark green
+                AppColors.background, // Fades perfectly into black
+              ],
+              stops: <double>[0, 0.14, 0.28],
+            ),
+          ),
+          child: SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: Obx(() {
-                  final bool isSignUp = controller.state.isSignUp;
-                  return Column(
-                    children: <Widget>[
-                      // ── Header ─────────────────────────────────
-                      FadeInDown(
-                        duration: const Duration(milliseconds: 600),
-                        child: AuthHeader(isSignUp: isSignUp),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Obx(() {
+                final bool isSignUp = controller.state.isSignUp;
+                return Column(
+                  children: <Widget>[
+                    // ── Hero Text ────────────────────────────────────
+                    const SafeArea(child: Empty()),
+                    const Gap(60),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: FadeInDown(
+                        duration: Duration(milliseconds: 600),
+                        child: HeroText(),
                       ),
-                      const SizedBox(height: 40),
-                      // ── Glassmorphism card ─────────────────────
-                      FadeInUp(
-                        duration: const Duration(milliseconds: 700),
-                        child: AuthFormCard(
-                          formKey: formKey,
-                          emailController: emailController,
-                          passwordController: passwordController,
-                          isSignUp: isSignUp,
-                          obscurePassword: obscurePassword.value,
-                          onObscurePressed: () {
-                            obscurePassword.value = !obscurePassword.value;
-                          },
-                          onSubmit: submit,
-                        ),
+                    ),
+                    // const Gap(20),
+                    // // ── Header ─────────────────────────────────
+                    // FadeInDown(
+                    //   duration: const Duration(milliseconds: 600),
+                    //   child: AuthHeader(isSignUp: isSignUp),
+                    // ),
+                    const SizedBox(height: 40),
+                    // ── Glassmorphism card ─────────────────────
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 700),
+                      child: AuthFormCard(
+                        formKey: formKey,
+                        emailController: emailController,
+                        passwordController: passwordController,
+                        isSignUp: isSignUp,
+                        obscurePassword: obscurePassword.value,
+                        onObscurePressed: () {
+                          obscurePassword.value = !obscurePassword.value;
+                        },
+                        onSubmit: submit,
                       ),
-                      const SizedBox(height: 24),
-                      // ── Toggle sign in / sign up ──────────────
-                      FadeInUp(
-                        child: AuthToggle(
-                          isSignUp: isSignUp,
-                          onToggle: controller.toggleSignUp,
-                        ),
+                    ),
+                    const SizedBox(height: 24),
+                    // ── Toggle sign in / sign up ──────────────
+                    FadeInUp(
+                      child: AuthToggle(
+                        isSignUp: isSignUp,
+                        onToggle: controller.toggleSignUp,
                       ),
-                    ],
-                  );
-                }),
-              ),
+                    ),
+                  ],
+                );
+              }),
             ),
           ),
         ),

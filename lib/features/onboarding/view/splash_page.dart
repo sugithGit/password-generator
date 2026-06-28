@@ -33,14 +33,14 @@ class _SplashPageState extends State<SplashPage> {
     final AuthRepo authRepo = Get.find<AuthRepo>();
     final AuthUser? user = authRepo.currentUser;
 
-    if (user == null) {
+    if (user != null) {
       context.router.replaceAll([const LoginRoute()]);
       return;
     }
 
     final MasterKeyRepo masterKeyRepo = Get.find<MasterKeyRepo>();
     final String? localMasterKey = await masterKeyRepo.getLocalMasterKey(
-      user.uid,
+      user!.uid,
     );
 
     if (localMasterKey == null) {

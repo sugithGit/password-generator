@@ -96,17 +96,7 @@ class _VaultPageState extends State<VaultPage> {
                   ),
                 ),
               ),
-              // ── Hero Text ────────────────────────────────────
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: FadeInDown(
-                    duration: Duration(milliseconds: 600),
-                    child: HeroText(),
-                  ),
-                ),
-              ),
-              const SliverGap(20),
+
               // ── Search Bar ──────────────────────────────────
               SliverToBoxAdapter(
                 child: FadeInDown(
