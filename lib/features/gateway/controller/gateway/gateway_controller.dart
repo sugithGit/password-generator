@@ -67,7 +67,9 @@ class GatewayController extends GetxController<_GatewayState> {
       final User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         const FlutterSecureStorage storage = FlutterSecureStorage();
-        final String? masterKey = await storage.read(key: 'master_key_${user.uid}');
+        final String? masterKey = await storage.read(
+          key: 'master_key_${user.uid}',
+        );
         if (masterKey != null) {
           onBiometricsSuccessWithKey(masterKey);
           return;
@@ -88,7 +90,9 @@ class GatewayController extends GetxController<_GatewayState> {
     }
 
     final MasterKeyRemoteDatasource ds = MasterKeyRemoteDatasource();
-    final Map<String, String>? keyData = await ds.getMasterKeyData(uid: user.uid);
+    final Map<String, String>? keyData = await ds.getMasterKeyData(
+      uid: user.uid,
+    );
 
     if (keyData == null) {
       onError('Verification data not found.');

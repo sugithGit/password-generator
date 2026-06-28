@@ -14,7 +14,8 @@ class VerifyEncryptedMasterKeyParams {
   final String storedEncryptedMasterKey;
 }
 
-class VerifyEncryptedMasterKeyUseCase implements UseCase<bool, VerifyEncryptedMasterKeyParams> {
+class VerifyEncryptedMasterKeyUseCase
+    implements UseCase<bool, VerifyEncryptedMasterKeyParams> {
   VerifyEncryptedMasterKeyUseCase(this.encryptionRepo);
   final EncryptionRepo encryptionRepo;
 

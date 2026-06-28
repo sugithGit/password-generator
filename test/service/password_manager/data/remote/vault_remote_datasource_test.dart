@@ -104,37 +104,40 @@ void main() {
       expect(doc.exists, isFalse);
     });
 
-    test('getEntries streams list of entries ordered by updatedAt descending', () async {
-      final now = DateTime.now();
-      final olderEntry = VaultEntryModel(
-        id: 'entry1',
-        title: 'title1',
-        username: 'user1',
-        encryptedPassword: 'password',
-        category: 'social',
-        createdAt: now.subtract(const Duration(days: 1)),
-        updatedAt: now.subtract(const Duration(days: 1)),
-      );
+    test(
+      'getEntries streams list of entries ordered by updatedAt descending',
+      () async {
+        final now = DateTime.now();
+        final olderEntry = VaultEntryModel(
+          id: 'entry1',
+          title: 'title1',
+          username: 'user1',
+          encryptedPassword: 'password',
+          category: 'social',
+          createdAt: now.subtract(const Duration(days: 1)),
+          updatedAt: now.subtract(const Duration(days: 1)),
+        );
 
-      final newerEntry = VaultEntryModel(
-        id: 'entry2',
-        title: 'title2',
-        username: 'user2',
-        encryptedPassword: 'password',
-        category: 'social',
-        createdAt: now,
-        updatedAt: now,
-      );
+        final newerEntry = VaultEntryModel(
+          id: 'entry2',
+          title: 'title2',
+          username: 'user2',
+          encryptedPassword: 'password',
+          category: 'social',
+          createdAt: now,
+          updatedAt: now,
+        );
 
-      await datasource.addEntry(olderEntry);
-      await datasource.addEntry(newerEntry);
+        await datasource.addEntry(olderEntry);
+        await datasource.addEntry(newerEntry);
 
-      final stream = datasource.getEntries();
-      final entries = await stream.first;
+        final stream = datasource.getEntries();
+        final entries = await stream.first;
 
-      expect(entries.length, 2);
-      expect(entries[0].id, 'entry2');
-      expect(entries[1].id, 'entry1');
-    });
+        expect(entries.length, 2);
+        expect(entries[0].id, 'entry2');
+        expect(entries[1].id, 'entry1');
+      },
+    );
   });
 }

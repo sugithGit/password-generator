@@ -61,7 +61,9 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     }
 
     final MasterKeyRemoteDatasource ds = MasterKeyRemoteDatasource();
-    final Map<String, String>? keyData = await ds.getMasterKeyData(uid: user.uid);
+    final Map<String, String>? keyData = await ds.getMasterKeyData(
+      uid: user.uid,
+    );
 
     if (mounted) {
       setState(() {
@@ -120,7 +122,9 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
       }
     } else {
       // Returning user: validate master key
-      final Map<String, String>? keyData = await ds.getMasterKeyData(uid: user.uid);
+      final Map<String, String>? keyData = await ds.getMasterKeyData(
+        uid: user.uid,
+      );
 
       if (keyData == null) {
         setState(() {

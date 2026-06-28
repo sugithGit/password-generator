@@ -53,18 +53,24 @@ void main() {
         updatedAt: now,
       );
 
-      when(() => mockRemoteDatasource.getEntries()).thenAnswer((_) => Stream.value([model]));
+      when(
+        () => mockRemoteDatasource.getEntries(),
+      ).thenAnswer((_) => Stream.value([model]));
 
       final stream = repository.getEntries();
-      
+
       expect(
         stream,
         emits([
           isA<VaultEntry>()
               .having((e) => e.id, 'id', '123')
               .having((e) => e.title, 'title', 'enc_title')
-              .having((e) => e.encryptedPassword, 'encryptedPassword', 'enc_password')
-              .having((e) => e.category, 'category', VaultCategory.social)
+              .having(
+                (e) => e.encryptedPassword,
+                'encryptedPassword',
+                'enc_password',
+              )
+              .having((e) => e.category, 'category', VaultCategory.social),
         ]),
       );
     });
@@ -83,19 +89,51 @@ void main() {
         updatedAt: now,
       );
 
-      when(() => mockEncryptionRepo.encrypt(plainText: 'plain_title', key: mockSecureKey)).thenReturn('enc_title');
-      when(() => mockEncryptionRepo.encrypt(plainText: 'plain_username', key: mockSecureKey)).thenReturn('enc_username');
-      when(() => mockEncryptionRepo.encrypt(plainText: 'plain_password', key: mockSecureKey)).thenReturn('enc_password');
-      when(() => mockEncryptionRepo.encrypt(plainText: 'plain_website', key: mockSecureKey)).thenReturn('enc_website');
-      when(() => mockEncryptionRepo.encrypt(plainText: 'plain_notes', key: mockSecureKey)).thenReturn('enc_notes');
-      
+      when(
+        () => mockEncryptionRepo.encrypt(
+          plainText: 'plain_title',
+          key: mockSecureKey,
+        ),
+      ).thenReturn('enc_title');
+      when(
+        () => mockEncryptionRepo.encrypt(
+          plainText: 'plain_username',
+          key: mockSecureKey,
+        ),
+      ).thenReturn('enc_username');
+      when(
+        () => mockEncryptionRepo.encrypt(
+          plainText: 'plain_password',
+          key: mockSecureKey,
+        ),
+      ).thenReturn('enc_password');
+      when(
+        () => mockEncryptionRepo.encrypt(
+          plainText: 'plain_website',
+          key: mockSecureKey,
+        ),
+      ).thenReturn('enc_website');
+      when(
+        () => mockEncryptionRepo.encrypt(
+          plainText: 'plain_notes',
+          key: mockSecureKey,
+        ),
+      ).thenReturn('enc_notes');
+
       when(() => mockRemoteDatasource.addEntry(any())).thenAnswer((_) async {});
 
       await repository.addEntry(entry);
 
-      verify(() => mockEncryptionRepo.encrypt(plainText: 'plain_title', key: mockSecureKey)).called(1);
-      
-      final captured = verify(() => mockRemoteDatasource.addEntry(captureAny())).captured;
+      verify(
+        () => mockEncryptionRepo.encrypt(
+          plainText: 'plain_title',
+          key: mockSecureKey,
+        ),
+      ).called(1);
+
+      final captured = verify(
+        () => mockRemoteDatasource.addEntry(captureAny()),
+      ).captured;
       final savedModel = captured.first as VaultEntryModel;
 
       expect(savedModel.title, 'enc_title');
@@ -112,21 +150,33 @@ void main() {
         title: 'plain_title',
         username: null,
         encryptedPassword: 'plain_password',
-        website: null,
-        notes: null,
         category: VaultCategory.work,
         createdAt: now,
         updatedAt: now,
       );
 
-      when(() => mockEncryptionRepo.encrypt(plainText: 'plain_title', key: mockSecureKey)).thenReturn('enc_title');
-      when(() => mockEncryptionRepo.encrypt(plainText: 'plain_password', key: mockSecureKey)).thenReturn('enc_password');
-      
-      when(() => mockRemoteDatasource.updateEntry(any())).thenAnswer((_) async {});
+      when(
+        () => mockEncryptionRepo.encrypt(
+          plainText: 'plain_title',
+          key: mockSecureKey,
+        ),
+      ).thenReturn('enc_title');
+      when(
+        () => mockEncryptionRepo.encrypt(
+          plainText: 'plain_password',
+          key: mockSecureKey,
+        ),
+      ).thenReturn('enc_password');
+
+      when(
+        () => mockRemoteDatasource.updateEntry(any()),
+      ).thenAnswer((_) async {});
 
       await repository.updateEntry(entry);
-      
-      final captured = verify(() => mockRemoteDatasource.updateEntry(captureAny())).captured;
+
+      final captured = verify(
+        () => mockRemoteDatasource.updateEntry(captureAny()),
+      ).captured;
       final savedModel = captured.first as VaultEntryModel;
 
       expect(savedModel.title, 'enc_title');
@@ -138,7 +188,9 @@ void main() {
     });
 
     test('deleteEntry calls remote datasource', () async {
-      when(() => mockRemoteDatasource.deleteEntry(any())).thenAnswer((_) async {});
+      when(
+        () => mockRemoteDatasource.deleteEntry(any()),
+      ).thenAnswer((_) async {});
 
       await repository.deleteEntry('123');
 
@@ -146,12 +198,22 @@ void main() {
     });
 
     test('decryptField calls encryptionRepo', () {
-      when(() => mockEncryptionRepo.decrypt(cipherText: 'cipher', key: mockSecureKey)).thenReturn('plain');
+      when(
+        () => mockEncryptionRepo.decrypt(
+          cipherText: 'cipher',
+          key: mockSecureKey,
+        ),
+      ).thenReturn('plain');
 
       final result = repository.decryptField('cipher');
 
       expect(result, 'plain');
-      verify(() => mockEncryptionRepo.decrypt(cipherText: 'cipher', key: mockSecureKey)).called(1);
+      verify(
+        () => mockEncryptionRepo.decrypt(
+          cipherText: 'cipher',
+          key: mockSecureKey,
+        ),
+      ).called(1);
     });
   });
 }

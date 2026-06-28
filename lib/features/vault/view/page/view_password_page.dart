@@ -27,9 +27,7 @@ class _ViewPasswordPageState extends State<ViewPasswordPage> {
         content: Text('$label copied!'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         duration: const Duration(seconds: 1),
       ),
     );
@@ -44,8 +42,7 @@ class _ViewPasswordPageState extends State<ViewPasswordPage> {
     final String? username = widget.entry.username != null
         ? controller.decrypt(widget.entry.username!)
         : null;
-    final String password =
-        controller.decrypt(widget.entry.encryptedPassword);
+    final String password = controller.decrypt(widget.entry.encryptedPassword);
     final String? website = widget.entry.website != null
         ? controller.decrypt(widget.entry.website!)
         : null;
@@ -54,9 +51,7 @@ class _ViewPasswordPageState extends State<ViewPasswordPage> {
         : null;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Password Details'),
-      ),
+      appBar: AppBar(title: const Text('Password Details')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(

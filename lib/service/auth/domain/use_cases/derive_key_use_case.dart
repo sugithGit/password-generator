@@ -5,10 +5,7 @@ import '../../../../core/use_case/use_case.dart';
 import '../repositories/encryption_repo.dart';
 
 class DeriveKeyParams {
-  const DeriveKeyParams({
-    required this.masterKey,
-    required this.salt,
-  });
+  const DeriveKeyParams({required this.masterKey, required this.salt});
   final String masterKey;
   final Uint8List salt;
 }
