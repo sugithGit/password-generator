@@ -44,6 +44,13 @@ class BiometricGatePage extends HookWidget {
                 }
                 ctx.router.replace(VaultRoute(repository: repository));
               },
+              onError: (String error) {
+                if (ctx.mounted) {
+                  ScaffoldMessenger.of(ctx).showSnackBar(
+                    SnackBar(content: Text(error)),
+                  );
+                }
+              },
             );
           },
         ),
@@ -61,6 +68,13 @@ class BiometricGatePage extends HookWidget {
                 return;
               }
               context.router.replace(VaultRoute(repository: repository));
+            },
+            onError: (String error) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(error)),
+                );
+              }
             },
           );
         },

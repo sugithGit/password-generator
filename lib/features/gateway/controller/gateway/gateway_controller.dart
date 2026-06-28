@@ -1,9 +1,13 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rxget/rxget.dart';
 import 'package:sodium/sodium.dart';
 
 import '../../../../service/auth/data/local/biometric_local.dart';
+import '../../../../service/auth/data/remote/master_key_remote_datasource.dart';
 import '../../../../service/auth/data/repositories/biometric_repo_impl.dart';
 import '../../../../service/auth/domain/repositories/biometric_repo.dart';
 import '../../../../service/auth/domain/repositories/encryption_repo.dart';
@@ -73,20 +77,31 @@ class GatewayController extends GetxController<_GatewayState> {
     }
   }
 
-  void onMasterKeyValidated(
+  Future<void> onMasterKeyValidated(
     String masterKey, {
     required void Function(VaultRepoImpl) onReady,
-  }) {
+    required void Function(String error) onError,
+  }) async {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       return;
     }
 
-    // Derive the encryption key from UID + master key
+    final MasterKeyRemoteDatasource ds = MasterKeyRemoteDatasource();
+    final Map<String, String>? keyData = await ds.getMasterKeyData(uid: user.uid);
+
+    if (keyData == null) {
+      onError('Verification data not found.');
+      return;
+    }
+
+    final Uint8List saltBytes = base64Decode(keyData['salt']!);
+
+    // Derive the encryption key from master key and salt
     final EncryptionRepo encryptionRepo = Get.find<EncryptionRepo>();
     final SecureKey encryptionKey = encryptionRepo.deriveKey(
-      uid: user.uid,
       masterKey: masterKey,
+      salt: saltBytes,
     );
 
     final VaultRemoteDatasource datasource = VaultRemoteDatasource(

@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -61,11 +61,11 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     }
 
     final MasterKeyRemoteDatasource ds = MasterKeyRemoteDatasource();
-    final String? encryptedKey = await ds.getEncryptedMasterKey(uid: user.uid);
+    final Map<String, String>? keyData = await ds.getMasterKeyData(uid: user.uid);
 
     if (mounted) {
       setState(() {
-        _isNewUser = encryptedKey == null;
+        _isNewUser = keyData == null;
         _isLoading = false;
       });
     }
@@ -96,15 +96,19 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     final MasterKeyRemoteDatasource ds = MasterKeyRemoteDatasource();
 
     if (_isNewUser) {
-      // First time: store encrypted master key
+      // First time: generate salt and store encrypted master key
+      final Uint8List saltBytes = encryptionRepo.generateSalt();
+      final String saltBase64 = base64Encode(saltBytes);
+
       final String encryptedMasterKey = encryptionRepo.encryptMasterKeyForSync(
-        uid: user.uid,
         masterKey: masterKey,
+        salt: saltBytes,
       );
 
-      await ds.saveEncryptedMasterKey(
+      await ds.saveMasterKeyData(
         uid: user.uid,
         encryptedMasterKey: encryptedMasterKey,
+        salt: saltBase64,
       );
 
       // Store in secure storage for biometrics
@@ -116,9 +120,9 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
       }
     } else {
       // Returning user: validate master key
-      final String? storedEncryptedMasterKey = await ds.getEncryptedMasterKey(uid: user.uid);
+      final Map<String, String>? keyData = await ds.getMasterKeyData(uid: user.uid);
 
-      if (storedEncryptedMasterKey == null) {
+      if (keyData == null) {
         setState(() {
           _errorMessage =
               'Verification data not found. Please contact support.';
@@ -127,9 +131,12 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
         return;
       }
 
+      final String storedEncryptedMasterKey = keyData['encryptedKey']!;
+      final Uint8List saltBytes = base64Decode(keyData['salt']!);
+
       final bool isValid = encryptionRepo.verifyEncryptedMasterKey(
-        uid: user.uid,
         masterKey: masterKey,
+        salt: saltBytes,
         storedEncryptedMasterKey: storedEncryptedMasterKey,
       );
 

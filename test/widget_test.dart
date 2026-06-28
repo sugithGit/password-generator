@@ -3,13 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:password_generator/app_view.dart';
 import 'package:password_generator/main.dart';
-import 'package:sodium/sodium.dart';
+import 'package:sodium/sodium_sumo.dart';
 
 void main() {
   setUpAll(() async {
     final Directory tempDir = Directory.systemTemp.createTempSync();
     Hive.init(tempDir.path);
-    sodiumInstance = await SodiumInit.init();
+    sodiumInstance = await SodiumSumoInit.init();
   });
 
   testWidgets('Password Generator UI loads successfully', (

@@ -9,20 +9,28 @@ class MasterKeyRemoteDatasource {
   CollectionReference<Map<String, dynamic>> get _collection =>
       _firestore.collection('m_key');
 
-  Future<void> saveEncryptedMasterKey({
+  Future<void> saveMasterKeyData({
     required String uid,
     required String encryptedMasterKey,
+    required String salt,
   }) async {
     await _collection.doc(uid).set({
       'encryptedKey': encryptedMasterKey,
+      'salt': salt,
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
 
-  Future<String?> getEncryptedMasterKey({required String uid}) async {
+  Future<Map<String, String>?> getMasterKeyData({required String uid}) async {
     final doc = await _collection.doc(uid).get();
     if (doc.exists && doc.data() != null) {
-      return doc.data()!['encryptedKey'] as String?;
+      final data = doc.data()!;
+      if (data.containsKey('encryptedKey') && data.containsKey('salt')) {
+        return {
+          'encryptedKey': data['encryptedKey'] as String,
+          'salt': data['salt'] as String,
+        };
+      }
     }
     return null;
   }

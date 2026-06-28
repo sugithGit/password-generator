@@ -1,22 +1,24 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:sodium/sodium.dart';
+import 'package:sodium/sodium_sumo.dart';
 
 class EncryptionLocal {
-  EncryptionLocal({required Sodium sodium}) : _sodium = sodium;
+  EncryptionLocal({required SodiumSumo sodium}) : _sodium = sodium;
 
-  final Sodium _sodium;
+  final SodiumSumo _sodium;
 
-  SecureKey deriveKey({required String uid, required String masterKey}) {
-    final String combined = '$uid:$masterKey';
-    final Uint8List seed = Uint8List.fromList(utf8.encode(combined));
+  Uint8List generateSalt() {
+    return _sodium.randombytes.buf(_sodium.crypto.pwhash.saltBytes);
+  }
 
-    final Uint8List hash = _sodium.crypto.genericHash.call(
-      message: seed,
+  SecureKey deriveKey({required String masterKey, required Uint8List salt}) {
+    return _sodium.crypto.pwhash.call(
       outLen: _sodium.crypto.secretBox.keyBytes,
+      password: Int8List.fromList(utf8.encode(masterKey)),
+      salt: salt,
+      opsLimit: _sodium.crypto.pwhash.opsLimitInteractive,
+      memLimit: _sodium.crypto.pwhash.memLimitInteractive,
     );
-
-    return _sodium.secureCopy(hash);
   }
 
   String encrypt({required String plainText, required SecureKey key}) {
@@ -56,10 +58,10 @@ class EncryptionLocal {
   }
 
   String encryptMasterKeyForSync({
-    required String uid,
     required String masterKey,
+    required Uint8List salt,
   }) {
-    final SecureKey key = deriveKey(uid: uid, masterKey: masterKey);
+    final SecureKey key = deriveKey(masterKey: masterKey, salt: salt);
     try {
       return encrypt(plainText: masterKey, key: key);
     } finally {
@@ -68,11 +70,11 @@ class EncryptionLocal {
   }
 
   bool verifyEncryptedMasterKey({
-    required String uid,
     required String masterKey,
+    required Uint8List salt,
     required String storedEncryptedMasterKey,
   }) {
-    final SecureKey key = deriveKey(uid: uid, masterKey: masterKey);
+    final SecureKey key = deriveKey(masterKey: masterKey, salt: salt);
     try {
       final String decrypted = decrypt(
         cipherText: storedEncryptedMasterKey,

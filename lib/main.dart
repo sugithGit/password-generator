@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sodium/sodium.dart';
+import 'package:sodium/sodium_sumo.dart';
 
 import 'app_view.dart';
 import 'core/db/hive/hive_registrar.g.dart';
 
-late final Sodium sodiumInstance;
+late final SodiumSumo sodiumInstance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +20,7 @@ void main() async {
     ..registerAdapters();
 
   // Initialize Sodium
-  sodiumInstance = await SodiumInit.init();
+  sodiumInstance = await SodiumSumoInit.init();
 
   runApp(const MyApp());
 }

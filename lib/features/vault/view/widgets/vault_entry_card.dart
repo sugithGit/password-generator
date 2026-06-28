@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../../../core/const/constants.dart';
 import '../../../../service/password_manager/domain/entities/decrypted_vault_entry.dart';
 import '../../../../service/password_manager/domain/entities/vault_category.dart';
-import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 
 class VaultEntryCard extends StatefulWidget {
   const VaultEntryCard({required this.entry, required this.onTap, super.key});

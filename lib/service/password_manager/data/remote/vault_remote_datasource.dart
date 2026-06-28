@@ -11,7 +11,7 @@ class VaultRemoteDatasource {
   final FirebaseFirestore _firestore;
 
   CollectionReference<Map<String, dynamic>> get _collection {
-    final String reversedUserId = _userId.split('').reversed.join('');
+    final String reversedUserId = _userId.split('').reversed.join();
     return _firestore
         .collection('vault')
         .doc(reversedUserId)

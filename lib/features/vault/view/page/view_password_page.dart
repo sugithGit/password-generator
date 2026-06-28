@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxget/rxget.dart';
 
-import '../../../../core/const/constants.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../controller/vault/vault_controller.dart';
 

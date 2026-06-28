@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:sodium/sodium.dart';
 import '../../domain/repositories/encryption_repo.dart';
 import '../local/encryption_local.dart';
@@ -9,8 +11,13 @@ class EncryptionRepoImpl implements EncryptionRepo {
   final EncryptionLocal _encryptionLocal;
 
   @override
-  SecureKey deriveKey({required String uid, required String masterKey}) {
-    return _encryptionLocal.deriveKey(uid: uid, masterKey: masterKey);
+  Uint8List generateSalt() {
+    return _encryptionLocal.generateSalt();
+  }
+
+  @override
+  SecureKey deriveKey({required String masterKey, required Uint8List salt}) {
+    return _encryptionLocal.deriveKey(masterKey: masterKey, salt: salt);
   }
 
   @override
@@ -25,24 +32,24 @@ class EncryptionRepoImpl implements EncryptionRepo {
 
   @override
   String encryptMasterKeyForSync({
-    required String uid,
     required String masterKey,
+    required Uint8List salt,
   }) {
     return _encryptionLocal.encryptMasterKeyForSync(
-      uid: uid,
       masterKey: masterKey,
+      salt: salt,
     );
   }
 
   @override
   bool verifyEncryptedMasterKey({
-    required String uid,
     required String masterKey,
+    required Uint8List salt,
     required String storedEncryptedMasterKey,
   }) {
     return _encryptionLocal.verifyEncryptedMasterKey(
-      uid: uid,
       masterKey: masterKey,
+      salt: salt,
       storedEncryptedMasterKey: storedEncryptedMasterKey,
     );
   }

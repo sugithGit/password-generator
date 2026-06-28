@@ -1,14 +1,16 @@
+import 'dart:typed_data';
+
 import '../../../../core/use_case/use_case.dart';
 import '../repositories/encryption_repo.dart';
 
 class VerifyEncryptedMasterKeyParams {
   const VerifyEncryptedMasterKeyParams({
-    required this.uid,
     required this.masterKey,
+    required this.salt,
     required this.storedEncryptedMasterKey,
   });
-  final String uid;
   final String masterKey;
+  final Uint8List salt;
   final String storedEncryptedMasterKey;
 }
 
@@ -19,8 +21,8 @@ class VerifyEncryptedMasterKeyUseCase implements UseCase<bool, VerifyEncryptedMa
   @override
   bool call(VerifyEncryptedMasterKeyParams params) {
     return encryptionRepo.verifyEncryptedMasterKey(
-      uid: params.uid,
       masterKey: params.masterKey,
+      salt: params.salt,
       storedEncryptedMasterKey: params.storedEncryptedMasterKey,
     );
   }

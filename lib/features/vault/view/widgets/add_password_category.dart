@@ -3,7 +3,6 @@ import 'package:rxget/rxget.dart';
 import '../../../../core/const/constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../service/password_manager/domain/entities/vault_category.dart';
-import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../controller/add_password/add_password_controller.dart';
 
 class AddPasswordCategory extends StatelessWidget {
