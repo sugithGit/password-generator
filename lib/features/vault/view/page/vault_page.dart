@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:rxget/rxget.dart';
 
 import '../../../../core/extension/color_ext.dart';
@@ -13,6 +14,8 @@ import '../../../../service/password_manager/domain/entities/decrypted_vault_ent
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../controller/vault/vault_controller.dart';
 import '../widgets/empty_vault_widget.dart';
+import '../widgets/glass_icon_button.dart';
+import '../widgets/hero_text.dart';
 import '../widgets/vault_entry_card.dart';
 import '../widgets/vault_search_bar.dart';
 
@@ -56,6 +59,7 @@ class _VaultPageState extends State<VaultPage> {
     final VaultController controller = Get.find<VaultController>();
     return Scaffold(
       backgroundColor: AppColors.background,
+      resizeToAvoidBottomInset: false,
       body: DecoratedBox(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -83,27 +87,26 @@ class _VaultPageState extends State<VaultPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      _buildGlassIconButton(Icons.menu_rounded, () {}),
-                      _buildGlassIconButton(Icons.more_vert_rounded, () {}),
+                      GlassIconButton(icon: Icons.menu_rounded, onTap: () {}),
+                      GlassIconButton(
+                        icon: Icons.more_vert_rounded,
+                        onTap: () {},
+                      ),
                     ],
                   ),
                 ),
               ),
-
               // ── Hero Text ────────────────────────────────────
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 24,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: FadeInDown(
-                    duration: const Duration(milliseconds: 600),
-                    child: _buildHeroText(),
+                    duration: Duration(milliseconds: 600),
+                    child: HeroText(),
                   ),
                 ),
               ),
-
+              const SliverGap(20),
               // ── Search Bar ──────────────────────────────────
               SliverToBoxAdapter(
                 child: FadeInDown(
@@ -237,97 +240,6 @@ class _VaultPageState extends State<VaultPage> {
           child: Text("🔑 NEW", style: context.titleLarge),
         ),
       ),
-    );
-  }
-
-  Widget _buildGlassIconButton(IconData icon, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 48,
-        height: 48,
-        decoration: ShapeDecoration(
-          color: Colors.white.op(0.15),
-          shape: const CircleBorder(),
-          shadows: <BoxShadow>[
-            BoxShadow(
-              color: Colors.black.op(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Icon(icon, color: AppColors.textPrimary, size: 20),
-      ),
-    );
-  }
-
-  Widget _buildHeroText() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            const Text(
-              'Keep',
-              style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.w500,
-                color: AppColors.textPrimary,
-                letterSpacing: -1,
-                height: 1.1,
-              ),
-            ),
-            const SizedBox(width: 12),
-            _buildEmojiPill('🔒', Colors.black.op(0.2)),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: <Widget>[
-            _buildEmojiPill('🗄️', Colors.black.op(0.2)),
-            const SizedBox(width: 12),
-            const Text(
-              'Your Life',
-              style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textPrimary,
-                letterSpacing: -1,
-                height: 1.1,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: <Widget>[
-            const Text(
-              'Safe',
-              style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textPrimary,
-                letterSpacing: -1,
-                height: 1.1,
-              ),
-            ),
-            const SizedBox(width: 12),
-            _buildEmojiPill('🌍', Colors.black.op(0.2)),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEmojiPill(String emoji, Color bgColor) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      decoration: ShapeDecoration(
-        color: bgColor,
-        shape: const Squircle(radius: 100).shape(),
-      ),
-      child: Text(emoji, style: const TextStyle(fontSize: 26)),
     );
   }
 }
