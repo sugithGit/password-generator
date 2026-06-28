@@ -1,8 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:rxget/rxget.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_bar/page_app_bar.dart';
 import '../../../../core/widgets/app_button/app_button.dart';
 import '../../../../service/password_manager/domain/entities/vault_category.dart';
@@ -13,7 +16,7 @@ import '../widgets/add_password_category.dart';
 import '../widgets/custom_form_field.dart';
 
 @RoutePage()
-class AddEntryPage extends StatefulWidget implements AutoRouteWrapper {
+class AddEntryPage extends HookWidget implements AutoRouteWrapper {
   const AddEntryPage({this.existingEntry, this.initialCategory, super.key});
 
   final VaultEntry? existingEntry;
@@ -38,105 +41,115 @@ class AddEntryPage extends StatefulWidget implements AutoRouteWrapper {
   }
 
   @override
-  State<AddEntryPage> createState() => _AddEntryPageState();
-}
+  Widget build(BuildContext context) {
+    final bool isEditing = existingEntry != null;
+    final VaultEntry? e = existingEntry;
 
-class _AddEntryPageState extends State<AddEntryPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late TextEditingController _titleController;
-  late TextEditingController _usernameController;
-  late TextEditingController _passwordController;
-  late TextEditingController _websiteController;
-  late TextEditingController _notesController;
-  VaultCategory _selectedCategory = VaultCategory.other;
-  bool _obscurePassword = true;
-
-  bool get _isEditing => widget.existingEntry != null;
-
-  @override
-  void initState() {
-    super.initState();
-    final VaultEntry? e = widget.existingEntry;
-    _titleController = TextEditingController(text: e?.title ?? '');
-    _usernameController = TextEditingController(text: e?.username ?? '');
-    _passwordController = TextEditingController(
+    final GlobalKey<FormState> formKey = useMemoized(GlobalKey<FormState>.new);
+    final TextEditingController titleController = useTextEditingController(
+      text: e?.title ?? '',
+    );
+    final TextEditingController usernameController = useTextEditingController(
+      text: e?.username ?? '',
+    );
+    final TextEditingController passwordController = useTextEditingController(
       text: e?.encryptedPassword ?? '',
     );
-    _websiteController = TextEditingController(text: e?.website ?? '');
-    _notesController = TextEditingController(text: e?.notes ?? '');
-    if (e != null) {
-      _selectedCategory = e.category;
-    }
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _usernameController.dispose();
-    _passwordController.dispose();
-    _websiteController.dispose();
-    _notesController.dispose();
-    super.dispose();
-  }
-
-  void _save() {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-    HapticFeedback.mediumImpact();
+    final TextEditingController websiteController = useTextEditingController(
+      text: e?.website ?? '',
+    );
+    final TextEditingController notesController = useTextEditingController(
+      text: e?.notes ?? '',
+    );
+    final ValueNotifier<bool> obscurePassword = useState(true);
 
     final AddPasswordController controller = Get.find<AddPasswordController>();
 
-    if (_isEditing) {
-      final VaultEntry updated = widget.existingEntry!.copyWith(
-        title: _titleController.text.trim(),
-        username: _usernameController.text.trim(),
-        encryptedPassword: _passwordController.text.trim(),
-        website: _websiteController.text.trim().isNotEmpty
-            ? _websiteController.text.trim()
-            : null,
-        notes: _notesController.text.trim().isNotEmpty
-            ? _notesController.text.trim()
-            : null,
-        category: _selectedCategory,
-        updatedAt: DateTime.now(),
-      );
-      controller.updateEntry(updated);
-    } else {
-      controller.addEntry(
-        title: _titleController.text.trim(),
-        username: _usernameController.text.trim(),
-        password: _passwordController.text.trim(),
-        website: _websiteController.text.trim().isNotEmpty
-            ? _websiteController.text.trim()
-            : null,
-        notes: _notesController.text.trim().isNotEmpty
-            ? _notesController.text.trim()
-            : null,
-        category: _selectedCategory,
-      );
-    }
-    context.router.maybePop();
-  }
+    useEffect(() {
+      void listener() {
+        controller.enableBtn(
+          title: titleController.text,
+          password: passwordController.text,
+        );
+      }
 
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+      titleController.addListener(listener);
+      passwordController.addListener(listener);
+
+      listener();
+
+      return () {
+        titleController.removeListener(listener);
+        passwordController.removeListener(listener);
+      };
+    }, <Object?>[titleController, passwordController, controller]);
+
+    final VoidCallback save = useCallback(
+      () {
+        if (!formKey.currentState!.validate()) {
+          return;
+        }
+        HapticFeedback.mediumImpact();
+
+        if (isEditing) {
+          final VaultEntry updated = existingEntry!.copyWith(
+            title: titleController.text.trim(),
+            username: usernameController.text.trim(),
+            encryptedPassword: passwordController.text.trim(),
+            website: websiteController.text.trim().isNotEmpty
+                ? websiteController.text.trim()
+                : null,
+            notes: notesController.text.trim().isNotEmpty
+                ? notesController.text.trim()
+                : null,
+            category: controller.state.selectedCategory,
+            updatedAt: DateTime.now(),
+          );
+          controller.updateEntry(updated);
+        } else {
+          controller.addEntry(
+            title: titleController.text.trim(),
+            username: usernameController.text.trim(),
+            password: passwordController.text.trim(),
+            website: websiteController.text.trim().isNotEmpty
+                ? websiteController.text.trim()
+                : null,
+            notes: notesController.text.trim().isNotEmpty
+                ? notesController.text.trim()
+                : null,
+            category: controller.state.selectedCategory,
+          );
+        }
+        context.router.maybePop();
+      },
+      <Object?>[
+        isEditing,
+        existingEntry,
+        titleController,
+        usernameController,
+        passwordController,
+        websiteController,
+        notesController,
+        controller,
+        context.router,
+      ],
+    );
+
     return Scaffold(
-      appBar: PageAppBar(title: _isEditing ? 'Edit Password' : 'Add Password'),
+      appBar: PageAppBar(title: isEditing ? 'Edit Password' : 'Add Password'),
       body: Column(
         children: <Widget>[
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
               child: Form(
-                key: _formKey,
+                key: formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     // Title
                     CustomFormField(
-                      controller: _titleController,
+                      controller: titleController,
                       label: 'Title',
                       icon: Icons.title_rounded,
                       hint: 'e.g. Gmail, Instagram',
@@ -146,33 +159,30 @@ class _AddEntryPageState extends State<AddEntryPage> {
                     const SizedBox(height: 16),
                     // Username/Email
                     CustomFormField(
-                      controller: _usernameController,
+                      controller: usernameController,
                       label: 'Username / Email',
                       icon: Icons.person_outline_rounded,
                       hint: 'e.g. john@example.com',
-                      validator: (String? v) => v == null || v.isEmpty
-                          ? 'Username is required'
-                          : null,
                     ),
                     const SizedBox(height: 16),
                     // Password
                     CustomFormField(
-                      controller: _passwordController,
+                      controller: passwordController,
                       label: 'Password',
                       icon: Icons.lock_outline_rounded,
                       hint: 'Enter password',
-                      obscureText: _obscurePassword,
+                      obscureText: obscurePassword.value,
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword
+                          obscurePassword.value
                               ? Icons.visibility_off_outlined
                               : Icons.visibility_outlined,
-                          color: theme.colorScheme.onSurfaceVariant,
+                          color: context.colorScheme.onSurfaceVariant,
                           size: 20,
                         ),
-                        onPressed: () => setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        }),
+                        onPressed: () {
+                          obscurePassword.value = !obscurePassword.value;
+                        },
                       ),
                       validator: (String? v) => v == null || v.isEmpty
                           ? 'Password is required'
@@ -181,7 +191,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                     const SizedBox(height: 16),
                     // Website
                     CustomFormField(
-                      controller: _websiteController,
+                      controller: websiteController,
                       label: 'Website (optional)',
                       icon: Icons.language_rounded,
                       hint: 'e.g. https://gmail.com',
@@ -190,7 +200,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                     const SizedBox(height: 16),
                     // Notes
                     CustomFormField(
-                      controller: _notesController,
+                      controller: notesController,
                       label: 'Notes (optional)',
                       icon: Icons.notes_rounded,
                       hint: 'Add any notes...',
@@ -200,7 +210,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
                     // Category
                     Text(
                       'CATEGORY',
-                      style: theme.textTheme.bodySmall?.copyWith(
+                      style: context.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         letterSpacing: 1.5,
                       ),
@@ -209,12 +219,14 @@ class _AddEntryPageState extends State<AddEntryPage> {
                     const AddPasswordCategory(),
                     const SizedBox(height: 40),
                     // Save button
-                    AppButton(
-                      onPressed: _save,
-                      disabled: true,
-                      title: _isEditing ? 'UPDATE PASSWORD' : 'SAVE PASSWORD',
+                    Obx(
+                      () => AppButton(
+                        onPressed: save,
+                        disabled: !controller.state.enableBtn,
+                        title: isEditing ? 'UPDATE PASSWORD' : 'SAVE PASSWORD',
+                      ),
                     ),
-                    if (_isEditing) ...<Widget>[
+                    if (isEditing) ...<Widget>[
                       const SizedBox(height: 16),
                       // Delete button
                       SizedBox(
@@ -225,58 +237,33 @@ class _AddEntryPageState extends State<AddEntryPage> {
                             showDialog(
                               context: context,
                               builder: (BuildContext ctx) => AlertDialog(
-                                backgroundColor: theme.cardColor,
+                                backgroundColor: AppColors.card,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),
-                                title: Text(
-                                  'Delete Password',
-                                  style: TextStyle(
-                                    color: theme.colorScheme.onSurface,
-                                  ),
-                                ),
-                                content: Text(
+                                title: const Text('Delete Password'),
+                                content: const Text(
                                   'Are you sure you want to delete this entry?',
-                                  style: TextStyle(
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
                                 ),
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () => ctx.router.maybePop(),
-                                    child: Text(
-                                      'Cancel',
-                                      style: TextStyle(
-                                        color:
-                                            theme.colorScheme.onSurfaceVariant,
-                                      ),
-                                    ),
+                                    child: const Text('Cancel'),
                                   ),
                                   TextButton(
                                     onPressed: () {
                                       Get.find<AddPasswordController>()
-                                          .deleteEntry(
-                                            widget.existingEntry!.id,
-                                          );
+                                          .deleteEntry(existingEntry!.id);
                                       ctx.router.maybePop();
                                       context.router.maybePop();
                                     },
-                                    child: Text(
-                                      'Delete',
-                                      style: TextStyle(
-                                        color: theme.colorScheme.error,
-                                      ),
-                                    ),
+                                    child: const Text('Delete'),
                                   ),
                                 ],
                               ),
                             );
                           },
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: theme.colorScheme.error,
-                            side: BorderSide(
-                              color: theme.colorScheme.error.withAlpha(100),
-                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

@@ -21,7 +21,6 @@ class AddPasswordController extends GetxController<_AddPasswordState> {
   _AddPasswordState state;
 
   void changeCategory(VaultCategory category) => _changeCategory(category);
-
   Future<void> addEntry({
     required String title,
     required String username,
@@ -37,9 +36,10 @@ class AddPasswordController extends GetxController<_AddPasswordState> {
     notes: notes,
     category: category ?? state.selectedCategory,
   );
-
   Future<void> updateEntry(VaultEntry entry) => _updateEntry(entry);
   Future<void> deleteEntry(String entryId) => _deleteEntry(entryId);
+  void enableBtn({required String title, required String password}) =>
+      _enableBtn(title: title, password: password);
 
   void _changeCategory(VaultCategory category) {
     state._selectedCategory.value = category;
@@ -86,5 +86,9 @@ class AddPasswordController extends GetxController<_AddPasswordState> {
     } catch (e) {
       rethrow;
     }
+  }
+
+  void _enableBtn({required String title, required String password}) {
+    state._enableBtn.value = title.isNotEmpty && password.isNotEmpty;
   }
 }

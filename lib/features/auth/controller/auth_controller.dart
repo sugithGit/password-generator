@@ -52,6 +52,7 @@ class AuthController extends GetxController<_AuthState> {
         SignInParams(email: email, password: password),
       );
       state._user.value = user;
+      state._status.value = .success;
     } on AuthException catch (e) {
       state._error.value = e.message;
       state._user.value = null;
