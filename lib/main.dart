@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sodium/sodium.dart';
 
 import 'app_view.dart';
-import 'core/hive/hive_registrar.g.dart';
+import 'core/db/hive/hive_registrar.g.dart';
 
 late final Sodium sodiumInstance;
 

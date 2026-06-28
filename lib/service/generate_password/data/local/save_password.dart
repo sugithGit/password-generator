@@ -1,6 +1,6 @@
 import 'package:hive_ce/hive.dart';
 
-import '../../../../core/hive/hive_box_name.dart';
+import '../../../../core/db/hive/hive_box_name.dart';
 import '../model/password_model.dart';
 
 class PasswordHistoryLocal {
