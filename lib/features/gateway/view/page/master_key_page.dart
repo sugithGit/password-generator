@@ -16,10 +16,7 @@ import '../../controller/gateway/gateway_controller.dart';
 /// If the master key is lost, data is irrecoverable — this is by design.
 @RoutePage()
 class MasterKeyPage extends HookWidget {
-  const MasterKeyPage({required this.onAuthenticated, super.key});
-
-  /// Called with the validated master key when authentication succeeds.
-  final void Function(BuildContext context, String masterKey) onAuthenticated;
+  const MasterKeyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +39,28 @@ class MasterKeyPage extends HookWidget {
       }
     }, <Object?>[context]);
 
+    final void Function(String) handleSuccess = useCallback((String masterKey) {
+      if (context.mounted) {
+        controller.onMasterKeyValidated(
+          masterKey,
+          onReady: (repository) {
+            if (context.mounted) {
+              context.router.replace(VaultRoute(repository: repository));
+            }
+          },
+          onError: handleAuthError,
+        );
+      }
+    }, <Object?>[context, controller, handleAuthError]);
+
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        controller.checkIfNewUser(onAuthError: handleAuthError);
+        controller.initMasterKey(
+          onRequiresMasterKeyCreation: () {},
+          onRequiresMasterKeyInput: () {},
+          onSuccess: handleSuccess,
+          onAuthError: handleAuthError,
+        );
       });
       return null;
     }, const <Object?>[]);
@@ -58,11 +74,7 @@ class MasterKeyPage extends HookWidget {
 
         controller.submitMasterKey(
           masterKey: masterKeyController.text.trim(),
-          onSuccess: (String masterKey) {
-            if (context.mounted) {
-              onAuthenticated(context, masterKey);
-            }
-          },
+          onSuccess: handleSuccess,
           onAuthError: handleAuthError,
         );
       },
@@ -71,8 +83,7 @@ class MasterKeyPage extends HookWidget {
         masterKeyController,
         formKey,
         handleAuthError,
-        context,
-        onAuthenticated,
+        handleSuccess,
       ],
     );
 

@@ -10,7 +10,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i10;
-import 'package:flutter/material.dart' as _i12;
+import 'package:flutter/material.dart' as _i13;
 import 'package:password_generator/features/auth/view/page/login_page.dart'
     as _i4;
 import 'package:password_generator/features/gateway/view/page/biometric_gate_page.dart'
@@ -30,11 +30,10 @@ import 'package:password_generator/features/vault/view/page/vault_page.dart'
 import 'package:password_generator/features/vault/view/page/view_password_page.dart'
     as _i9;
 import 'package:password_generator/service/password_manager/data/repositories/vault_repo_impl.dart'
-    as _i13;
+    as _i14;
+import 'package:password_generator/service/password_manager/domain/entities/vault_category.dart'
+    as _i12;
 import 'package:password_generator/service/password_manager/domain/entities/vault_entry.dart'
-    as _i11;
-
-import '../../service/password_manager/domain/entities/vault_category.dart'
     as _i11;
 
 /// generated route for
@@ -42,8 +41,8 @@ import '../../service/password_manager/domain/entities/vault_category.dart'
 class AddEntryRoute extends _i10.PageRouteInfo<AddEntryRouteArgs> {
   AddEntryRoute({
     _i11.VaultEntry? existingEntry,
-    _i11.VaultCategory? initialCategory,
-    _i12.Key? key,
+    _i12.VaultCategory? initialCategory,
+    _i13.Key? key,
     List<_i10.PageRouteInfo>? children,
   }) : super(
          AddEntryRoute.name,
@@ -79,9 +78,9 @@ class AddEntryRouteArgs {
 
   final _i11.VaultEntry? existingEntry;
 
-  final _i11.VaultCategory? initialCategory;
+  final _i12.VaultCategory? initialCategory;
 
-  final _i12.Key? key;
+  final _i13.Key? key;
 
   @override
   String toString() {
@@ -152,52 +151,18 @@ class LoginRoute extends _i10.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i5.MasterKeyPage]
-class MasterKeyRoute extends _i10.PageRouteInfo<MasterKeyRouteArgs> {
-  MasterKeyRoute({
-    required void Function(_i12.BuildContext, String) onAuthenticated,
-    _i12.Key? key,
-    List<_i10.PageRouteInfo>? children,
-  }) : super(
-         MasterKeyRoute.name,
-         args: MasterKeyRouteArgs(onAuthenticated: onAuthenticated, key: key),
-         initialChildren: children,
-       );
+class MasterKeyRoute extends _i10.PageRouteInfo<void> {
+  const MasterKeyRoute({List<_i10.PageRouteInfo>? children})
+    : super(MasterKeyRoute.name, initialChildren: children);
 
   static const String name = 'MasterKeyRoute';
 
   static _i10.PageInfo page = _i10.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<MasterKeyRouteArgs>();
-      return _i5.MasterKeyPage(
-        onAuthenticated: args.onAuthenticated,
-        key: args.key,
-      );
+      return const _i5.MasterKeyPage();
     },
   );
-}
-
-class MasterKeyRouteArgs {
-  const MasterKeyRouteArgs({required this.onAuthenticated, this.key});
-
-  final void Function(_i12.BuildContext, String) onAuthenticated;
-
-  final _i12.Key? key;
-
-  @override
-  String toString() {
-    return 'MasterKeyRouteArgs{onAuthenticated: $onAuthenticated, key: $key}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! MasterKeyRouteArgs) return false;
-    return key == other.key;
-  }
-
-  @override
-  int get hashCode => key.hashCode;
 }
 
 /// generated route for
@@ -236,8 +201,8 @@ class SplashRoute extends _i10.PageRouteInfo<void> {
 /// [_i8.VaultPage]
 class VaultRoute extends _i10.PageRouteInfo<VaultRouteArgs> {
   VaultRoute({
-    required _i13.VaultRepoImpl repository,
-    _i12.Key? key,
+    required _i14.VaultRepoImpl repository,
+    _i13.Key? key,
     List<_i10.PageRouteInfo>? children,
   }) : super(
          VaultRoute.name,
@@ -261,9 +226,9 @@ class VaultRoute extends _i10.PageRouteInfo<VaultRouteArgs> {
 class VaultRouteArgs {
   const VaultRouteArgs({required this.repository, this.key});
 
-  final _i13.VaultRepoImpl repository;
+  final _i14.VaultRepoImpl repository;
 
-  final _i12.Key? key;
+  final _i13.Key? key;
 
   @override
   String toString() {
@@ -286,7 +251,7 @@ class VaultRouteArgs {
 class ViewPasswordRoute extends _i10.PageRouteInfo<ViewPasswordRouteArgs> {
   ViewPasswordRoute({
     required _i11.VaultEntry entry,
-    _i12.Key? key,
+    _i13.Key? key,
     List<_i10.PageRouteInfo>? children,
   }) : super(
          ViewPasswordRoute.name,
@@ -310,7 +275,7 @@ class ViewPasswordRouteArgs {
 
   final _i11.VaultEntry entry;
 
-  final _i12.Key? key;
+  final _i13.Key? key;
 
   @override
   String toString() {

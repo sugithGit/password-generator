@@ -100,7 +100,7 @@ class GatewayController extends GetxController<_GatewayState> {
       } on AuthException catch (e) {
         state._isAuthenticating.value = false;
         onAuthError(e.message);
-      } catch (e) {
+      } on Exception catch (_) {
         state._isAuthenticating.value = false;
         onAuthError('An unexpected error occurred.');
       }
@@ -150,7 +150,10 @@ class GatewayController extends GetxController<_GatewayState> {
     onReady(repository);
   }
 
-  Future<void> checkIfNewUser({
+  Future<void> initMasterKey({
+    required void Function() onRequiresMasterKeyCreation,
+    required void Function() onRequiresMasterKeyInput,
+    required void Function(String masterKey) onSuccess,
     required void Function(String error) onAuthError,
   }) async {
     state._isLoading.value = true;
@@ -168,7 +171,38 @@ class GatewayController extends GetxController<_GatewayState> {
         user.uid,
       );
       state._isNewUser.value = keyData == null;
+
+      if (keyData == null) {
+        state._isLoading.value = false;
+        onRequiresMasterKeyCreation();
+        return;
+      }
+
+      // Existing user, check local storage
+      final String? localMasterKey = await masterKeyRepo.getLocalMasterKey(
+        user.uid,
+      );
+      if (localMasterKey != null) {
+        final EncryptionRepo encryptionRepo = Get.find<EncryptionRepo>();
+        final String storedEncryptedMasterKey = keyData['encryptedKey']!;
+        final Uint8List saltBytes = base64Decode(keyData['salt']!);
+
+        final bool isValid = encryptionRepo.verifyEncryptedMasterKey(
+          masterKey: localMasterKey,
+          salt: saltBytes,
+          storedEncryptedMasterKey: storedEncryptedMasterKey,
+        );
+
+        if (isValid) {
+          state._isLoading.value = false;
+          onSuccess(localMasterKey);
+          return;
+        }
+      }
+
+      // No valid local key found, require input
       state._isLoading.value = false;
+      onRequiresMasterKeyInput();
     } on AuthPermissionDeniedException {
       await authRepo.signOut();
       onAuthError('Session expired or user deleted. Please log in again.');

@@ -33,28 +33,7 @@ class BiometricGatePage extends HookWidget {
       if (!context.mounted) {
         return;
       }
-      context.router.replace(
-        MasterKeyRoute(
-          onAuthenticated: (BuildContext ctx, String masterKey) {
-            controller.onMasterKeyValidated(
-              masterKey,
-              onReady: (VaultRepoImpl repository) {
-                if (!ctx.mounted) {
-                  return;
-                }
-                ctx.router.replace(VaultRoute(repository: repository));
-              },
-              onError: (String error) {
-                if (ctx.mounted) {
-                  ScaffoldMessenger.of(
-                    ctx,
-                  ).showSnackBar(SnackBar(content: Text(error)));
-                }
-              },
-            );
-          },
-        ),
-      );
+      context.router.replace(const MasterKeyRoute());
     }, <Object?>[context, controller]);
 
     final VoidCallback authenticate = useCallback(() {
