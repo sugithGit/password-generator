@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 import 'package:rxget/rxget.dart';
 
+import '../../../service/auth/domain/entities/auth_exceptions.dart';
 import '../../../service/auth/domain/entities/auth_user.dart';
 import '../../../service/auth/domain/use_cases/get_current_user_use_case.dart';
 import '../../../service/auth/domain/use_cases/sign_in_use_case.dart';
@@ -45,11 +45,10 @@ class AuthController extends GetxController<_AuthState> {
         SignInParams(email: email, password: password),
       );
       state._user.value = user;
-    } on FirebaseAuthException catch (e) {
-      final String parsedError = _parseAuthError(e.code);
-      state._error.value = parsedError;
+    } on AuthException catch (e) {
+      state._error.value = e.message;
       state._user.value = null;
-      throw Exception(parsedError);
+      throw Exception(e.message);
     } on Exception catch (e) {
       final String errorMsg = e.toString();
       state._error.value = errorMsg;
@@ -68,11 +67,10 @@ class AuthController extends GetxController<_AuthState> {
         SignUpParams(email: email, password: password),
       );
       state._user.value = user;
-    } on FirebaseAuthException catch (e) {
-      final String parsedError = _parseAuthError(e.code);
-      state._error.value = parsedError;
+    } on AuthException catch (e) {
+      state._error.value = e.message;
       state._user.value = null;
-      throw Exception(parsedError);
+      throw Exception(e.message);
     } on Exception catch (e) {
       final String errorMsg = e.toString();
       state._error.value = errorMsg;
@@ -86,24 +84,5 @@ class AuthController extends GetxController<_AuthState> {
   Future<void> _signOut() async {
     await signOutUseCase.call(null);
     state._user.value = null;
-  }
-
-  String _parseAuthError(String code) {
-    switch (code) {
-      case 'user-not-found':
-        return 'No user found with this email.';
-      case 'wrong-password':
-        return 'Incorrect password.';
-      case 'email-already-in-use':
-        return 'An account already exists with this email.';
-      case 'weak-password':
-        return 'Password is too weak.';
-      case 'invalid-email':
-        return 'Invalid email address.';
-      case 'invalid-credential':
-        return 'Invalid email or password.';
-      default:
-        return 'Authentication failed. Please try again.';
-    }
   }
 }

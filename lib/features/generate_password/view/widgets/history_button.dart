@@ -1,10 +1,12 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rxget/rxget.dart';
 
 import '../../../../core/const/constants.dart';
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../core/widgets/squircle.dart';
+import '../../../../service/auth/domain/entities/auth_user.dart';
+import '../../../../service/auth/domain/repositories/auth_repo.dart';
 
 class HistoryButton extends StatelessWidget {
   const HistoryButton({super.key});
@@ -36,7 +38,8 @@ class HistoryButton extends StatelessWidget {
   }
 
   void _handleTap(BuildContext context) {
-    final User? user = FirebaseAuth.instance.currentUser;
+    final AuthRepo authRepo = Get.find<AuthRepo>();
+    final AuthUser? user = authRepo.currentUser;
 
     if (user == null) {
       // Not signed in → show login page

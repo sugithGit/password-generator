@@ -14,9 +14,13 @@ import 'firebase_options.dart';
 import 'main.dart';
 import 'service/auth/data/local/encryption_local.dart';
 import 'service/auth/data/remote/firebase_auth_remote.dart';
+import 'service/auth/data/remote/master_key_remote_datasource.dart';
 import 'service/auth/data/repositories/auth_repo_impl.dart';
 import 'service/auth/data/repositories/encryption_repo_impl.dart';
+import 'service/auth/data/repositories/master_key_repo_impl.dart';
+import 'service/auth/domain/repositories/auth_repo.dart';
 import 'service/auth/domain/repositories/encryption_repo.dart';
+import 'service/auth/domain/repositories/master_key_repo.dart';
 import 'service/auth/domain/use_cases/get_current_user_use_case.dart';
 import 'service/auth/domain/use_cases/sign_in_use_case.dart';
 import 'service/auth/domain/use_cases/sign_out_use_case.dart';
@@ -57,11 +61,17 @@ class _MyAppState extends State<MyApp> {
           }
           return GetInWidget(
             dependencies: <GetIn<dynamic>>[
-              GetIn<AuthController>(() {
+              GetIn<AuthRepo>(() {
                 final FirebaseAuthRemote authRemote = FirebaseAuthRemote();
-                final AuthRepoImpl authRepo = AuthRepoImpl(
-                  firebaseAuthRemote: authRemote,
-                );
+                return AuthRepoImpl(firebaseAuthRemote: authRemote);
+              }),
+              GetIn<MasterKeyRepo>(() {
+                final MasterKeyRemoteDatasource mkRemote =
+                    MasterKeyRemoteDatasource();
+                return MasterKeyRepoImpl(remoteDatasource: mkRemote);
+              }),
+              GetIn<AuthController>(() {
+                final AuthRepo authRepo = Get.find<AuthRepo>();
                 return AuthController(
                   getCurrentUserUseCase: GetCurrentUserUseCase(authRepo),
                   signInUseCase: SignInUseCase(authRepo),

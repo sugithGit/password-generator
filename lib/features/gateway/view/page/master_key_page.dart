@@ -1,13 +1,12 @@
-import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_rxget/hooks_rxget.dart';
 import 'package:rxget/rxget.dart';
 
-import '../../../../service/auth/data/remote/master_key_remote_datasource.dart';
-import '../../../../service/auth/domain/repositories/encryption_repo.dart';
+import '../../../../core/routes/app_router.gr.dart';
+import '../../controller/gateway/gateway_controller.dart';
 
 /// Page prompting the user to enter (or setup) their master key.
 ///
@@ -16,156 +15,69 @@ import '../../../../service/auth/domain/repositories/encryption_repo.dart';
 ///
 /// If the master key is lost, data is irrecoverable — this is by design.
 @RoutePage()
-class MasterKeyPage extends StatefulWidget {
+class MasterKeyPage extends HookWidget {
   const MasterKeyPage({required this.onAuthenticated, super.key});
 
   /// Called with the validated master key when authentication succeeds.
   final void Function(BuildContext context, String masterKey) onAuthenticated;
 
   @override
-  State<MasterKeyPage> createState() => _MasterKeyPageState();
-}
+  Widget build(BuildContext context) {
+    useGetIn<GatewayController>(GetIn(GatewayController.new));
+    final GatewayController controller = Get.find<GatewayController>();
 
-class _MasterKeyPageState extends State<MasterKeyPage> {
-  final TextEditingController _masterKeyController = TextEditingController();
-  final TextEditingController _confirmController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final TextEditingController masterKeyController =
+        useTextEditingController();
+    final TextEditingController confirmController = useTextEditingController();
 
-  bool _isLoading = false;
-  bool _isNewUser = false;
-  bool _obscureMasterKey = true;
-  bool _obscureConfirm = true;
-  String? _errorMessage;
+    // We use a traditional GlobalKey for the form
+    final GlobalKey<FormState> formKey = useMemoized(GlobalKey<FormState>.new);
 
-  @override
-  void initState() {
-    super.initState();
-    _checkIfNewUser();
-  }
-
-  @override
-  void dispose() {
-    _masterKeyController.dispose();
-    _confirmController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _checkIfNewUser() async {
-    setState(() => _isLoading = true);
-    final User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      if (mounted) {
-        await context.router.maybePop();
+    final void Function(String) handleAuthError = useCallback((String error) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error)));
+        context.router.replace(const LoginRoute());
       }
-      return;
-    }
+    }, <Object?>[context]);
 
-    final MasterKeyRemoteDatasource ds = MasterKeyRemoteDatasource();
-    final Map<String, String>? keyData = await ds.getMasterKeyData(
-      uid: user.uid,
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.checkIfNewUser(onAuthError: handleAuthError);
+      });
+      return null;
+    }, const <Object?>[]);
+
+    final VoidCallback submit = useCallback(
+      () async {
+        if (!formKey.currentState!.validate()) {
+          return;
+        }
+        await HapticFeedback.mediumImpact();
+
+        controller.submitMasterKey(
+          masterKey: masterKeyController.text.trim(),
+          onSuccess: (String masterKey) {
+            if (context.mounted) {
+              onAuthenticated(context, masterKey);
+            }
+          },
+          onAuthError: handleAuthError,
+        );
+      },
+      <Object?>[
+        controller,
+        masterKeyController,
+        formKey,
+        handleAuthError,
+        context,
+        onAuthenticated,
+      ],
     );
 
-    if (mounted) {
-      setState(() {
-        _isNewUser = keyData == null;
-        _isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-    await HapticFeedback.mediumImpact();
-
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    final User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      if (mounted) {
-        await context.router.maybePop();
-      }
-      return;
-    }
-
-    final String masterKey = _masterKeyController.text.trim();
-
-    final EncryptionRepo encryptionRepo = Get.find<EncryptionRepo>();
-    final MasterKeyRemoteDatasource ds = MasterKeyRemoteDatasource();
-
-    if (_isNewUser) {
-      // First time: generate salt and store encrypted master key
-      final Uint8List saltBytes = encryptionRepo.generateSalt();
-      final String saltBase64 = base64Encode(saltBytes);
-
-      final String encryptedMasterKey = encryptionRepo.encryptMasterKeyForSync(
-        masterKey: masterKey,
-        salt: saltBytes,
-      );
-
-      await ds.saveMasterKeyData(
-        uid: user.uid,
-        encryptedMasterKey: encryptedMasterKey,
-        salt: saltBase64,
-      );
-
-      // Store in secure storage for biometrics
-      const FlutterSecureStorage storage = FlutterSecureStorage();
-      await storage.write(key: 'master_key_${user.uid}', value: masterKey);
-
-      if (mounted) {
-        widget.onAuthenticated(context, masterKey);
-      }
-    } else {
-      // Returning user: validate master key
-      final Map<String, String>? keyData = await ds.getMasterKeyData(
-        uid: user.uid,
-      );
-
-      if (keyData == null) {
-        setState(() {
-          _errorMessage =
-              'Verification data not found. Please contact support.';
-          _isLoading = false;
-        });
-        return;
-      }
-
-      final String storedEncryptedMasterKey = keyData['encryptedKey']!;
-      final Uint8List saltBytes = base64Decode(keyData['salt']!);
-
-      final bool isValid = encryptionRepo.verifyEncryptedMasterKey(
-        masterKey: masterKey,
-        salt: saltBytes,
-        storedEncryptedMasterKey: storedEncryptedMasterKey,
-      );
-
-      if (isValid) {
-        // Store in secure storage for future biometrics
-        const FlutterSecureStorage storage = FlutterSecureStorage();
-        await storage.write(key: 'master_key_${user.uid}', value: masterKey);
-
-        if (mounted) {
-          widget.onAuthenticated(context, masterKey);
-        }
-      } else {
-        if (mounted) {
-          setState(() {
-            _errorMessage = 'Incorrect master key. Please try again.';
-            _isLoading = false;
-          });
-        }
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -173,22 +85,34 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
-              child: _isLoading && _masterKeyController.text.isEmpty
-                  ? Center(
-                      child: CircularProgressIndicator(
-                        color: theme.colorScheme.primary,
-                        strokeWidth: 2.5,
-                      ),
-                    )
-                  : Column(
-                      children: <Widget>[
-                        _buildHeader(),
-                        const SizedBox(height: 40),
-                        _buildFormCard(),
-                        const SizedBox(height: 24),
-                        _buildBackButton(),
-                      ],
+              child: Obx(() {
+                if (controller.state.isLoading &&
+                    masterKeyController.text.isEmpty) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: theme.colorScheme.primary,
+                      strokeWidth: 2.5,
                     ),
+                  );
+                }
+
+                return Column(
+                  children: <Widget>[
+                    _buildHeader(context, controller.state.isNewUser),
+                    const SizedBox(height: 40),
+                    _buildFormCard(
+                      context,
+                      controller: controller,
+                      masterKeyController: masterKeyController,
+                      confirmController: confirmController,
+                      formKey: formKey,
+                      submit: submit,
+                    ),
+                    const SizedBox(height: 24),
+                    _buildBackButton(context),
+                  ],
+                );
+              }),
             ),
           ),
         ),
@@ -196,7 +120,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context, bool isNewUser) {
     final ThemeData theme = Theme.of(context);
     return Column(
       children: <Widget>[
@@ -219,7 +143,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
         ),
         const SizedBox(height: 24),
         Text(
-          _isNewUser ? 'Create Master Key' : 'Enter Master Key',
+          isNewUser ? 'Create Master Key' : 'Enter Master Key',
           style: theme.textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.w800,
             letterSpacing: 0.5,
@@ -229,7 +153,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            _isNewUser
+            isNewUser
                 ? 'This key encrypts all your data.\nStore it safely — if lost, your data cannot be recovered.'
                 : 'Enter your master key to decrypt your vault.',
             textAlign: TextAlign.center,
@@ -244,16 +168,25 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     );
   }
 
-  Widget _buildFormCard() {
+  Widget _buildFormCard(
+    BuildContext context, {
+    required GatewayController controller,
+    required TextEditingController masterKeyController,
+    required TextEditingController confirmController,
+    required GlobalKey<FormState> formKey,
+    required VoidCallback submit,
+  }) {
+    final bool isNewUser = controller.state.isNewUser;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              if (_isNewUser) ...<Widget>[
+              if (isNewUser) ...<Widget>[
                 // Warning banner for new users
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -291,59 +224,59 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
               ],
               // Master key field
               _buildTextField(
-                controller: _masterKeyController,
+                context,
+                controller: masterKeyController,
                 label: 'Master Key',
                 icon: Icons.key_rounded,
-                obscureText: _obscureMasterKey,
+                obscureText: controller.state.obscureMasterKey,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _obscureMasterKey
+                    controller.state.obscureMasterKey
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                     size: 20,
                   ),
-                  onPressed: () =>
-                      setState(() => _obscureMasterKey = !_obscureMasterKey),
+                  onPressed: controller.toggleObscureMasterKey,
                 ),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
                     return 'Master key is required';
                   }
-                  if (_isNewUser && value.length < 8) {
+                  if (isNewUser && value.length < 8) {
                     return 'Master key must be at least 8 characters';
                   }
                   return null;
                 },
               ),
-              if (_isNewUser) ...<Widget>[
+              if (isNewUser) ...<Widget>[
                 const SizedBox(height: 16),
                 // Confirm field for new users
                 _buildTextField(
-                  controller: _confirmController,
+                  context,
+                  controller: confirmController,
                   label: 'Confirm Master Key',
                   icon: Icons.key_off_rounded,
-                  obscureText: _obscureConfirm,
+                  obscureText: controller.state.obscureConfirm,
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscureConfirm
+                      controller.state.obscureConfirm
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       size: 20,
                     ),
-                    onPressed: () =>
-                        setState(() => _obscureConfirm = !_obscureConfirm),
+                    onPressed: controller.toggleObscureConfirm,
                   ),
                   validator: (String? value) {
-                    if (value != _masterKeyController.text) {
+                    if (value != masterKeyController.text) {
                       return 'Master keys do not match';
                     }
                     return null;
                   },
                 ),
               ],
-              if (_errorMessage != null) ...<Widget>[
+              if (controller.state.errorMessage != null) ...<Widget>[
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.all(10),
@@ -355,7 +288,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
                     ),
                   ),
                   child: Text(
-                    _errorMessage!,
+                    controller.state.errorMessage!,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error.withAlpha(220),
                       fontSize: 13,
@@ -369,8 +302,8 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
               SizedBox(
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: _isLoading ? null : _submit,
-                  child: _isLoading
+                  onPressed: controller.state.isLoading ? null : submit,
+                  child: controller.state.isLoading
                       ? SizedBox(
                           width: 22,
                           height: 22,
@@ -379,7 +312,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         )
-                      : Text(_isNewUser ? 'CREATE VAULT' : 'UNLOCK VAULT'),
+                      : Text(isNewUser ? 'CREATE VAULT' : 'UNLOCK VAULT'),
                 ),
               ),
             ],
@@ -389,7 +322,8 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     );
   }
 
-  Widget _buildTextField({
+  Widget _buildTextField(
+    BuildContext context, {
     required TextEditingController controller,
     required String label,
     required IconData icon,
@@ -411,7 +345,7 @@ class _MasterKeyPageState extends State<MasterKeyPage> {
     );
   }
 
-  Widget _buildBackButton() {
+  Widget _buildBackButton(BuildContext context) {
     return TextButton(
       onPressed: () => context.router.maybePop(),
       child: const Text('Go Back'),

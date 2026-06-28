@@ -80,6 +80,14 @@ class BiometricGatePage extends HookWidget {
         },
         onRequiresMasterKeyCreation: navigateToMasterKey,
         onRequiresMasterKeyInput: navigateToMasterKey,
+        onAuthError: (String error) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(error)));
+            context.router.replace(const LoginRoute());
+          }
+        },
       );
     }, <Object?>[controller, navigateToMasterKey, context]);
 
