@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rxget/rxget.dart';
 import '../../../../core/widgets/app_button/app_button.dart';
+import '../../../../core/widgets/app_text_field.dart';
 import '../../controller/auth_controller.dart';
 
 class AuthFormCard extends StatelessWidget {
@@ -31,7 +32,7 @@ class AuthFormCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           // Email field
-          _AuthTextField(
+          AppTextField(
             controller: emailController,
             label: 'Email',
             icon: Icons.email_outlined,
@@ -48,7 +49,7 @@ class AuthFormCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           // Password field
-          _AuthTextField(
+          AppTextField(
             controller: passwordController,
             label: 'Password',
             icon: Icons.lock_outline_rounded,
@@ -83,43 +84,6 @@ class AuthFormCard extends StatelessWidget {
             );
           }),
         ],
-      ),
-    );
-  }
-}
-
-class _AuthTextField extends StatelessWidget {
-  const _AuthTextField({
-    required this.controller,
-    required this.label,
-    required this.icon,
-    this.keyboardType = TextInputType.text,
-    this.obscureText = false,
-    this.suffixIcon,
-    this.validator,
-  });
-
-  final TextEditingController controller;
-  final String label;
-  final IconData icon;
-  final TextInputType keyboardType;
-  final bool obscureText;
-  final Widget? suffixIcon;
-  final String? Function(String?)? validator;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      validator: validator,
-      style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, size: 20),
-        suffixIcon: suffixIcon,
       ),
     );
   }

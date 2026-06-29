@@ -8,6 +8,7 @@ import 'package:toastification/toastification.dart';
 
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_background.dart';
 import '../../../../core/widgets/empty_widget.dart';
 import '../../controller/auth_controller.dart';
 import '../widgets/auth_form_card.dart';
@@ -63,19 +64,7 @@ class LoginPage extends HookWidget {
         backgroundColor: AppColors.background,
         extendBody: true,
         resizeToAvoidBottomInset: false,
-        body: DecoratedBox(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: <Color>[
-                Color(0xFF3ECF8E), // Vibrant Supabase Green at the top
-                Color(0xFF1B6A42), // Transition to dark green
-                AppColors.background, // Fades perfectly into black
-              ],
-              stops: <double>[0, 0.14, 0.28],
-            ),
-          ),
+        body: AppBackground(
           child: SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),

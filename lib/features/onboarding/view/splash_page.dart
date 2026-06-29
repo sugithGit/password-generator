@@ -28,18 +28,18 @@ class _SplashPageState extends State<SplashPage> {
     final AuthRepo authRepo = Get.find<AuthRepo>();
     final AuthUser? user = authRepo.currentUser;
 
-    if (user != null) {
-      await context.router.replaceAll([const MasterKeyRoute()]);
+    if (user == null) {
+      await context.router.replaceAll([const LoginRoute()]);
       return;
     }
 
     final MasterKeyRepo masterKeyRepo = Get.find<MasterKeyRepo>();
     final String? localMasterKey = await masterKeyRepo.getLocalMasterKey(
-      user!.uid,
+      user.uid,
     );
 
     if (localMasterKey == null) {
-      context.router.replaceAll([const MasterKeyRoute()]);
+      await context.router.replaceAll([const MasterKeyRoute()]);
       return;
     }
 
@@ -48,9 +48,9 @@ class _SplashPageState extends State<SplashPage> {
 
     if (mounted) {
       if (useUnlock) {
-        context.router.replaceAll([const BiometricGateRoute()]);
+        await context.router.replaceAll([const BiometricGateRoute()]);
       } else {
-        context.router.replaceAll([const MasterKeyRoute()]);
+        await context.router.replaceAll([const MasterKeyRoute()]);
       }
     }
   }

@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'package:rxget/rxget.dart';
 import '../../../../core/db/hive/user_prefs_local.dart';
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_background.dart';
 import '../../controller/gateway/gateway_controller.dart';
 import '../widgets/master_key_back_button.dart';
 import '../widgets/master_key_form_card.dart';
@@ -139,54 +141,53 @@ class MasterKeyPage extends HookWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: <Color>[
-              Color(0xFF3ECF8E), // Vibrant Supabase Green at the top
-              Color(0xFF1B6A42), // Transition to dark green
-              AppColors.background, // Fades perfectly into black
-            ],
-            stops: <double>[0, 0.20, 0.35],
-          ),
-        ),
+      body: AppBackground(
         child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: Obx(() {
-                  if (controller.state.isLoading &&
-                      masterKeyController.text.isEmpty) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: theme.colorScheme.primary,
-                        strokeWidth: 2.5,
-                      ),
-                    );
-                  }
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Obx(() {
+              if (controller.state.isLoading &&
+                  masterKeyController.text.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 100),
+                    child: CircularProgressIndicator(
+                      color: theme.colorScheme.primary,
+                      strokeWidth: 2.5,
+                    ),
+                  ),
+                );
+              }
 
-                  return Column(
-                    children: <Widget>[
-                      MasterKeyHeader(isNewUser: controller.state.isNewUser),
-                      const SizedBox(height: 32),
-                      MasterKeyFormCard(
-                        controller: controller,
-                        masterKeyController: masterKeyController,
-                        confirmController: confirmController,
-                        formKey: formKey,
-                        submit: submit,
-                      ),
-                      const SizedBox(height: 24),
-                      const MasterKeyBackButton(),
-                    ],
-                  );
-                }),
-              ),
-            ),
+              return Column(
+                children: <Widget>[
+                  const SafeArea(child: SizedBox.shrink()),
+                  const SizedBox(height: 80),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: FadeInDown(
+                      duration: const Duration(milliseconds: 600),
+                      child: MasterKeyHeader(isNewUser: controller.state.isNewUser),
+                    ),
+                  ),
+                  const SizedBox(height: 42),
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 700),
+                    child: MasterKeyFormCard(
+                      controller: controller,
+                      masterKeyController: masterKeyController,
+                      confirmController: confirmController,
+                      formKey: formKey,
+                      submit: submit,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  FadeInUp(
+                    child: const MasterKeyBackButton(),
+                  ),
+                ],
+              );
+            }),
           ),
         ),
       ),
