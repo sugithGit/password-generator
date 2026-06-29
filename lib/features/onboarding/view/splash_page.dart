@@ -25,16 +25,11 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _startTimer() async {
-    await Future<void>.delayed(const Duration(seconds: 1));
-    if (!mounted) {
-      return;
-    }
-
     final AuthRepo authRepo = Get.find<AuthRepo>();
     final AuthUser? user = authRepo.currentUser;
 
     if (user != null) {
-      context.router.replaceAll([const LoginRoute()]);
+      await context.router.replaceAll([const MasterKeyRoute()]);
       return;
     }
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -21,6 +22,8 @@ void main() async {
 
   // Initialize Sodium
   sodiumInstance = await SodiumSumoInit.init();
+
+  await Firebase.initializeApp();
 
   runApp(const MyApp());
 }
