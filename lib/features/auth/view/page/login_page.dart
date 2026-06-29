@@ -13,6 +13,7 @@ import '../../controller/auth_controller.dart';
 import '../widgets/auth_form_card.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/auth_toggle.dart';
+import '../widgets/privacy_policy_check_box.dart';
 
 @RoutePage()
 class LoginPage extends HookWidget {
@@ -60,6 +61,7 @@ class LoginPage extends HookWidget {
       },
       child: Scaffold(
         backgroundColor: AppColors.background,
+        extendBody: true,
         resizeToAvoidBottomInset: false,
         body: DecoratedBox(
           decoration: const BoxDecoration(
@@ -119,6 +121,12 @@ class LoginPage extends HookWidget {
                 );
               }),
             ),
+          ),
+        ),
+        bottomNavigationBar: const SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 20),
+            child: PrivacyPolicyCheckBox(),
           ),
         ),
       ),
