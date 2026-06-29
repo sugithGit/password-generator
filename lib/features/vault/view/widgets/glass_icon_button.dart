@@ -1,13 +1,10 @@
-import '../../../../core/extension/color_ext.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/extension/color_ext.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class GlassIconButton extends StatelessWidget {
-  const GlassIconButton({
-    required this.icon,
-    required this.onTap,
-    super.key,
-  });
+  const GlassIconButton({required this.icon, required this.onTap, super.key});
 
   final IconData icon;
   final VoidCallback onTap;

@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/widgets/squircle.dart';
 
 class EmojiPill extends StatelessWidget {
-  const EmojiPill({
-    required this.emoji,
-    required this.bgColor,
-    super.key,
-  });
+  const EmojiPill({required this.emoji, required this.bgColor, super.key});
 
   final String emoji;
   final Color bgColor;

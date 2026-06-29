@@ -1,5 +1,6 @@
-import '../../../../core/extension/color_ext.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/extension/color_ext.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'emoji_pill.dart';
 

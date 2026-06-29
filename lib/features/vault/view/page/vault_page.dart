@@ -2,7 +2,6 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:rxget/rxget.dart';
 
 import '../../../../core/extension/color_ext.dart';
@@ -15,7 +14,6 @@ import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../controller/vault/vault_controller.dart';
 import '../widgets/empty_vault_widget.dart';
 import '../widgets/glass_icon_button.dart';
-import '../widgets/hero_text.dart';
 import '../widgets/vault_entry_card.dart';
 import '../widgets/vault_search_bar.dart';
 

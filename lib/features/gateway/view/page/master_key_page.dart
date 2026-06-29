@@ -7,8 +7,8 @@ import 'package:rxget/rxget.dart';
 
 import '../../../../core/db/hive/user_prefs_local.dart';
 import '../../../../core/routes/app_router.gr.dart';
-import '../../controller/gateway/gateway_controller.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../controller/gateway/gateway_controller.dart';
 import '../widgets/master_key_back_button.dart';
 import '../widgets/master_key_form_card.dart';
 import '../widgets/master_key_header.dart';

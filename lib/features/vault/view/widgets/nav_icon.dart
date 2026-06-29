@@ -1,5 +1,6 @@
-import '../../../../core/extension/color_ext.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/extension/color_ext.dart';
 
 class NavIcon extends StatelessWidget {
   const NavIcon({

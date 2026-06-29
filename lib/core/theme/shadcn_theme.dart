@@ -68,7 +68,7 @@ class ShadcnTheme {
       cardTheme: CardThemeData(
         color: colorScheme.surfaceContainerHighest,
         elevation: 0,
-        shape: Squircle(
+        shape: const Squircle(
           radius: 24,
         ).shape(side: BorderSide(color: colorScheme.outline)),
       ),

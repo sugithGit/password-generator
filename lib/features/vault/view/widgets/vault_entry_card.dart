@@ -92,10 +92,12 @@ class _VaultEntryCardState extends State<VaultEntryCard>
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: ShapeDecoration(
-              color: Colors.white.withOpacity(0.05), // Dark translucent glass card
-              shape: const Squircle(radius: 28).shape(
-                side: BorderSide(color: Colors.white.withOpacity(0.02)),
-              ),
+              color: Colors.white.withOpacity(
+                0.05,
+              ), // Dark translucent glass card
+              shape: const Squircle(
+                radius: 28,
+              ).shape(side: BorderSide(color: Colors.white.withOpacity(0.02))),
             ),
             child: Row(
               children: <Widget>[
@@ -132,11 +134,14 @@ class _VaultEntryCardState extends State<VaultEntryCard>
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        (widget.entry.entry.username != null && widget.entry.entry.username!.isNotEmpty)
-                            ? widget.entry.entry.username! 
+                        (widget.entry.entry.username != null &&
+                                widget.entry.entry.username!.isNotEmpty)
+                            ? widget.entry.entry.username!
                             : 'Tap to view details',
                         style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                          color: theme.colorScheme.onSurfaceVariant.withOpacity(
+                            0.7,
+                          ),
                           fontSize: 13,
                         ),
                         maxLines: 1,
@@ -146,7 +151,8 @@ class _VaultEntryCardState extends State<VaultEntryCard>
                   ),
                 ),
                 Icon(
-                  Icons.link_rounded, // Similar to the infinity/link icon in image
+                  Icons
+                      .link_rounded, // Similar to the infinity/link icon in image
                   color: theme.colorScheme.onSurfaceVariant.withAlpha(150),
                   size: 20,
                 ),
