@@ -106,10 +106,9 @@ class BiometricGatePage extends HookWidget {
                             child: child,
                           );
                         },
-                        child: Container(
+                        child: SizedBox(
                           width: 120,
                           height: 120,
-
                           child: Icon(
                             controller.state.authFailed
                                 ? Icons.lock_outline_rounded
