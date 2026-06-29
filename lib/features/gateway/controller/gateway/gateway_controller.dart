@@ -79,11 +79,12 @@ class GatewayController extends GetxController<_GatewayState> {
         'Authenticate to access your Password Vault',
       );
 
-      state._status.value = StatusEnum.base;
       state._authFailed.value = !success;
 
       if (success) {
         onBiometricsSuccessWithKey(masterKey);
+      } else {
+        state._status.value = StatusEnum.base;
       }
     } else {
       try {
@@ -116,6 +117,7 @@ class GatewayController extends GetxController<_GatewayState> {
     required void Function(VaultRepoImpl) onReady,
     required void Function(String error) onError,
   }) async {
+    state._status.value = StatusEnum.loading;
     final AuthRepo authRepo = Get.find<AuthRepo>();
     final MasterKeyRepo masterKeyRepo = Get.find<MasterKeyRepo>();
 
@@ -129,6 +131,7 @@ class GatewayController extends GetxController<_GatewayState> {
     );
 
     if (keyData == null) {
+      state._status.value = StatusEnum.base;
       onError('Verification data not found.');
       return;
     }

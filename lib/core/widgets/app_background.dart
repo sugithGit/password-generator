@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 
 class AppBackground extends StatelessWidget {
-  const AppBackground({
-    required this.child,
-    super.key,
-  });
+  const AppBackground({required this.child, super.key});
 
   final Widget child;
 

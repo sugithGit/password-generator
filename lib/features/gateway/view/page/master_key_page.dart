@@ -167,7 +167,9 @@ class MasterKeyPage extends HookWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: FadeInDown(
                       duration: const Duration(milliseconds: 600),
-                      child: MasterKeyHeader(isNewUser: controller.state.isNewUser),
+                      child: MasterKeyHeader(
+                        isNewUser: controller.state.isNewUser,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 42),
@@ -182,9 +184,7 @@ class MasterKeyPage extends HookWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  FadeInUp(
-                    child: const MasterKeyBackButton(),
-                  ),
+                  const FadeInUp(child: MasterKeyBackButton()),
                 ],
               );
             }),

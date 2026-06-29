@@ -9,7 +9,7 @@ import '../../../../core/routes/app_router.gr.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_background.dart';
 import '../../../../core/widgets/app_button/app_button.dart';
-import '../../../../core/widgets/squircle.dart';
+import '../../../../core/widgets/loading_icon.dart';
 import '../../../../service/password_manager/data/repositories/vault_repo_impl.dart';
 import '../../controller/gateway/gateway_controller.dart';
 
@@ -163,10 +163,7 @@ class BiometricGatePage extends HookWidget {
                         child: SizedBox(
                           width: 36,
                           height: 36,
-                          child: CircularProgressIndicator(
-                            color: Color(0xFF3ECF8E),
-                            strokeWidth: 2.5,
-                          ),
+                          child: LoadingIcon(colors: [Color(0xFF3ECF8E)]),
                         ),
                       )
                     else if (controller.state.authFailed)

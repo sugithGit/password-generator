@@ -8,6 +8,7 @@ import 'package:sodium/sodium_sumo.dart';
 
 import 'app_view.dart';
 import 'core/db/hive/hive_registrar.g.dart';
+import 'firebase_options.dart';
 
 late final SodiumSumo sodiumInstance;
 
@@ -23,7 +24,7 @@ void main() async {
   // Initialize Sodium
   sodiumInstance = await SodiumSumoInit.init();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: firebaseOptions);
 
   runApp(const MyApp());
 }
