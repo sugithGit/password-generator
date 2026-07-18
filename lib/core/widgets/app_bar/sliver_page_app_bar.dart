@@ -20,6 +20,7 @@ class SliverPageAppBar extends StatelessWidget {
     return SliverAppBar(
       floating: floating,
       leading: const BackBtn(),
+      leadingWidth: 80,
       centerTitle: centerTitle,
       title: title != null
           ? Text(

@@ -205,26 +205,32 @@ class _VaultPageState extends State<VaultPage> {
       ),
       // Floating Bottom Add Button (matches the image aesthetic)
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: const AddNewPasswordBtn(),
+      floatingActionButton: AddNewPasswordBtn(onTap: _navigateToAddEntry),
     );
   }
 }
 
 class AddNewPasswordBtn extends StatelessWidget {
-  const AddNewPasswordBtn({super.key});
+  const AddNewPasswordBtn({required this.onTap, super.key});
+
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return FadeInUp(
       duration: const Duration(milliseconds: 600),
       delay: const Duration(milliseconds: 400),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        decoration: ShapeDecoration(
-          color: Colors.white.op(0.12),
-          shape: const Squircle().shape(),
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+          decoration: ShapeDecoration(
+            color: Colors.white.op(0.12),
+            shape: const Squircle().shape(),
+          ),
+          child: Text("🔑 NEW", style: context.titleLarge),
         ),
-        child: Text("🔑 NEW", style: context.titleLarge),
       ),
     );
   }

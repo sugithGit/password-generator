@@ -10,11 +10,9 @@ class BackBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: InkWell(
+      child: GestureDetector(
         onTap: () => context.router.maybePop(),
-        customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: ShapeDecoration(

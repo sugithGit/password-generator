@@ -19,6 +19,7 @@ class PageAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       leading: const BackBtn(),
+      leadingWidth: 80,
       backgroundColor: bg,
       title: title != null
           ? Text(
