@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:awesome_extensions/awesome_extensions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:rxget/rxget.dart';
 
 import '../../../../core/extension/color_ext.dart';
@@ -71,14 +73,20 @@ class _VaultPageState extends State<VaultPage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
-                    vertical: 12,
+                    vertical: 20,
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: .center,
                     children: <Widget>[
-                      GlassIconButton(icon: Icons.menu_rounded, onTap: () {}),
+                      Expanded(
+                        child: VaultSearchBar(
+                          controller: _searchController,
+                          onChanged: controller.searchEntries,
+                        ),
+                      ),
+                      const Gap(10),
                       GlassIconButton(
-                        icon: Icons.more_vert_rounded,
+                        icon: CupertinoIcons.settings,
                         onTap: () {},
                       ),
                     ],
@@ -87,19 +95,6 @@ class _VaultPageState extends State<VaultPage> {
               ),
 
               // ── Search Bar ──────────────────────────────────
-              SliverToBoxAdapter(
-                child: FadeInDown(
-                  duration: const Duration(milliseconds: 600),
-                  delay: const Duration(milliseconds: 100),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: VaultSearchBar(
-                      controller: _searchController,
-                      onChanged: controller.searchEntries,
-                    ),
-                  ),
-                ),
-              ),
 
               // ── Categories ──────────────────────────────────
               SliverToBoxAdapter(
@@ -107,7 +102,7 @@ class _VaultPageState extends State<VaultPage> {
                   duration: const Duration(milliseconds: 600),
                   delay: const Duration(milliseconds: 200),
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 24, bottom: 8),
+                    padding: const EdgeInsets.only(bottom: 8),
                     child: SizedBox(
                       height: 38,
                       child: Obx(() {
@@ -117,7 +112,7 @@ class _VaultPageState extends State<VaultPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           scrollDirection: Axis.horizontal,
                           itemCount: VaultCategory.values.length + 1,
-                          separatorBuilder: (_, __) => const SizedBox(width: 8),
+                          separatorBuilder: (_, _) => const SizedBox(width: 8),
                           itemBuilder: (BuildContext context, int index) {
                             final VaultCategory? category = index == 0
                                 ? null
@@ -131,38 +126,6 @@ class _VaultPageState extends State<VaultPage> {
                           },
                         );
                       }),
-                    ),
-                  ),
-                ),
-              ),
-
-              // ── List Header ──────────────────────────────────
-              const SliverToBoxAdapter(
-                child: FadeInDown(
-                  duration: Duration(milliseconds: 600),
-                  delay: Duration(milliseconds: 300),
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(24, 24, 24, 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'Today',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                        Text(
-                          'See All',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                 ),
@@ -242,17 +205,26 @@ class _VaultPageState extends State<VaultPage> {
       ),
       // Floating Bottom Add Button (matches the image aesthetic)
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FadeInUp(
-        duration: const Duration(milliseconds: 600),
-        delay: const Duration(milliseconds: 400),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-          decoration: ShapeDecoration(
-            color: Colors.white.op(0.12),
-            shape: const Squircle().shape(),
-          ),
-          child: Text("🔑 NEW", style: context.titleLarge),
+      floatingActionButton: const AddNewPasswordBtn(),
+    );
+  }
+}
+
+class AddNewPasswordBtn extends StatelessWidget {
+  const AddNewPasswordBtn({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeInUp(
+      duration: const Duration(milliseconds: 600),
+      delay: const Duration(milliseconds: 400),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        decoration: ShapeDecoration(
+          color: Colors.white.op(0.12),
+          shape: const Squircle().shape(),
         ),
+        child: Text("🔑 NEW", style: context.titleLarge),
       ),
     );
   }

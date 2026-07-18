@@ -8,6 +8,7 @@ import '../../../service/auth/domain/use_cases/sign_in_use_case.dart';
 import '../../../service/auth/domain/use_cases/sign_in_with_google_use_case.dart';
 import '../../../service/auth/domain/use_cases/sign_out_use_case.dart';
 import '../../../service/auth/domain/use_cases/sign_up_use_case.dart';
+import '../enum/auth_type_enum.dart';
 
 part 'auth_state.dart';
 
@@ -49,6 +50,7 @@ class AuthController extends GetxController<_AuthState> {
 
   Future<void> _signIn(String email, String password) async {
     state._status.value = .loading;
+    state._authType.value = AuthType.email;
     state._error.value = null;
     try {
       final AuthUser user = await signInUseCase.call(
@@ -57,64 +59,81 @@ class AuthController extends GetxController<_AuthState> {
       state._user.value = user;
       state._status.value = .success;
     } on AuthException catch (e) {
+      state._authType.value = null;
       state._error.value = e.message;
       state._user.value = null;
       throw Exception(e.message);
     } on Exception catch (e) {
+      state._authType.value = null;
       final String errorMsg = e.toString();
       state._error.value = errorMsg;
       state._user.value = null;
       throw Exception(errorMsg);
     } finally {
-      state._status.value = .base;
+      if (state._status.value == .loading) {
+        state._status.value = .base;
+      }
     }
   }
 
   Future<void> _signUp(String email, String password) async {
     state._status.value = .loading;
+    state._authType.value = AuthType.email;
     state._error.value = null;
     try {
       final AuthUser user = await signUpUseCase.call(
         SignUpParams(email: email, password: password),
       );
       state._user.value = user;
+      state._status.value = .success;
     } on AuthException catch (e) {
+      state._authType.value = null;
       state._error.value = e.message;
       state._user.value = null;
       throw Exception(e.message);
     } on Exception catch (e) {
+      state._authType.value = null;
       final String errorMsg = e.toString();
       state._error.value = errorMsg;
       state._user.value = null;
       throw Exception(errorMsg);
     } finally {
-      state._status.value = .base;
+      if (state._status.value == .loading) {
+        state._status.value = .base;
+      }
     }
   }
 
   Future<void> signInWithGoogle() async {
     state._status.value = .loading;
+    state._authType.value = AuthType.google;
     state._error.value = null;
     try {
       final AuthUser user = await signInWithGoogleUseCase.call(null);
       state._user.value = user;
       state._status.value = .success;
     } on AuthException catch (e) {
+      state._authType.value = null;
       state._error.value = e.message;
       state._user.value = null;
       throw Exception(e.message);
     } on Exception catch (e) {
+      state._authType.value = null;
       final String errorMsg = e.toString();
       state._error.value = errorMsg;
       state._user.value = null;
       throw Exception(errorMsg);
     } finally {
-      state._status.value = .base;
+      if (state._status.value == .loading) {
+        state._status.value = .base;
+      }
     }
   }
 
   Future<void> _signOut() async {
     await signOutUseCase.call(null);
     state._user.value = null;
+    state._status.value = StatusEnum.base;
+    state._authType.value = null;
   }
 }

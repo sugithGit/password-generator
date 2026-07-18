@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../extension/color_ext.dart';
 import '../widgets/squircle.dart';
 import 'app_colors.dart';
 
@@ -92,7 +93,7 @@ class ShadcnTheme {
           fontSize: 14,
         ),
         hintStyle: TextStyle(
-          color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+          color: colorScheme.onSurfaceVariant.op(0.5),
           fontSize: 14,
         ),
         prefixIconColor: colorScheme.onSurfaceVariant,
@@ -124,7 +125,7 @@ class ShadcnTheme {
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
           elevation: 4, // Slight elevation for glow effect shadow
-          shadowColor: colorScheme.primary.withOpacity(0.5),
+          shadowColor: colorScheme.primary.op(0.5),
           minimumSize: const Size.fromHeight(56),
           shape: const Squircle(radius: 100).outlinedShape(),
           textStyle: const TextStyle(

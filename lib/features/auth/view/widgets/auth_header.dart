@@ -13,7 +13,6 @@ class AuthHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final String row1Text = isSignUp ? 'Create' : 'Welcome';
     final String row1Emoji = isSignUp ? '✨' : '👋';
-    final String row2Emoji = isSignUp ? '👤' : '✨';
     final String row2Text = isSignUp ? 'New' : 'Back';
     final String row3Text = isSignUp ? 'Account' : 'To Vault';
     const String row3Emoji = '🔒';

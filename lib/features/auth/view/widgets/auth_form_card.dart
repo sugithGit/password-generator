@@ -77,9 +77,9 @@ class AuthFormCard extends StatelessWidget {
           // Submit button
           Obx(() {
             final AuthController controller = Get.find<AuthController>();
-            final bool isLoading = controller.state.isLoading;
             return AppButton(
-              onPressed: isLoading ? null : onSubmit,
+              onPressed: controller.state.isLoading ? null : onSubmit,
+              isLoading: controller.state.isEmailLoading,
               title: isSignUp ? 'SIGN UP' : 'SIGN IN',
             );
           }),

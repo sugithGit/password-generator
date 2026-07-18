@@ -15,22 +15,23 @@ void main() {
     useCase = SignInWithGoogleUseCase(mockAuthRepo);
   });
 
-  const testUser = AuthUser(
-    uid: '123',
-    email: 'test@example.com',
+  const testUser = AuthUser(uid: '123', email: 'test@example.com');
+
+  test(
+    'should call signInWithGoogle on AuthRepo and return AuthUser',
+    () async {
+      // Arrange
+      when(
+        () => mockAuthRepo.signInWithGoogle(),
+      ).thenAnswer((_) async => testUser);
+
+      // Act
+      final result = await useCase.call(null);
+
+      // Assert
+      expect(result, testUser);
+      verify(() => mockAuthRepo.signInWithGoogle()).called(1);
+      verifyNoMoreInteractions(mockAuthRepo);
+    },
   );
-
-  test('should call signInWithGoogle on AuthRepo and return AuthUser', () async {
-    // Arrange
-    when(() => mockAuthRepo.signInWithGoogle())
-        .thenAnswer((_) async => testUser);
-
-    // Act
-    final result = await useCase.call(null);
-
-    // Assert
-    expect(result, testUser);
-    verify(() => mockAuthRepo.signInWithGoogle()).called(1);
-    verifyNoMoreInteractions(mockAuthRepo);
-  });
 }

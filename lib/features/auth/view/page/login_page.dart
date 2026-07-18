@@ -10,7 +10,6 @@ import 'package:toastification/toastification.dart';
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_background.dart';
-import '../../../../core/widgets/app_button/app_button.dart';
 import '../../../../core/widgets/empty_widget.dart';
 import '../../controller/auth_controller.dart';
 import '../widgets/auth_form_card.dart';
@@ -150,19 +149,59 @@ class LoginPage extends HookWidget {
                     ),
                     const SizedBox(height: 20),
                     FadeInUp(
-                      duration: const Duration(milliseconds: 800),
-                      child: AppButton(
-                        onPressed: controller.state.isLoading
-                            ? null
-                            : loginWithGoogle,
-                        isLoading: controller.state.isLoading,
-                        title: 'Sign in with Google',
-                        bgColor: AppColors.card,
-                        textColor: AppColors.foreground,
-                        icon: SvgPicture.string(
-                          _googleIconSvg,
-                          width: 20,
-                          height: 20,
+                      child: Container(
+                        height: 52,
+                        decoration: const BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: ElevatedButton(
+                          onPressed: controller.state.isLoading
+                              ? null
+                              : loginWithGoogle,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black87,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                          child: controller.state.isGoogleLoading
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      AppColors.primary,
+                                    ),
+                                  ),
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.string(
+                                      _googleIconSvg,
+                                      width: 20,
+                                      height: 20,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    const Text(
+                                      'Sign in with Google',
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                         ),
                       ),
                     ),

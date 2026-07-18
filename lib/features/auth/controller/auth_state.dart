@@ -8,6 +8,12 @@ class _AuthState extends GetxState {
   final RxnString _error = RxnString();
   final RxBool _isSignUp = false.obs;
 
+  final Rxn<AuthType> _authType = Rxn<AuthType>();
+  AuthType? get authType => _authType.value;
+
+  bool get isGoogleLoading => isLoading && authType == AuthType.google;
+  bool get isEmailLoading => isLoading && authType == AuthType.email;
+
   bool get isLoading => _status.value == .loading;
   AuthUser? get user => _user.value;
   String? get error => _error.value;
@@ -19,5 +25,6 @@ class _AuthState extends GetxState {
     _user.close();
     _error.close();
     _isSignUp.close();
+    _authType.close();
   }
 }

@@ -14,8 +14,8 @@ class GlassIconButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 48,
-        height: 48,
+        width: 58,
+        height: 58,
         decoration: ShapeDecoration(
           color: Colors.white.op(0.15),
           shape: const CircleBorder(),

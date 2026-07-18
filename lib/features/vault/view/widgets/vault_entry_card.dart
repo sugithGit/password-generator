@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/const/constants.dart';
+import '../../../../core/extension/color_ext.dart';
 import '../../../../core/widgets/squircle.dart';
 import '../../../../service/password_manager/domain/entities/decrypted_vault_entry.dart';
 import '../../../../service/password_manager/domain/entities/vault_category.dart';
@@ -92,12 +93,10 @@ class _VaultEntryCardState extends State<VaultEntryCard>
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: ShapeDecoration(
-              color: Colors.white.withOpacity(
-                0.05,
-              ), // Dark translucent glass card
+              color: Colors.white.op(0.05), // Dark translucent glass card
               shape: const Squircle(
                 radius: 28,
-              ).shape(side: BorderSide(color: Colors.white.withOpacity(0.02))),
+              ).shape(side: BorderSide(color: Colors.white.op(0.02))),
             ),
             child: Row(
               children: <Widget>[
@@ -132,29 +131,8 @@ class _VaultEntryCardState extends State<VaultEntryCard>
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        (widget.entry.entry.username != null &&
-                                widget.entry.entry.username!.isNotEmpty)
-                            ? widget.entry.entry.username!
-                            : 'Tap to view details',
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant.withOpacity(
-                            0.7,
-                          ),
-                          fontSize: 13,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
                     ],
                   ),
-                ),
-                Icon(
-                  Icons
-                      .link_rounded, // Similar to the infinity/link icon in image
-                  color: theme.colorScheme.onSurfaceVariant.withAlpha(150),
-                  size: 20,
                 ),
               ],
             ),

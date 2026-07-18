@@ -52,14 +52,6 @@ class VaultSearchBar extends StatelessWidget {
                       onChanged('');
                     },
                   ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: Icon(
-                    Icons.tune_rounded,
-                    size: 20,
-                    color: AppColors.textSecondary.op(0.8),
-                  ),
-                ),
               ],
             ),
             border: InputBorder.none,

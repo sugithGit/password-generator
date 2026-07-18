@@ -163,7 +163,9 @@ class OnboardingPage extends HookWidget {
                     // Dots indicator
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: List<Widget>.generate(slides.length, (int index) {
+                      children: List<Widget>.generate(slides.length, (
+                        int index,
+                      ) {
                         return AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           margin: const EdgeInsets.symmetric(horizontal: 4),

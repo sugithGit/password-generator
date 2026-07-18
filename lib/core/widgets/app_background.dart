@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../extension/color_ext.dart';
 import '../theme/app_colors.dart';
 
 class AppBackground extends StatelessWidget {
@@ -24,9 +25,7 @@ class AppBackground extends StatelessWidget {
               ).createShader(bounds);
             },
             blendMode: BlendMode.dstIn,
-            child: CustomPaint(
-              painter: _GridPainter(),
-            ),
+            child: CustomPaint(painter: _GridPainter()),
           ),
           child,
         ],
@@ -39,7 +38,7 @@ class _GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint()
-      ..color = Colors.white.withOpacity(0.04)
+      ..color = Colors.white.op(0.04)
       ..strokeWidth = 1.0;
 
     const double step = 40.0;
