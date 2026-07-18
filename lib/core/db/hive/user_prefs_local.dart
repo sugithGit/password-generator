@@ -22,4 +22,13 @@ class UserPrefsLocal {
     final Box<dynamic> box = await _box;
     return box.get('useUnlock', defaultValue: false) as bool;
   }
+  Future<void> saveHasSeenOnboarding({required bool hasSeen}) async {
+    final Box<dynamic> box = await _box;
+    await box.put('hasSeenOnboarding', hasSeen);
+  }
+
+  Future<bool> getHasSeenOnboarding() async {
+    final Box<dynamic> box = await _box;
+    return box.get('hasSeenOnboarding', defaultValue: false) as bool;
+  }
 }

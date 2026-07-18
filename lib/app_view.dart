@@ -23,6 +23,7 @@ import 'service/auth/domain/repositories/encryption_repo.dart';
 import 'service/auth/domain/repositories/master_key_repo.dart';
 import 'service/auth/domain/use_cases/get_current_user_use_case.dart';
 import 'service/auth/domain/use_cases/sign_in_use_case.dart';
+import 'service/auth/domain/use_cases/sign_in_with_google_use_case.dart';
 import 'service/auth/domain/use_cases/sign_out_use_case.dart';
 import 'service/auth/domain/use_cases/sign_up_use_case.dart';
 
@@ -77,6 +78,7 @@ class _MyAppState extends State<MyApp> {
                   signInUseCase: SignInUseCase(authRepo),
                   signUpUseCase: SignUpUseCase(authRepo),
                   signOutUseCase: SignOutUseCase(authRepo),
+                  signInWithGoogleUseCase: SignInWithGoogleUseCase(authRepo),
                 )..checkAuth();
               }),
               GetIn<EncryptionRepo>(() => encryptionRepo),

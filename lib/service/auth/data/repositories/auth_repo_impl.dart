@@ -69,6 +69,19 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
+  Future<AuthUser> signInWithGoogle() async {
+    try {
+      final UserCredential credential = await _firebaseAuthRemote
+          .signInWithGoogle();
+      return AuthUserModel.fromFirebaseUser(credential.user!).toAuthUser();
+    } on FirebaseAuthException catch (e) {
+      throw _mapFirebaseAuthException(e);
+    } catch (e) {
+      throw const AuthUnknownException();
+    }
+  }
+
+  @override
   Future<void> signOut() async {
     try {
       await _firebaseAuthRemote.signOut();

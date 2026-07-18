@@ -28,6 +28,14 @@ class _SplashPageState extends State<SplashPage> {
     final AuthRepo authRepo = Get.find<AuthRepo>();
     final AuthUser? user = authRepo.currentUser;
 
+    final UserPrefsLocal userPrefs = UserPrefsLocal();
+    final bool hasSeenOnboarding = await userPrefs.getHasSeenOnboarding();
+
+    if (!hasSeenOnboarding) {
+      await context.router.replaceAll([const OnboardingRoute()]);
+      return;
+    }
+
     if (user == null) {
       await context.router.replaceAll([const LoginRoute()]);
       return;
@@ -43,7 +51,6 @@ class _SplashPageState extends State<SplashPage> {
       return;
     }
 
-    final UserPrefsLocal userPrefs = UserPrefsLocal();
     final bool useUnlock = await userPrefs.getUseUnlock();
 
     if (mounted) {

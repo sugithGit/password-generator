@@ -9,20 +9,50 @@ class AppBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: <Color>[
-            Color(0xFF3ECF8E), // Vibrant Supabase Green at the top
-            Color(0xFF1B6A42), // Transition to dark green
-            AppColors.background, // Fades perfectly into black
-          ],
-          stops: <double>[0, 0.14, 0.28],
-        ),
+    return ColoredBox(
+      color: AppColors.background,
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          ShaderMask(
+            shaderCallback: (Rect bounds) {
+              return const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: <Color>[Colors.white, Colors.transparent],
+                stops: <double>[0.0, 0.4],
+              ).createShader(bounds);
+            },
+            blendMode: BlendMode.dstIn,
+            child: CustomPaint(
+              painter: _GridPainter(),
+            ),
+          ),
+          child,
+        ],
       ),
-      child: child,
     );
   }
+}
+
+class _GridPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..color = Colors.white.withOpacity(0.04)
+      ..strokeWidth = 1.0;
+
+    const double step = 40.0;
+
+    for (double i = 0; i < size.width; i += step) {
+      canvas.drawLine(Offset(i, 0), Offset(i, size.height), paint);
+    }
+
+    for (double i = 0; i < size.height; i += step) {
+      canvas.drawLine(Offset(0, i), Offset(size.width, i), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

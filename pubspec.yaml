@@ -24,6 +24,7 @@ dependencies:
   freezed_annotation: ^3.1.0
   gap: ^3.0.1
   google_fonts: ^8.1.0
+  google_sign_in: ^7.2.0
   hive_ce: ^2.19.3
   hive_ce_flutter: ^2.3.4
   hooks_rxget: ^0.0.1

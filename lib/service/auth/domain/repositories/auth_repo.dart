@@ -9,5 +9,7 @@ abstract interface class AuthRepo {
 
   Future<AuthUser> signUp({required String email, required String password});
 
+  Future<AuthUser> signInWithGoogle();
+
   Future<void> signOut();
 }

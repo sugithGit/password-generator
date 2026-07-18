@@ -57,6 +57,10 @@ class AppRouter extends RootStackRouter {
         path: AppRouteEnum.passwordGenerate.path,
         page: PasswordGenerateRoute.page,
       ),
+      AppRouteEnum.onboarding => AutoRoute(
+        path: AppRouteEnum.onboarding.path,
+        page: OnboardingRoute.page,
+      ),
     };
   }
 }

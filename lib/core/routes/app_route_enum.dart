@@ -7,7 +7,8 @@ enum AppRouteEnum {
   biometricGate('/biometric-gate'),
   addEntry('/add-entry'),
   viewPassword('/view-password'),
-  passwordGenerate('/password-generate');
+  passwordGenerate('/password-generate'),
+  onboarding('/onboarding');
 
   const AppRouteEnum(this.path);
   final String path;

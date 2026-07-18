@@ -7,11 +7,14 @@ import 'package:rxget/rxget.dart';
 import '../../../../core/extension/color_ext.dart';
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_background.dart';
 import '../../../../core/widgets/squircle.dart';
 import '../../../../service/password_manager/data/repositories/vault_repo_impl.dart';
 import '../../../../service/password_manager/domain/entities/decrypted_vault_entry.dart';
+import '../../../../service/password_manager/domain/entities/vault_category.dart';
 import '../../../../service/password_manager/domain/entities/vault_entry.dart';
 import '../../controller/vault/vault_controller.dart';
+import '../widgets/category_chip.dart';
 import '../widgets/empty_vault_widget.dart';
 import '../widgets/glass_icon_button.dart';
 import '../widgets/vault_entry_card.dart';
@@ -58,19 +61,7 @@ class _VaultPageState extends State<VaultPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: false,
-      body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: <Color>[
-              Color(0xFF3ECF8E), // Vibrant Supabase Green at the top
-              Color(0xFF1B6A42), // Transition to dark green
-              AppColors.background, // Fades perfectly into black
-            ],
-            stops: <double>[0, 0.20, 0.35],
-          ),
-        ),
+      body: AppBackground(
         child: SafeArea(
           bottom: false,
           child: CustomScrollView(
@@ -110,13 +101,48 @@ class _VaultPageState extends State<VaultPage> {
                 ),
               ),
 
+              // ── Categories ──────────────────────────────────
+              SliverToBoxAdapter(
+                child: FadeInDown(
+                  duration: const Duration(milliseconds: 600),
+                  delay: const Duration(milliseconds: 200),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 24, bottom: 8),
+                    child: SizedBox(
+                      height: 38,
+                      child: Obx(() {
+                        final VaultCategory? selected =
+                            controller.state.selectedCategory;
+                        return ListView.separated(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: VaultCategory.values.length + 1,
+                          separatorBuilder: (_, __) => const SizedBox(width: 8),
+                          itemBuilder: (BuildContext context, int index) {
+                            final VaultCategory? category = index == 0
+                                ? null
+                                : VaultCategory.values[index - 1];
+                            return CategoryChip(
+                              category: category,
+                              isSelected: selected == category,
+                              onTap: () =>
+                                  controller.filterByCategory(category),
+                            );
+                          },
+                        );
+                      }),
+                    ),
+                  ),
+                ),
+              ),
+
               // ── List Header ──────────────────────────────────
               const SliverToBoxAdapter(
                 child: FadeInDown(
                   duration: Duration(milliseconds: 600),
                   delay: Duration(milliseconds: 300),
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(24, 32, 24, 16),
+                    padding: EdgeInsets.fromLTRB(24, 24, 24, 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[

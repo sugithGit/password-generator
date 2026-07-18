@@ -10,21 +10,25 @@ class AuthToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(
-          isSignUp ? 'Already have an account?' : "Don't have an account?",
-          style: TextStyle(
-            color: theme.colorScheme.onSurfaceVariant,
-            fontSize: 14,
+    return GestureDetector(
+      behavior: .translucent,
+      onTap: onToggle,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            isSignUp ? 'Already have an account?' : "Don't have an account?",
+            style: TextStyle(
+              color: theme.colorScheme.onSurfaceVariant,
+              fontSize: 14,
+            ),
           ),
-        ),
-        TextButton(
-          onPressed: onToggle,
-          child: Text(isSignUp ? 'Sign In' : 'Sign Up'),
-        ),
-      ],
+          TextButton(
+            onPressed: onToggle,
+            child: Text(isSignUp ? 'Sign In' : 'Sign Up'),
+          ),
+        ],
+      ),
     );
   }
 }
