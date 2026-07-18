@@ -12,4 +12,8 @@ abstract interface class AuthRepo {
   Future<AuthUser> signInWithGoogle();
 
   Future<void> signOut();
+
+  Future<void> sendPasswordResetEmail(String email);
+
+  Future<void> deleteAccount();
 }

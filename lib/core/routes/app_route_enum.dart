@@ -8,7 +8,8 @@ enum AppRouteEnum {
   addEntry('/add-entry'),
   viewPassword('/view-password'),
   passwordGenerate('/password-generate'),
-  onboarding('/onboarding');
+  onboarding('/onboarding'),
+  settings('/settings');
 
   const AppRouteEnum(this.path);
   final String path;

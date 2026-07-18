@@ -56,4 +56,12 @@ class FirebaseAuthRemote {
       ].map((future) => future.catchError((_) {})),
     );
   }
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
+  Future<void> deleteAccount() async {
+    await currentUser?.delete();
+  }
 }

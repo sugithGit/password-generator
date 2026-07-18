@@ -3,6 +3,7 @@ import 'package:rxget/rxget.dart';
 import '../../../core/enum/status_enum.dart';
 import '../../../service/auth/domain/entities/auth_exceptions.dart';
 import '../../../service/auth/domain/entities/auth_user.dart';
+import '../../../service/auth/domain/repositories/auth_repo.dart';
 import '../../../service/auth/domain/use_cases/get_current_user_use_case.dart';
 import '../../../service/auth/domain/use_cases/sign_in_use_case.dart';
 import '../../../service/auth/domain/use_cases/sign_in_with_google_use_case.dart';
@@ -135,5 +136,42 @@ class AuthController extends GetxController<_AuthState> {
     state._user.value = null;
     state._status.value = StatusEnum.base;
     state._authType.value = null;
+  }
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    state._status.value = StatusEnum.loading;
+    state._error.value = null;
+    try {
+      final AuthRepo authRepo = Get.find<AuthRepo>();
+      await authRepo.sendPasswordResetEmail(email);
+      state._status.value = StatusEnum.success;
+    } catch (e) {
+      state._error.value = e.toString();
+      state._status.value = StatusEnum.base;
+      rethrow;
+    } finally {
+      if (state.status == StatusEnum.loading) {
+        state._status.value = StatusEnum.base;
+      }
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    state._status.value = StatusEnum.loading;
+    state._error.value = null;
+    try {
+      final AuthRepo authRepo = Get.find<AuthRepo>();
+      await authRepo.deleteAccount();
+      state._user.value = null;
+      state._status.value = StatusEnum.success;
+    } catch (e) {
+      state._error.value = e.toString();
+      state._status.value = StatusEnum.base;
+      rethrow;
+    } finally {
+      if (state.status == StatusEnum.loading) {
+        state._status.value = StatusEnum.base;
+      }
+    }
   }
 }

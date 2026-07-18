@@ -92,6 +92,28 @@ class AuthRepoImpl implements AuthRepo {
     }
   }
 
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _firebaseAuthRemote.sendPasswordResetEmail(email);
+    } on FirebaseAuthException catch (e) {
+      throw _mapFirebaseAuthException(e);
+    } on Exception {
+      throw const AuthUnknownException();
+    }
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    try {
+      await _firebaseAuthRemote.deleteAccount();
+    } on FirebaseAuthException catch (e) {
+      throw _mapFirebaseAuthException(e);
+    } on Exception {
+      throw const AuthUnknownException();
+    }
+  }
+
   AuthException _mapFirebaseAuthException(FirebaseAuthException e) {
     switch (e.code) {
       case 'user-not-found':

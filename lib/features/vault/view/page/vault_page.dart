@@ -87,7 +87,7 @@ class _VaultPageState extends State<VaultPage> {
                       const Gap(10),
                       GlassIconButton(
                         icon: CupertinoIcons.settings,
-                        onTap: () {},
+                        onTap: () => context.router.push(const SettingsRoute()),
                       ),
                     ],
                   ),

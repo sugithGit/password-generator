@@ -61,6 +61,10 @@ class AppRouter extends RootStackRouter {
         path: AppRouteEnum.onboarding.path,
         page: OnboardingRoute.page,
       ),
+      AppRouteEnum.settings => AutoRoute(
+        path: AppRouteEnum.settings.path,
+        page: SettingsRoute.page,
+      ),
     };
   }
 }
